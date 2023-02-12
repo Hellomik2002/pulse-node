@@ -1,0 +1,100 @@
+// MONGO
+// datasource db {
+//   provider = "mongodb"
+//   url      = "mongodb+srv://admin:gpPHn4BEjdHyG91w@cluster0.bo29m4x.mongodb.net/pulse_dev"
+// }
+
+// POSTGRE
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://postgres:z8zb8jKadEACdzARhmsP@containers-us-west-165.railway.app:6983/railway"
+}
+
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "pulse_client"
+}
+
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
+generator nestgraphql {
+  // provider = "node node_modules/prisma-nestjs-graphql"
+  // for yarn monorepos
+  provider = "prisma-nestjs-graphql"
+  output   = "../../apps/nest_js/src/@generated"
+}
+
+model User {
+  id                    String        @id @default(cuid())
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+  email                 String        @unique
+  password              String
+  fullName              String
+  uniqueName            String        @unique
+  phoneNumber           String        @unique
+  address               String
+  role                  Role          @default(USER)
+  appointmentsAsAuthor  Appointment[] @relation("Author")
+  appointmentsAsPatient Appointment[] @relation("Patient")
+}
+
+model Appointment {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  date      DateTime
+  title     String
+  content   String?
+  author    User     @relation("Author", fields: [authorId], references: [id])
+  authorId  String
+  patient   User     @relation("Patient", fields: [patientId], references: [id])
+  patientId String
+}
+
+enum Role {
+  ADMIN
+  USER
+  PATIENT
+  DOCTOR
+  LABORATORY
+}
+
+model Doctor {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  email       String   @unique
+  password    String
+  fullName    String
+  uniqueName  String   @unique
+  bookingLink String
+  bookingId   String
+  phoneNumber String
+  // specializations
+}
+
+// _id: string;
+
+// @Field()
+// name: string;
+
+// @Field()
+// description: string;
+
+// @Field(() => PhotoURLGraph, { nullable: true })
+// photoURL: PhotoURLGraph;
+
+// @Field(() => ColorCodeGradientGraph, { nullable: true })
+// colorCodeGradient: ColorCodeGradientGraph;
+
+// @Field(() => [DoctorGraph])
+// doctors: DoctorGraph[];
+
+// @Field(() => [ServiceGraph])
+// services: ServiceGraph[];

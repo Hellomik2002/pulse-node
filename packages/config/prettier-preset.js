@@ -15,6 +15,7 @@ module.exports = {
     "^~/(.*)$",
     "^[./]",
   ],
+  importOrderParserPlugins: ["typescript", "decorators-legacy"],
   importOrderSeparation: true,
   plugins: [require("./merged-prettier-plugin")],
   overrides: [
