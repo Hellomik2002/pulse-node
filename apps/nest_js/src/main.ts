@@ -28,6 +28,6 @@ async function bootstrap() {
 
 	app.use('/graphql', graphqlUploadExpress({}));
 
-	await app.listen(3000);
+	await app.listen(3001);
 }
 bootstrap();

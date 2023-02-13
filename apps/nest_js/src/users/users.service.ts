@@ -3,7 +3,7 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 
 import { ChangePasswordInput } from './dto/change-password.input';
 import { UpdateUserInput } from './dto/update-user.input';
-import { PasswordService } from 'src/auth/services/password.service';
+import { PasswordService } from 'src/modules/auth/services/password.service';
 import { mainPrismaClient } from 'src/prisma/main_client';
 
 @Injectable()

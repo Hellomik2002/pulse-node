@@ -13,8 +13,8 @@ import { UsersService } from './users.service';
 import { User } from 'src/@generated/user/user.model';
 import { UpdateUserInput } from './dto/update-user.input';
 import { ChangePasswordInput } from './dto/change-password.input';
-import { GqlAuthGuard } from 'src/auth/tools/gql-auth.guard';
-import { UserEntity } from 'src/auth/tools/user.decorator';
+import { GqlAuthGuard } from 'src/modules/auth/tools/gql-auth.guard';
+import { UserEntity } from 'src/modules/auth/tools/user.decorator';
 
 @Resolver(() => User)
 @UseGuards(GqlAuthGuard)

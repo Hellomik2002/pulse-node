@@ -10,8 +10,10 @@ import { PrismaModule } from 'nestjs-prisma';
 import { UserModule } from './users/users.module';
 import { HttpModule } from '@nestjs/axios';
 import { AppointmentsModule } from './appointments/appointments.module';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './modules/auth/auth.module';
 import config from './common/configs/config';
+import { DoctorModule } from './modules/doctors/doctor.module';
+import { SpecializatonModule } from './modules/specialization/specialization.module';
 
 @Module({
 	imports: [
@@ -38,6 +40,8 @@ import config from './common/configs/config';
 		AuthModule,
 		UserModule,
 		AppointmentsModule,
+		DoctorModule,
+		SpecializatonModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

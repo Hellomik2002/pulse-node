@@ -37,22 +37,6 @@ export class AuthResolver {
 	) {}
 
 	@Mutation(() => Boolean)
-	async createFstBooking() {
-		const check = await calPrismaClient.booking.create({
-			// data: new Date(),
-			data: {
-				startTime: new Date('2023-02-15T05:30:00.000Z'),
-				endTime: new Date('2023-02-15T04:00:00.000Z'),
-				title: 'THE WORLD',
-				uid: randomUUID(),
-				eventTypeId: 20,
-				userId: 14,
-			},
-		});
-		console.log(check);
-	}
-
-	@Mutation(() => Boolean)
 	async signup(@Args('data') data: SignupInput): Promise<boolean> {
 		data.address = data.address.trim();
 		data.email = data.email.toLowerCase().trim();

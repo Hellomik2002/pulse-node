@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { PasswordService } from 'src/auth/services/password.service';
+import { PasswordService } from 'src/modules/auth/services/password.service';
 import { UsersResolver } from './users.resolver';
 import { UsersService } from './users.service';
 

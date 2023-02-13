@@ -36,5 +36,6 @@ import { SMSService } from './services/sms.service';
 		PasswordService,
 		SMSService,
 	],
+	exports: [PasswordService],
 })
 export class AuthModule {}

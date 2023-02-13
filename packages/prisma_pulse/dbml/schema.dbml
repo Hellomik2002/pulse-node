@@ -15,6 +15,7 @@ Table User {
   role Role [not null, default: 'USER']
   appointmentsAsAuthor Appointment [not null]
   appointmentsAsPatient Appointment [not null]
+  doctor Doctor
 }
 
 Table Appointment {
@@ -34,13 +35,24 @@ Table Doctor {
   id String [pk]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
-  email String [unique, not null]
-  password String [not null]
-  fullName String [not null]
-  uniqueName String [unique, not null]
-  bookingLink String [not null]
-  bookingId String [not null]
+  calLink String [not null, default: '']
+  calUserId Int [not null, default: 0]
   phoneNumber String [not null]
+  user User [not null]
+  userId String [unique, not null]
+  specializations Specialization [not null]
+}
+
+Table Specialization {
+  id String [pk]
+  name String [not null]
+  description String [not null]
+  Doctor Doctor [not null]
+}
+
+Table DoctorToSpecialization {
+  specializationsId String [ref: > Specialization.id]
+  doctorId String [ref: > Doctor.id]
 }
 
 Enum Role {
@@ -54,3 +66,5 @@ Enum Role {
 Ref: Appointment.authorId > User.id
 
 Ref: Appointment.patientId > User.id
+
+Ref: Doctor.userId - User.id

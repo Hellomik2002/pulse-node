@@ -29,29 +29,29 @@ export class AuthService {
 			payload.password,
 		);
 
-		try {
-			const user = await mainPrismaClient.user.create({
-				data: {
-					...payload,
-					password: hashedPassword,
-					role: 'USER',
-				},
-			});
+		// try {
+		const user = await mainPrismaClient.user.create({
+			data: {
+				...payload,
+				password: hashedPassword,
+				role: 'USER',
+			},
+		});
 
-			return this.generateTokens({
-				userId: user.id,
-			});
-		} catch (e) {
-			if (
-				e instanceof Prisma.PrismaClientKnownRequestError &&
-				e.code === 'P2002'
-			) {
-				throw new ConflictException(
-					`UniqueName ${payload.uniqueName} already used.`,
-				);
-			}
-			throw new Error(e);
-		}
+		return this.generateTokens({
+			userId: user.id,
+		});
+		// } catch (e) {
+		// 	if (
+		// 		e instanceof Prisma.PrismaClientKnownRequestError &&
+		// 		e.code === 'P2002'
+		// 	) {
+		// 		throw new ConflictException(
+		// 			`UniqueName ${payload.uniqueName} already used.`,
+		// 		);
+		// 	}
+		// 	throw new Error(e);
+		// }
 	}
 
 	async login(uniqueName: string, password: string): Promise<Token> {
@@ -98,7 +98,12 @@ export class AuthService {
 	}
 
 	private generateAccessToken(payload: { userId: string }): string {
-		return this.jwtService.sign(payload);
+		const securityConfig =
+			this.configService.get<SecurityConfig>('security');
+		return this.jwtService.sign(payload, {
+			secret: this.configService.get('JWT_REFRESH_SECRET'),
+			expiresIn: securityConfig.expiresIn,
+		});
 	}
 
 	private generateRefreshToken(payload: { userId: string }): string {
