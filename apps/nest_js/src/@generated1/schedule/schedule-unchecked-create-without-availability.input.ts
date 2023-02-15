@@ -1,0 +1,23 @@
+import { Field } from '@nestjs/graphql';
+import { InputType } from '@nestjs/graphql';
+import { Int } from '@nestjs/graphql';
+import { EventTypeUncheckedCreateNestedManyWithoutScheduleInput } from '../event-type/event-type-unchecked-create-nested-many-without-schedule.input';
+
+@InputType()
+export class ScheduleUncheckedCreateWithoutAvailabilityInput {
+
+    @Field(() => Int, {nullable:true})
+    id?: number;
+
+    @Field(() => Int, {nullable:false})
+    userId!: number;
+
+    @Field(() => EventTypeUncheckedCreateNestedManyWithoutScheduleInput, {nullable:true})
+    eventType?: EventTypeUncheckedCreateNestedManyWithoutScheduleInput;
+
+    @Field(() => String, {nullable:false})
+    name!: string;
+
+    @Field(() => String, {nullable:true})
+    timeZone?: string;
+}

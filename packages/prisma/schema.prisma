@@ -11,6 +11,22 @@ generator client {
   previewFeatures = ["interactiveTransactions"]
 }
 
+generator nestgraphql {
+  // provider = "node node_modules/prisma-nestjs-graphql"
+  // for yarn monorepos
+  provider = "prisma-nestjs-graphql"
+  output   = "../../apps/nest_js/src/@generated1"
+}
+
+// generator custom_generator {
+//   provider   = "ts-node ../../node_modules/@jmondi/prisma-generator-nestjs-graphql/src/generator.ts"
+//   clientPath = "@prisma/client"
+//   output     = "../../apps/nest_js/src/@generated2"
+//   prefix     = "Base"
+//   abstract   = true
+//   compileJs  = false
+// }
+
 generator zod {
   provider      = "zod-prisma"
   output        = "./zod"

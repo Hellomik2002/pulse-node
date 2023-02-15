@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@calcom/lib": "*",
+    "@jmondi/prisma-generator-nestjs-graphql": "^1.4.1",
     "@prisma/client": "^4.8.1",
     "prisma": "^4.8.1",
     "ts-node": "^10.9.1",

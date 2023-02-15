@@ -42,7 +42,6 @@
     "embed-tests-quick": "turbo run embed-tests-quick",
     "embed-tests": "turbo run embed-tests",
     "env-check:app-store": "dotenv-checker --schema .env.appStore.example --env .env.appStore",
-    
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "heroku-postbuild": "turbo run @calcom/web#build",
     "lint:fix": "turbo run lint:fix",
@@ -80,6 +79,7 @@
     "ts-jest": "^28.0.8"
   },
   "dependencies": {
+    "@jmondi/prisma-generator-nestjs-graphql": "^1.4.1",
     "@nestjs/apollo": "^10.2.0",
     "@nestjs/common": "^9.3.8",
     "@nestjs/core": "^9.3.8",
