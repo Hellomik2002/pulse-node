@@ -106,8 +106,8 @@ exports.Prisma.DoctorScalarFieldEnum = makeEnum({
   updatedAt: 'updatedAt',
   calLink: 'calLink',
   calUserId: 'calUserId',
-  phoneNumber: 'phoneNumber',
-  userId: 'userId'
+  userId: 'userId',
+  specializationsIds: 'specializationsIds'
 });
 
 exports.Prisma.QueryMode = makeEnum({
@@ -123,14 +123,8 @@ exports.Prisma.SortOrder = makeEnum({
 exports.Prisma.SpecializationScalarFieldEnum = makeEnum({
   id: 'id',
   name: 'name',
-  description: 'description'
-});
-
-exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
-  ReadUncommitted: 'ReadUncommitted',
-  ReadCommitted: 'ReadCommitted',
-  RepeatableRead: 'RepeatableRead',
-  Serializable: 'Serializable'
+  description: 'description',
+  doctorIds: 'doctorIds'
 });
 
 exports.Prisma.UserScalarFieldEnum = makeEnum({

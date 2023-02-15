@@ -54,8 +54,8 @@ export type Doctor = {
   updatedAt: Date
   calLink: string
   calUserId: number
-  phoneNumber: string
   userId: string
+  specializationsIds: string[]
 }
 
 /**
@@ -66,6 +66,7 @@ export type Specialization = {
   id: string
   name: string
   description: string
+  doctorIds: string[]
 }
 
 
@@ -142,52 +143,6 @@ export class PrismaClient<
   $use(cb: Prisma.Middleware): void
 
 /**
-   * Executes a prepared raw query and returns the number of affected rows.
-   * @example
-   * ```
-   * const result = await prisma.$executeRaw`UPDATE User SET cool = ${true} WHERE email = ${'user@email.com'};`
-   * ```
-   * 
-   * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
-   */
-  $executeRaw<T = unknown>(query: TemplateStringsArray | Prisma.Sql, ...values: any[]): PrismaPromise<number>;
-
-  /**
-   * Executes a raw query and returns the number of affected rows.
-   * Susceptible to SQL injections, see documentation.
-   * @example
-   * ```
-   * const result = await prisma.$executeRawUnsafe('UPDATE User SET cool = $1 WHERE email = $2 ;', true, 'user@email.com')
-   * ```
-   * 
-   * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
-   */
-  $executeRawUnsafe<T = unknown>(query: string, ...values: any[]): PrismaPromise<number>;
-
-  /**
-   * Performs a prepared raw query and returns the `SELECT` data.
-   * @example
-   * ```
-   * const result = await prisma.$queryRaw`SELECT * FROM User WHERE id = ${1} OR email = ${'user@email.com'};`
-   * ```
-   * 
-   * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
-   */
-  $queryRaw<T = unknown>(query: TemplateStringsArray | Prisma.Sql, ...values: any[]): PrismaPromise<T>;
-
-  /**
-   * Performs a raw query and returns the `SELECT` data.
-   * Susceptible to SQL injections, see documentation.
-   * @example
-   * ```
-   * const result = await prisma.$queryRawUnsafe('SELECT * FROM User WHERE id = $1 OR email = $2;', 1, 'user@email.com')
-   * ```
-   * 
-   * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
-   */
-  $queryRawUnsafe<T = unknown>(query: string, ...values: any[]): PrismaPromise<T>;
-
-  /**
    * Allows the running of a sequence of read/write operations that are guaranteed to either succeed or fail as a whole.
    * @example
    * ```
@@ -200,9 +155,24 @@ export class PrismaClient<
    * 
    * Read more in our [docs](https://www.prisma.io/docs/concepts/components/prisma-client/transactions).
    */
-  $transaction<P extends PrismaPromise<any>[]>(arg: [...P], options?: { isolationLevel?: Prisma.TransactionIsolationLevel }): Promise<UnwrapTuple<P>>;
+  $transaction<P extends PrismaPromise<any>[]>(arg: [...P]): Promise<UnwrapTuple<P>>;
 
-  $transaction<R>(fn: (prisma: Prisma.TransactionClient) => Promise<R>, options?: {maxWait?: number, timeout?: number, isolationLevel?: Prisma.TransactionIsolationLevel}): Promise<R>;
+  $transaction<R>(fn: (prisma: Prisma.TransactionClient) => Promise<R>, options?: {maxWait?: number, timeout?: number}): Promise<R>;
+
+  /**
+   * Executes a raw MongoDB command and returns the result of it.
+   * @example
+   * ```
+   * const user = await prisma.$runCommandRaw({
+   *   aggregate: 'User',
+   *   pipeline: [{ $match: { name: 'Bob' } }, { $project: { email: true, _id: false } }],
+   *   explain: false,
+   * })
+   * ```
+   * 
+   * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
+   */
+  $runCommandRaw(command: Prisma.InputJsonObject): PrismaPromise<Prisma.JsonObject>;
 
       /**
    * `prisma.user`: Exposes CRUD operations for the **User** model.
@@ -1500,6 +1470,33 @@ export namespace Prisma {
     ): Prisma__UserClient<UserGetPayload<T>>
 
     /**
+     * Find zero or more Users that matches the filter.
+     * @param {UserFindRawArgs} args - Select which filters you would like to apply.
+     * @example
+     * const user = await prisma.user.findRaw({
+     *   filter: { age: { $gt: 25 } } 
+     * })
+    **/
+    findRaw(
+      args?: UserFindRawArgs
+    ): PrismaPromise<JsonObject>
+
+    /**
+     * Perform aggregation operations on a User.
+     * @param {UserAggregateRawArgs} args - Select which aggregations you would like to apply.
+     * @example
+     * const user = await prisma.user.aggregateRaw({
+     *   pipeline: [
+     *     { $match: { status: "registered" } },
+     *     { $group: { _id: "$country", total: { $sum: 1 } } }
+     *   ]
+     * })
+    **/
+    aggregateRaw(
+      args?: UserAggregateRawArgs
+    ): PrismaPromise<JsonObject>
+
+    /**
      * Count the number of Users.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
@@ -1945,7 +1942,6 @@ export namespace Prisma {
      * 
     **/
     data: Enumerable<UserCreateManyInput>
-    skipDuplicates?: boolean
   }
 
 
@@ -2056,6 +2052,40 @@ export namespace Prisma {
      * 
     **/
     where?: UserWhereInput
+  }
+
+
+  /**
+   * User findRaw
+   */
+  export type UserFindRawArgs = {
+    /**
+     * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
+     * 
+    **/
+    filter?: InputJsonValue
+    /**
+     * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
+     * 
+    **/
+    options?: InputJsonValue
+  }
+
+
+  /**
+   * User aggregateRaw
+   */
+  export type UserAggregateRawArgs = {
+    /**
+     * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
+     * 
+    **/
+    pipeline?: Array<InputJsonValue>
+    /**
+     * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
+     * 
+    **/
+    options?: InputJsonValue
   }
 
 
@@ -2566,6 +2596,33 @@ export namespace Prisma {
     ): Prisma__AppointmentClient<AppointmentGetPayload<T>>
 
     /**
+     * Find zero or more Appointments that matches the filter.
+     * @param {AppointmentFindRawArgs} args - Select which filters you would like to apply.
+     * @example
+     * const appointment = await prisma.appointment.findRaw({
+     *   filter: { age: { $gt: 25 } } 
+     * })
+    **/
+    findRaw(
+      args?: AppointmentFindRawArgs
+    ): PrismaPromise<JsonObject>
+
+    /**
+     * Perform aggregation operations on a Appointment.
+     * @param {AppointmentAggregateRawArgs} args - Select which aggregations you would like to apply.
+     * @example
+     * const appointment = await prisma.appointment.aggregateRaw({
+     *   pipeline: [
+     *     { $match: { status: "registered" } },
+     *     { $group: { _id: "$country", total: { $sum: 1 } } }
+     *   ]
+     * })
+    **/
+    aggregateRaw(
+      args?: AppointmentAggregateRawArgs
+    ): PrismaPromise<JsonObject>
+
+    /**
      * Count the number of Appointments.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
@@ -3009,7 +3066,6 @@ export namespace Prisma {
      * 
     **/
     data: Enumerable<AppointmentCreateManyInput>
-    skipDuplicates?: boolean
   }
 
 
@@ -3124,6 +3180,40 @@ export namespace Prisma {
 
 
   /**
+   * Appointment findRaw
+   */
+  export type AppointmentFindRawArgs = {
+    /**
+     * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
+     * 
+    **/
+    filter?: InputJsonValue
+    /**
+     * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
+     * 
+    **/
+    options?: InputJsonValue
+  }
+
+
+  /**
+   * Appointment aggregateRaw
+   */
+  export type AppointmentAggregateRawArgs = {
+    /**
+     * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
+     * 
+    **/
+    pipeline?: Array<InputJsonValue>
+    /**
+     * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
+     * 
+    **/
+    options?: InputJsonValue
+  }
+
+
+  /**
    * Appointment without action
    */
   export type AppointmentArgs = {
@@ -3168,7 +3258,6 @@ export namespace Prisma {
     updatedAt: Date | null
     calLink: string | null
     calUserId: number | null
-    phoneNumber: string | null
     userId: string | null
   }
 
@@ -3178,7 +3267,6 @@ export namespace Prisma {
     updatedAt: Date | null
     calLink: string | null
     calUserId: number | null
-    phoneNumber: string | null
     userId: string | null
   }
 
@@ -3188,8 +3276,8 @@ export namespace Prisma {
     updatedAt: number
     calLink: number
     calUserId: number
-    phoneNumber: number
     userId: number
+    specializationsIds: number
     _all: number
   }
 
@@ -3208,7 +3296,6 @@ export namespace Prisma {
     updatedAt?: true
     calLink?: true
     calUserId?: true
-    phoneNumber?: true
     userId?: true
   }
 
@@ -3218,7 +3305,6 @@ export namespace Prisma {
     updatedAt?: true
     calLink?: true
     calUserId?: true
-    phoneNumber?: true
     userId?: true
   }
 
@@ -3228,8 +3314,8 @@ export namespace Prisma {
     updatedAt?: true
     calLink?: true
     calUserId?: true
-    phoneNumber?: true
     userId?: true
+    specializationsIds?: true
     _all?: true
   }
 
@@ -3331,8 +3417,8 @@ export namespace Prisma {
     updatedAt: Date
     calLink: string
     calUserId: number
-    phoneNumber: string
     userId: string
+    specializationsIds: string[]
     _count: DoctorCountAggregateOutputType | null
     _avg: DoctorAvgAggregateOutputType | null
     _sum: DoctorSumAggregateOutputType | null
@@ -3360,9 +3446,9 @@ export namespace Prisma {
     updatedAt?: boolean
     calLink?: boolean
     calUserId?: boolean
-    phoneNumber?: boolean
     user?: boolean | UserArgs
     userId?: boolean
+    specializationsIds?: boolean
     specializations?: boolean | Doctor$specializationsArgs
     _count?: boolean | DoctorCountOutputTypeArgs
   }
@@ -3612,6 +3698,33 @@ export namespace Prisma {
     upsert<T extends DoctorUpsertArgs>(
       args: SelectSubset<T, DoctorUpsertArgs>
     ): Prisma__DoctorClient<DoctorGetPayload<T>>
+
+    /**
+     * Find zero or more Doctors that matches the filter.
+     * @param {DoctorFindRawArgs} args - Select which filters you would like to apply.
+     * @example
+     * const doctor = await prisma.doctor.findRaw({
+     *   filter: { age: { $gt: 25 } } 
+     * })
+    **/
+    findRaw(
+      args?: DoctorFindRawArgs
+    ): PrismaPromise<JsonObject>
+
+    /**
+     * Perform aggregation operations on a Doctor.
+     * @param {DoctorAggregateRawArgs} args - Select which aggregations you would like to apply.
+     * @example
+     * const doctor = await prisma.doctor.aggregateRaw({
+     *   pipeline: [
+     *     { $match: { status: "registered" } },
+     *     { $group: { _id: "$country", total: { $sum: 1 } } }
+     *   ]
+     * })
+    **/
+    aggregateRaw(
+      args?: DoctorAggregateRawArgs
+    ): PrismaPromise<JsonObject>
 
     /**
      * Count the number of Doctors.
@@ -4057,7 +4170,6 @@ export namespace Prisma {
      * 
     **/
     data: Enumerable<DoctorCreateManyInput>
-    skipDuplicates?: boolean
   }
 
 
@@ -4172,6 +4284,40 @@ export namespace Prisma {
 
 
   /**
+   * Doctor findRaw
+   */
+  export type DoctorFindRawArgs = {
+    /**
+     * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
+     * 
+    **/
+    filter?: InputJsonValue
+    /**
+     * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
+     * 
+    **/
+    options?: InputJsonValue
+  }
+
+
+  /**
+   * Doctor aggregateRaw
+   */
+  export type DoctorAggregateRawArgs = {
+    /**
+     * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
+     * 
+    **/
+    pipeline?: Array<InputJsonValue>
+    /**
+     * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
+     * 
+    **/
+    options?: InputJsonValue
+  }
+
+
+  /**
    * Doctor.specializations
    */
   export type Doctor$specializationsArgs = {
@@ -4239,6 +4385,7 @@ export namespace Prisma {
     id: number
     name: number
     description: number
+    doctorIds: number
     _all: number
   }
 
@@ -4259,6 +4406,7 @@ export namespace Prisma {
     id?: true
     name?: true
     description?: true
+    doctorIds?: true
     _all?: true
   }
 
@@ -4344,6 +4492,7 @@ export namespace Prisma {
     id: string
     name: string
     description: string
+    doctorIds: string[]
     _count: SpecializationCountAggregateOutputType | null
     _min: SpecializationMinAggregateOutputType | null
     _max: SpecializationMaxAggregateOutputType | null
@@ -4367,6 +4516,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
+    doctorIds?: boolean
     Doctor?: boolean | Specialization$DoctorArgs
     _count?: boolean | SpecializationCountOutputTypeArgs
   }
@@ -4613,6 +4763,33 @@ export namespace Prisma {
     upsert<T extends SpecializationUpsertArgs>(
       args: SelectSubset<T, SpecializationUpsertArgs>
     ): Prisma__SpecializationClient<SpecializationGetPayload<T>>
+
+    /**
+     * Find zero or more Specializations that matches the filter.
+     * @param {SpecializationFindRawArgs} args - Select which filters you would like to apply.
+     * @example
+     * const specialization = await prisma.specialization.findRaw({
+     *   filter: { age: { $gt: 25 } } 
+     * })
+    **/
+    findRaw(
+      args?: SpecializationFindRawArgs
+    ): PrismaPromise<JsonObject>
+
+    /**
+     * Perform aggregation operations on a Specialization.
+     * @param {SpecializationAggregateRawArgs} args - Select which aggregations you would like to apply.
+     * @example
+     * const specialization = await prisma.specialization.aggregateRaw({
+     *   pipeline: [
+     *     { $match: { status: "registered" } },
+     *     { $group: { _id: "$country", total: { $sum: 1 } } }
+     *   ]
+     * })
+    **/
+    aggregateRaw(
+      args?: SpecializationAggregateRawArgs
+    ): PrismaPromise<JsonObject>
 
     /**
      * Count the number of Specializations.
@@ -5056,7 +5233,6 @@ export namespace Prisma {
      * 
     **/
     data: Enumerable<SpecializationCreateManyInput>
-    skipDuplicates?: boolean
   }
 
 
@@ -5171,6 +5347,40 @@ export namespace Prisma {
 
 
   /**
+   * Specialization findRaw
+   */
+  export type SpecializationFindRawArgs = {
+    /**
+     * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
+     * 
+    **/
+    filter?: InputJsonValue
+    /**
+     * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
+     * 
+    **/
+    options?: InputJsonValue
+  }
+
+
+  /**
+   * Specialization aggregateRaw
+   */
+  export type SpecializationAggregateRawArgs = {
+    /**
+     * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
+     * 
+    **/
+    pipeline?: Array<InputJsonValue>
+    /**
+     * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
+     * 
+    **/
+    options?: InputJsonValue
+  }
+
+
+  /**
    * Specialization.Doctor
    */
   export type Specialization$DoctorArgs = {
@@ -5238,8 +5448,8 @@ export namespace Prisma {
     updatedAt: 'updatedAt',
     calLink: 'calLink',
     calUserId: 'calUserId',
-    phoneNumber: 'phoneNumber',
-    userId: 'userId'
+    userId: 'userId',
+    specializationsIds: 'specializationsIds'
   };
 
   export type DoctorScalarFieldEnum = (typeof DoctorScalarFieldEnum)[keyof typeof DoctorScalarFieldEnum]
@@ -5264,20 +5474,11 @@ export namespace Prisma {
   export const SpecializationScalarFieldEnum: {
     id: 'id',
     name: 'name',
-    description: 'description'
+    description: 'description',
+    doctorIds: 'doctorIds'
   };
 
   export type SpecializationScalarFieldEnum = (typeof SpecializationScalarFieldEnum)[keyof typeof SpecializationScalarFieldEnum]
-
-
-  export const TransactionIsolationLevel: {
-    ReadUncommitted: 'ReadUncommitted',
-    ReadCommitted: 'ReadCommitted',
-    RepeatableRead: 'RepeatableRead',
-    Serializable: 'Serializable'
-  };
-
-  export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
   export const UserScalarFieldEnum: {
@@ -5445,9 +5646,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter | Date | string
     calLink?: StringFilter | string
     calUserId?: IntFilter | number
-    phoneNumber?: StringFilter | string
     user?: XOR<UserRelationFilter, UserWhereInput>
     userId?: StringFilter | string
+    specializationsIds?: StringNullableListFilter
     specializations?: SpecializationListRelationFilter
   }
 
@@ -5457,9 +5658,9 @@ export namespace Prisma {
     updatedAt?: SortOrder
     calLink?: SortOrder
     calUserId?: SortOrder
-    phoneNumber?: SortOrder
     user?: UserOrderByWithRelationInput
     userId?: SortOrder
+    specializationsIds?: SortOrder
     specializations?: SpecializationOrderByRelationAggregateInput
   }
 
@@ -5474,8 +5675,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     calLink?: SortOrder
     calUserId?: SortOrder
-    phoneNumber?: SortOrder
     userId?: SortOrder
+    specializationsIds?: SortOrder
     _count?: DoctorCountOrderByAggregateInput
     _avg?: DoctorAvgOrderByAggregateInput
     _max?: DoctorMaxOrderByAggregateInput
@@ -5492,8 +5693,8 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter | Date | string
     calLink?: StringWithAggregatesFilter | string
     calUserId?: IntWithAggregatesFilter | number
-    phoneNumber?: StringWithAggregatesFilter | string
     userId?: StringWithAggregatesFilter | string
+    specializationsIds?: StringNullableListFilter
   }
 
   export type SpecializationWhereInput = {
@@ -5503,6 +5704,7 @@ export namespace Prisma {
     id?: StringFilter | string
     name?: StringFilter | string
     description?: StringFilter | string
+    doctorIds?: StringNullableListFilter
     Doctor?: DoctorListRelationFilter
   }
 
@@ -5510,6 +5712,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
+    doctorIds?: SortOrder
     Doctor?: DoctorOrderByRelationAggregateInput
   }
 
@@ -5521,6 +5724,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
+    doctorIds?: SortOrder
     _count?: SpecializationCountOrderByAggregateInput
     _max?: SpecializationMaxOrderByAggregateInput
     _min?: SpecializationMinOrderByAggregateInput
@@ -5533,6 +5737,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter | string
     name?: StringWithAggregatesFilter | string
     description?: StringWithAggregatesFilter | string
+    doctorIds?: StringNullableListFilter
   }
 
   export type UserCreateInput = {
@@ -5568,7 +5773,6 @@ export namespace Prisma {
   }
 
   export type UserUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     email?: StringFieldUpdateOperationsInput | string
@@ -5584,7 +5788,6 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     email?: StringFieldUpdateOperationsInput | string
@@ -5613,7 +5816,6 @@ export namespace Prisma {
   }
 
   export type UserUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     email?: StringFieldUpdateOperationsInput | string
@@ -5626,7 +5828,6 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     email?: StringFieldUpdateOperationsInput | string
@@ -5661,7 +5862,6 @@ export namespace Prisma {
   }
 
   export type AppointmentUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -5672,7 +5872,6 @@ export namespace Prisma {
   }
 
   export type AppointmentUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -5694,7 +5893,6 @@ export namespace Prisma {
   }
 
   export type AppointmentUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -5703,7 +5901,6 @@ export namespace Prisma {
   }
 
   export type AppointmentUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -5719,8 +5916,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     calLink?: string
     calUserId?: number
-    phoneNumber: string
     user: UserCreateNestedOneWithoutDoctorInput
+    specializationsIds?: DoctorCreatespecializationsIdsInput | Enumerable<string>
     specializations?: SpecializationCreateNestedManyWithoutDoctorInput
   }
 
@@ -5730,30 +5927,28 @@ export namespace Prisma {
     updatedAt?: Date | string
     calLink?: string
     calUserId?: number
-    phoneNumber: string
     userId: string
+    specializationsIds?: DoctorCreatespecializationsIdsInput | Enumerable<string>
     specializations?: SpecializationUncheckedCreateNestedManyWithoutDoctorInput
   }
 
   export type DoctorUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     calLink?: StringFieldUpdateOperationsInput | string
     calUserId?: IntFieldUpdateOperationsInput | number
-    phoneNumber?: StringFieldUpdateOperationsInput | string
     user?: UserUpdateOneRequiredWithoutDoctorNestedInput
+    specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
     specializations?: SpecializationUpdateManyWithoutDoctorNestedInput
   }
 
   export type DoctorUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     calLink?: StringFieldUpdateOperationsInput | string
     calUserId?: IntFieldUpdateOperationsInput | number
-    phoneNumber?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
     specializations?: SpecializationUncheckedUpdateManyWithoutDoctorNestedInput
   }
 
@@ -5763,33 +5958,32 @@ export namespace Prisma {
     updatedAt?: Date | string
     calLink?: string
     calUserId?: number
-    phoneNumber: string
     userId: string
+    specializationsIds?: DoctorCreatespecializationsIdsInput | Enumerable<string>
   }
 
   export type DoctorUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     calLink?: StringFieldUpdateOperationsInput | string
     calUserId?: IntFieldUpdateOperationsInput | number
-    phoneNumber?: StringFieldUpdateOperationsInput | string
+    specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
   }
 
   export type DoctorUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     calLink?: StringFieldUpdateOperationsInput | string
     calUserId?: IntFieldUpdateOperationsInput | number
-    phoneNumber?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
   }
 
   export type SpecializationCreateInput = {
     id?: string
     name: string
     description: string
+    doctorIds?: SpecializationCreatedoctorIdsInput | Enumerable<string>
     Doctor?: DoctorCreateNestedManyWithoutSpecializationsInput
   }
 
@@ -5797,20 +5991,21 @@ export namespace Prisma {
     id?: string
     name: string
     description: string
+    doctorIds?: SpecializationCreatedoctorIdsInput | Enumerable<string>
     Doctor?: DoctorUncheckedCreateNestedManyWithoutSpecializationsInput
   }
 
   export type SpecializationUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    doctorIds?: SpecializationUpdatedoctorIdsInput | Enumerable<string>
     Doctor?: DoctorUpdateManyWithoutSpecializationsNestedInput
   }
 
   export type SpecializationUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    doctorIds?: SpecializationUpdatedoctorIdsInput | Enumerable<string>
     Doctor?: DoctorUncheckedUpdateManyWithoutSpecializationsNestedInput
   }
 
@@ -5818,18 +6013,19 @@ export namespace Prisma {
     id?: string
     name: string
     description: string
+    doctorIds?: SpecializationCreatedoctorIdsInput | Enumerable<string>
   }
 
   export type SpecializationUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    doctorIds?: SpecializationUpdatedoctorIdsInput | Enumerable<string>
   }
 
   export type SpecializationUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    doctorIds?: SpecializationUpdatedoctorIdsInput | Enumerable<string>
   }
 
   export type StringFilter = {
@@ -5974,6 +6170,7 @@ export namespace Prisma {
     endsWith?: string
     mode?: QueryMode
     not?: NestedStringNullableFilter | string | null
+    isSet?: boolean
   }
 
   export type UserRelationFilter = {
@@ -6030,6 +6227,7 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter
     _min?: NestedStringNullableFilter
     _max?: NestedStringNullableFilter
+    isSet?: boolean
   }
 
   export type IntFilter = {
@@ -6041,6 +6239,14 @@ export namespace Prisma {
     gt?: number
     gte?: number
     not?: NestedIntFilter | number
+  }
+
+  export type StringNullableListFilter = {
+    equals?: Enumerable<string> | null
+    has?: string | null
+    hasEvery?: Enumerable<string>
+    hasSome?: Enumerable<string>
+    isEmpty?: boolean
   }
 
   export type SpecializationListRelationFilter = {
@@ -6059,8 +6265,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     calLink?: SortOrder
     calUserId?: SortOrder
-    phoneNumber?: SortOrder
     userId?: SortOrder
+    specializationsIds?: SortOrder
   }
 
   export type DoctorAvgOrderByAggregateInput = {
@@ -6073,7 +6279,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
     calLink?: SortOrder
     calUserId?: SortOrder
-    phoneNumber?: SortOrder
     userId?: SortOrder
   }
 
@@ -6083,7 +6288,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
     calLink?: SortOrder
     calUserId?: SortOrder
-    phoneNumber?: SortOrder
     userId?: SortOrder
   }
 
@@ -6121,6 +6325,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
+    doctorIds?: SortOrder
   }
 
   export type SpecializationMaxOrderByAggregateInput = {
@@ -6175,12 +6380,12 @@ export namespace Prisma {
     connect?: DoctorWhereUniqueInput
   }
 
-  export type StringFieldUpdateOperationsInput = {
-    set?: string
-  }
-
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type StringFieldUpdateOperationsInput = {
+    set?: string
   }
 
   export type EnumRoleFieldUpdateOperationsInput = {
@@ -6277,6 +6482,7 @@ export namespace Prisma {
 
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
+    unset?: boolean
   }
 
   export type UserUpdateOneRequiredWithoutAppointmentsAsAuthorNestedInput = {
@@ -6299,6 +6505,10 @@ export namespace Prisma {
     create?: XOR<UserCreateWithoutDoctorInput, UserUncheckedCreateWithoutDoctorInput>
     connectOrCreate?: UserCreateOrConnectWithoutDoctorInput
     connect?: UserWhereUniqueInput
+  }
+
+  export type DoctorCreatespecializationsIdsInput = {
+    set: Enumerable<string>
   }
 
   export type SpecializationCreateNestedManyWithoutDoctorInput = {
@@ -6329,6 +6539,11 @@ export namespace Prisma {
     update?: XOR<UserUpdateWithoutDoctorInput, UserUncheckedUpdateWithoutDoctorInput>
   }
 
+  export type DoctorUpdatespecializationsIdsInput = {
+    set?: Enumerable<string>
+    push?: string | Enumerable<string>
+  }
+
   export type SpecializationUpdateManyWithoutDoctorNestedInput = {
     create?: XOR<Enumerable<SpecializationCreateWithoutDoctorInput>, Enumerable<SpecializationUncheckedCreateWithoutDoctorInput>>
     connectOrCreate?: Enumerable<SpecializationCreateOrConnectWithoutDoctorInput>
@@ -6355,6 +6570,10 @@ export namespace Prisma {
     deleteMany?: Enumerable<SpecializationScalarWhereInput>
   }
 
+  export type SpecializationCreatedoctorIdsInput = {
+    set: Enumerable<string>
+  }
+
   export type DoctorCreateNestedManyWithoutSpecializationsInput = {
     create?: XOR<Enumerable<DoctorCreateWithoutSpecializationsInput>, Enumerable<DoctorUncheckedCreateWithoutSpecializationsInput>>
     connectOrCreate?: Enumerable<DoctorCreateOrConnectWithoutSpecializationsInput>
@@ -6365,6 +6584,11 @@ export namespace Prisma {
     create?: XOR<Enumerable<DoctorCreateWithoutSpecializationsInput>, Enumerable<DoctorUncheckedCreateWithoutSpecializationsInput>>
     connectOrCreate?: Enumerable<DoctorCreateOrConnectWithoutSpecializationsInput>
     connect?: Enumerable<DoctorWhereUniqueInput>
+  }
+
+  export type SpecializationUpdatedoctorIdsInput = {
+    set?: Enumerable<string>
+    push?: string | Enumerable<string>
   }
 
   export type DoctorUpdateManyWithoutSpecializationsNestedInput = {
@@ -6489,6 +6713,7 @@ export namespace Prisma {
     startsWith?: string
     endsWith?: string
     not?: NestedStringNullableFilter | string | null
+    isSet?: boolean
   }
 
   export type NestedStringNullableWithAggregatesFilter = {
@@ -6506,6 +6731,7 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter
     _min?: NestedStringNullableFilter
     _max?: NestedStringNullableFilter
+    isSet?: boolean
   }
 
   export type NestedIntNullableFilter = {
@@ -6517,6 +6743,7 @@ export namespace Prisma {
     gt?: number
     gte?: number
     not?: NestedIntNullableFilter | number | null
+    isSet?: boolean
   }
 
   export type NestedIntWithAggregatesFilter = {
@@ -6573,7 +6800,6 @@ export namespace Prisma {
 
   export type AppointmentCreateManyAuthorInputEnvelope = {
     data: Enumerable<AppointmentCreateManyAuthorInput>
-    skipDuplicates?: boolean
   }
 
   export type AppointmentCreateWithoutPatientInput = {
@@ -6603,7 +6829,6 @@ export namespace Prisma {
 
   export type AppointmentCreateManyPatientInputEnvelope = {
     data: Enumerable<AppointmentCreateManyPatientInput>
-    skipDuplicates?: boolean
   }
 
   export type DoctorCreateWithoutUserInput = {
@@ -6612,7 +6837,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     calLink?: string
     calUserId?: number
-    phoneNumber: string
+    specializationsIds?: DoctorCreatespecializationsIdsInput | Enumerable<string>
     specializations?: SpecializationCreateNestedManyWithoutDoctorInput
   }
 
@@ -6622,7 +6847,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     calLink?: string
     calUserId?: number
-    phoneNumber: string
+    specializationsIds?: DoctorCreatespecializationsIdsInput | Enumerable<string>
     specializations?: SpecializationUncheckedCreateNestedManyWithoutDoctorInput
   }
 
@@ -6683,22 +6908,20 @@ export namespace Prisma {
   }
 
   export type DoctorUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     calLink?: StringFieldUpdateOperationsInput | string
     calUserId?: IntFieldUpdateOperationsInput | number
-    phoneNumber?: StringFieldUpdateOperationsInput | string
+    specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
     specializations?: SpecializationUpdateManyWithoutDoctorNestedInput
   }
 
   export type DoctorUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     calLink?: StringFieldUpdateOperationsInput | string
     calUserId?: IntFieldUpdateOperationsInput | number
-    phoneNumber?: StringFieldUpdateOperationsInput | string
+    specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
     specializations?: SpecializationUncheckedUpdateManyWithoutDoctorNestedInput
   }
 
@@ -6778,7 +7001,6 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutAppointmentsAsAuthorInput = {
-    id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     email?: StringFieldUpdateOperationsInput | string
@@ -6793,7 +7015,6 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateWithoutAppointmentsAsAuthorInput = {
-    id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     email?: StringFieldUpdateOperationsInput | string
@@ -6813,7 +7034,6 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutAppointmentsAsPatientInput = {
-    id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     email?: StringFieldUpdateOperationsInput | string
@@ -6828,7 +7048,6 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateWithoutAppointmentsAsPatientInput = {
-    id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     email?: StringFieldUpdateOperationsInput | string
@@ -6881,12 +7100,14 @@ export namespace Prisma {
     id?: string
     name: string
     description: string
+    doctorIds?: SpecializationCreatedoctorIdsInput | Enumerable<string>
   }
 
   export type SpecializationUncheckedCreateWithoutDoctorInput = {
     id?: string
     name: string
     description: string
+    doctorIds?: SpecializationCreatedoctorIdsInput | Enumerable<string>
   }
 
   export type SpecializationCreateOrConnectWithoutDoctorInput = {
@@ -6900,7 +7121,6 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutDoctorInput = {
-    id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     email?: StringFieldUpdateOperationsInput | string
@@ -6915,7 +7135,6 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateWithoutDoctorInput = {
-    id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     email?: StringFieldUpdateOperationsInput | string
@@ -6952,6 +7171,7 @@ export namespace Prisma {
     id?: StringFilter | string
     name?: StringFilter | string
     description?: StringFilter | string
+    doctorIds?: StringNullableListFilter
   }
 
   export type DoctorCreateWithoutSpecializationsInput = {
@@ -6960,8 +7180,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     calLink?: string
     calUserId?: number
-    phoneNumber: string
     user: UserCreateNestedOneWithoutDoctorInput
+    specializationsIds?: DoctorCreatespecializationsIdsInput | Enumerable<string>
   }
 
   export type DoctorUncheckedCreateWithoutSpecializationsInput = {
@@ -6970,8 +7190,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     calLink?: string
     calUserId?: number
-    phoneNumber: string
     userId: string
+    specializationsIds?: DoctorCreatespecializationsIdsInput | Enumerable<string>
   }
 
   export type DoctorCreateOrConnectWithoutSpecializationsInput = {
@@ -7004,8 +7224,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter | Date | string
     calLink?: StringFilter | string
     calUserId?: IntFilter | number
-    phoneNumber?: StringFilter | string
     userId?: StringFilter | string
+    specializationsIds?: StringNullableListFilter
   }
 
   export type AppointmentCreateManyAuthorInput = {
@@ -7029,7 +7249,6 @@ export namespace Prisma {
   }
 
   export type AppointmentUpdateWithoutAuthorInput = {
-    id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7039,7 +7258,6 @@ export namespace Prisma {
   }
 
   export type AppointmentUncheckedUpdateWithoutAuthorInput = {
-    id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7049,7 +7267,6 @@ export namespace Prisma {
   }
 
   export type AppointmentUncheckedUpdateManyWithoutAppointmentsAsAuthorInput = {
-    id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7059,7 +7276,6 @@ export namespace Prisma {
   }
 
   export type AppointmentUpdateWithoutPatientInput = {
-    id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7069,7 +7285,6 @@ export namespace Prisma {
   }
 
   export type AppointmentUncheckedUpdateWithoutPatientInput = {
-    id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7079,7 +7294,6 @@ export namespace Prisma {
   }
 
   export type AppointmentUncheckedUpdateManyWithoutAppointmentsAsPatientInput = {
-    id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7089,51 +7303,48 @@ export namespace Prisma {
   }
 
   export type SpecializationUpdateWithoutDoctorInput = {
-    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    doctorIds?: SpecializationUpdatedoctorIdsInput | Enumerable<string>
   }
 
   export type SpecializationUncheckedUpdateWithoutDoctorInput = {
-    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    doctorIds?: SpecializationUpdatedoctorIdsInput | Enumerable<string>
   }
 
   export type SpecializationUncheckedUpdateManyWithoutSpecializationsInput = {
-    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    doctorIds?: SpecializationUpdatedoctorIdsInput | Enumerable<string>
   }
 
   export type DoctorUpdateWithoutSpecializationsInput = {
-    id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     calLink?: StringFieldUpdateOperationsInput | string
     calUserId?: IntFieldUpdateOperationsInput | number
-    phoneNumber?: StringFieldUpdateOperationsInput | string
     user?: UserUpdateOneRequiredWithoutDoctorNestedInput
+    specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
   }
 
   export type DoctorUncheckedUpdateWithoutSpecializationsInput = {
-    id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     calLink?: StringFieldUpdateOperationsInput | string
     calUserId?: IntFieldUpdateOperationsInput | number
-    phoneNumber?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
   }
 
   export type DoctorUncheckedUpdateManyWithoutDoctorInput = {
-    id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     calLink?: StringFieldUpdateOperationsInput | string
     calUserId?: IntFieldUpdateOperationsInput | number
-    phoneNumber?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
   }
 
 

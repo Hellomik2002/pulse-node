@@ -11,6 +11,7 @@ import { AppModule } from './app.module';
 import graphqlUploadExpress from './utils/graphql_upload/graphqlUploadExpress';
 import { from } from 'rxjs';
 import { PrismaClient } from '@prisma/client';
+import { mainPrismaClient } from './prisma/main_client';
 
 export const prismaClient = new PrismaClient();
 
@@ -27,7 +28,7 @@ async function bootstrap() {
 	});
 
 	app.use('/graphql', graphqlUploadExpress({}));
-
+	// await mainPrismaClient.$connect();
 	await app.listen(3001);
 }
 bootstrap();

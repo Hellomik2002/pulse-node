@@ -5,7 +5,7 @@ import { PrismaClient } from '@calcom/prisma_pulse';
 export const mainPrismaClient = new PrismaClient({
 	datasources: {
 		db: {
-			url: 'postgresql://postgres:z8zb8jKadEACdzARhmsP@containers-us-west-165.railway.app:6983/railway',
+			url: 'mongodb+srv://admin:gpPHn4BEjdHyG91w@cluster0.bo29m4x.mongodb.net/pulse_new',
 		},
 	},
 });

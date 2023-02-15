@@ -37,9 +37,9 @@ Table Doctor {
   updatedAt DateTime [not null]
   calLink String [not null, default: '']
   calUserId Int [not null, default: 0]
-  phoneNumber String [not null]
   user User [not null]
   userId String [unique, not null]
+  specializationsIds String[] [not null]
   specializations Specialization [not null]
 }
 
@@ -47,12 +47,8 @@ Table Specialization {
   id String [pk]
   name String [not null]
   description String [not null]
+  doctorIds String[] [not null]
   Doctor Doctor [not null]
-}
-
-Table DoctorToSpecialization {
-  specializationsId String [ref: > Specialization.id]
-  doctorId String [ref: > Doctor.id]
 }
 
 Enum Role {
@@ -68,3 +64,7 @@ Ref: Appointment.authorId > User.id
 Ref: Appointment.patientId > User.id
 
 Ref: Doctor.userId - User.id
+
+Ref: Doctor.specializationsIds > Specialization.id
+
+Ref: Specialization.doctorIds > Doctor.id
