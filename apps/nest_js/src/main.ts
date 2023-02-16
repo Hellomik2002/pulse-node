@@ -10,10 +10,9 @@ import DurationPlugin from 'dayjs/plugin/duration';
 import { AppModule } from './app.module';
 import graphqlUploadExpress from './utils/graphql_upload/graphqlUploadExpress';
 import { from } from 'rxjs';
-import { PrismaClient } from '@prisma/client';
 import { mainPrismaClient } from './prisma/main_client';
 
-export const prismaClient = new PrismaClient();
+export const prismaClient = mainPrismaClient;
 
 async function bootstrap() {
 	dayjs.extend(UTCPlugin);

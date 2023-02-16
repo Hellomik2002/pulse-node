@@ -1,17 +1,7 @@
-// MONGO
-// datasource db {
-//   provider = "mongodb"
-//   url      = "mongodb+srv://admin:gpPHn4BEjdHyG91w@cluster0.bo29m4x.mongodb.net/pulse_dev"
-// }
-
-// POSTGRE
 datasource db {
   provider = "mongodb"
   url      = "mongodb+srv://admin:gpPHn4BEjdHyG91w@cluster0.bo29m4x.mongodb.net/pulse_new"
 }
-
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
   provider = "prisma-client-js"
