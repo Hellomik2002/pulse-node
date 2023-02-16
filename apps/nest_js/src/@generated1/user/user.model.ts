@@ -25,7 +25,7 @@ import { VerifiedNumber } from '../verified-number/verified-number.model';
 import { Host } from '../host/host.model';
 import { UserCount } from './user-count.output';
 
-@ObjectType()
+@ObjectType('CalUser')
 export class User {
 
     @Field(() => ID, {nullable:false})
