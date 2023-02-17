@@ -1,10 +1,10 @@
 import { CACHE_MANAGER, Inject } from '@nestjs/common';
 import {
-	Resolver,
-	Mutation,
-	Args,
-	Parent,
-	ResolveField,
+  Resolver,
+  Mutation,
+  Args,
+  Parent,
+  ResolveField,
 } from '@nestjs/graphql';
 import { ApolloError } from 'apollo-server-core';
 import { Cache } from 'cache-manager';
@@ -15,9 +15,9 @@ import { User } from 'src/@generated/user/user.model';
 import { prismaClient } from 'src/main';
 import { calPrismaClient } from 'src/prisma/client_cal';
 import {
-	LoginInput,
-	PhoneCodeInput,
-	PhoneLoginInput,
+  LoginInput,
+  PhoneCodeInput,
+  PhoneLoginInput,
 } from '../dto/login.input';
 import { RefreshTokenInput } from '../dto/refresh-token.input';
 import { SignupInput } from '../dto/signup.input';
@@ -26,6 +26,7 @@ import { Token } from '../models/token.model';
 import { AuthService } from '../services/auth.service';
 import { makeNumber, SMSService } from '../services/sms.service';
 import { mainPrismaClient } from 'src/prisma/main_client';
+
 
 @Resolver(() => Auth)
 export class AuthResolver {
@@ -92,15 +93,15 @@ export class AuthResolver {
 		};
 	}
 
-	@Mutation(() => Token)
+	@Mutation(() => Auth)
 	async login(@Args('data') { uniqueName, password }: LoginInput) {
-		const { accessToken, refreshToken } = await this.auth.login(
+		const { tokens, user } = await this.auth.login(
 			uniqueName.toLowerCase(),
 			password,
 		);
 		return {
-			accessToken,
-			refreshToken,
+			...tokens,
+			user,
 		};
 	}
 

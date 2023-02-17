@@ -54,7 +54,10 @@ export class AuthService {
 		// }
 	}
 
-	async login(uniqueName: string, password: string): Promise<Token> {
+	async login(uniqueName: string, password: string): Promise<{
+    tokens: Token;
+    user: User;
+  }> {
 		const user = await mainPrismaClient.user.findUnique({
 			where: { uniqueName },
 		});
@@ -74,9 +77,14 @@ export class AuthService {
 			throw new BadRequestException('Invalid password');
 		}
 
-		return this.generateTokens({
+		const tokens=  this.generateTokens({
 			userId: user.id,
 		});
+
+    return {
+      tokens,
+      user
+    }
 	}
 
 	validateUser(userId: string): Promise<User> {
