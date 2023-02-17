@@ -18,7 +18,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const data = req.body;
+  console.log("data", data, data.username);
   const { email, password } = data;
+  console.log("username", data.username);
   const username = slugify(data.username);
   const userEmail = email.toLowerCase();
 
@@ -96,5 +98,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   }
 
-  res.status(201).json({ message: "Created user" });
+  res.status(201).json({ message: "Created user", user });
 }
