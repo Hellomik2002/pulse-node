@@ -115,7 +115,8 @@ export class AuthResolver {
 		this.smsService.sendCode(val, phoneNumber);
 		return true;
 	}
-
+	
+	@Mutation(() => Auth)
 	async loginVerify(@Args('data') { phoneNumber, code }: PhoneCodeInput) {
 		const keyCache = phoneNumber;
 

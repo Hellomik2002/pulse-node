@@ -19,10 +19,7 @@ import { UserEntity } from 'src/modules/auth/tools/user.decorator';
 @Resolver(() => User)
 @UseGuards(GqlAuthGuard)
 export class UsersResolver {
-	constructor(
-		private usersService: UsersService,
-		private prisma: PrismaService,
-	) {}
+	constructor(private usersService: UsersService) {}
 
 	@Query(() => User)
 	async me(@UserEntity() user: User): Promise<User> {

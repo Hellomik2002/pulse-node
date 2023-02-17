@@ -30,6 +30,9 @@ export class AttendeeScalarWhereInput {
     timeZone?: StringFilter;
 
     @Field(() => StringNullableFilter, {nullable:true})
+    pulseUserId?: StringNullableFilter;
+
+    @Field(() => StringNullableFilter, {nullable:true})
     locale?: StringNullableFilter;
 
     @Field(() => IntNullableFilter, {nullable:true})

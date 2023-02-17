@@ -10,6 +10,7 @@ import { AuthService } from './services/auth.service';
 import { PasswordService } from './services/password.service';
 import { AuthResolver } from './resolvers/auth.resolver';
 import { SMSService } from './services/sms.service';
+import { UserResolver } from './resolvers/user.resolver';
 
 @Module({
 	imports: [
@@ -35,6 +36,7 @@ import { SMSService } from './services/sms.service';
 		GqlAuthGuard,
 		PasswordService,
 		SMSService,
+		UserResolver,
 	],
 	exports: [PasswordService],
 })

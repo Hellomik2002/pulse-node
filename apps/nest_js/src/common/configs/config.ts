@@ -1,6 +1,7 @@
 import type { Config } from './config.interface';
 
 const config: Config = {
+	
 	nest: {
 		port: Number(process.env.PORT) | 3001,
 	},
