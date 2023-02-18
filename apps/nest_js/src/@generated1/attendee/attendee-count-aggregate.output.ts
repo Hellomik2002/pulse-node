@@ -18,6 +18,9 @@ export class AttendeeCountAggregate {
     timeZone!: number;
 
     @Field(() => Int, {nullable:false})
+    pulseUserId!: number;
+
+    @Field(() => Int, {nullable:false})
     locale!: number;
 
     @Field(() => Int, {nullable:false})

@@ -19,6 +19,9 @@ export class Attendee {
     @Field(() => String, {nullable:false})
     timeZone!: string;
 
+    @Field(() => String, {nullable:true})
+    pulseUserId!: string | null;
+
     @Field(() => String, {nullable:true,defaultValue:'en'})
     locale!: string | null;
 

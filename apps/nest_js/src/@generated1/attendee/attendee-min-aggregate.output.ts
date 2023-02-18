@@ -18,6 +18,9 @@ export class AttendeeMinAggregate {
     timeZone?: string;
 
     @Field(() => String, {nullable:true})
+    pulseUserId?: string;
+
+    @Field(() => String, {nullable:true})
     locale?: string;
 
     @Field(() => Int, {nullable:true})

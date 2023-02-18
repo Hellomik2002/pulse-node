@@ -17,6 +17,9 @@ export class AttendeeCountAggregateInput {
     timeZone?: true;
 
     @Field(() => Boolean, {nullable:true})
+    pulseUserId?: true;
+
+    @Field(() => Boolean, {nullable:true})
     locale?: true;
 
     @Field(() => Boolean, {nullable:true})

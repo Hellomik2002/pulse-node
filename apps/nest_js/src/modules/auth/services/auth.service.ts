@@ -109,7 +109,7 @@ export class AuthService {
 		const securityConfig =
 			this.configService.get<SecurityConfig>('security');
 		return this.jwtService.sign(payload, {
-			secret: this.configService.get('JWT_REFRESH_SECRET'),
+			secret: this.configService.get('JWT_ACCESS_SECRET'),
 			expiresIn: securityConfig.expiresIn,
 		});
 	}

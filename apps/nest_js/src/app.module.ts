@@ -15,6 +15,7 @@ import config from './common/configs/config';
 import { DoctorModule } from './modules/doctors/doctor.module';
 import { SpecializatonModule } from './modules/specialization/specialization.module';
 import { BookingResolver } from './booking/booking.resolver';
+import { BookingModule } from './modules/booking/booking.module';
 
 @Module({
 	imports: [
@@ -43,6 +44,7 @@ import { BookingResolver } from './booking/booking.resolver';
 		AppointmentsModule,
 		DoctorModule,
 		SpecializatonModule,
+		BookingModule,
 	],
 	controllers: [AppController],
 	providers: [AppService, BookingResolver],
