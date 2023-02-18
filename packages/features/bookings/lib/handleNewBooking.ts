@@ -1,11 +1,4 @@
-import {
-  BookingStatus,
-  Credential,
-  EventTypeCustomInput,
-  Prisma,
-  SchedulingType,
-  WebhookTriggerEvents,
-} from "@prisma/client";
+import { BookingStatus, Credential, EventTypeCustomInput, Prisma, SchedulingType, WebhookTriggerEvents } from "@prisma/client";
 import async from "async";
 import { isValidPhoneNumber } from "libphonenumber-js";
 import { cloneDeep } from "lodash";
@@ -13,6 +6,8 @@ import type { NextApiRequest } from "next";
 import short from "short-uuid";
 import { v5 as uuidv5 } from "uuid";
 import z from "zod";
+
+
 
 import { metadata as GoogleMeetMetadata } from "@calcom/app-store/googlevideo/_metadata";
 import { getLocationValueForDB, LocationObject } from "@calcom/app-store/locations";
@@ -25,13 +20,7 @@ import EventManager from "@calcom/core/EventManager";
 import { getEventName } from "@calcom/core/event";
 import { getUserAvailability } from "@calcom/core/getUserAvailability";
 import dayjs, { ConfigType } from "@calcom/dayjs";
-import {
-  sendAttendeeRequestEmail,
-  sendOrganizerRequestEmail,
-  sendRescheduledEmails,
-  sendScheduledEmails,
-  sendScheduledSeatsEmails,
-} from "@calcom/emails";
+import { sendAttendeeRequestEmail, sendOrganizerRequestEmail, sendRescheduledEmails, sendScheduledEmails, sendScheduledSeatsEmails } from "@calcom/emails";
 import { scheduleWorkflowReminders } from "@calcom/features/ee/workflows/lib/reminders/reminderScheduler";
 import getWebhooks from "@calcom/features/webhooks/lib/getWebhooks";
 import { isPrismaObjOrUndefined, parseRecurringEvent } from "@calcom/lib";
@@ -45,17 +34,16 @@ import { checkBookingLimits, getLuckyUser } from "@calcom/lib/server";
 import { getTranslation } from "@calcom/lib/server/i18n";
 import { updateWebUser as syncServicesUpdateWebUser } from "@calcom/lib/sync/SyncServiceManager";
 import prisma, { userSelect } from "@calcom/prisma";
-import {
-  customInputSchema,
-  EventTypeMetaDataSchema,
-  extendedBookingCreateBody,
-} from "@calcom/prisma/zod-utils";
+import { customInputSchema, EventTypeMetaDataSchema, extendedBookingCreateBody } from "@calcom/prisma/zod-utils";
 import type { BufferedBusyTime } from "@calcom/types/BufferedBusyTime";
 import type { AdditionalInformation, AppsStatus, CalendarEvent } from "@calcom/types/Calendar";
 import type { EventResult, PartialReference } from "@calcom/types/EventManager";
 import { WorkingHours } from "@calcom/types/schedule";
 
+
+
 import sendPayload, { EventTypeInfo } from "../../webhooks/lib/sendPayload";
+
 
 const translator = short();
 const log = logger.getChildLogger({ prefix: ["[api] book:user"] });
@@ -732,6 +720,7 @@ async function handler(req: NextApiRequest & { userId?: number | undefined }) {
       location: evt.location,
       eventType: eventTypeRel,
       smsReminderNumber: reqBody.smsReminderNumber,
+      metadata: { ...reqBody.metadata },
       attendees: {
         createMany: {
           data: evt.attendees.map((attendee) => {

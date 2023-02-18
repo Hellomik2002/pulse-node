@@ -11,7 +11,8 @@ export function getLocaleFromHeaders(req: IncomingMessage): string {
   if (req.headers["accept-language"]) {
     preferredLocale = parser.pick(i18n.locales, req.headers["accept-language"]) as Maybe<string>;
   }
-  return preferredLocale ?? i18n.defaultLocale;
+  // return preferredLocale ?? i18n.defaultLocale;
+  return "kg"
 }
 
 export const getDirFromLang = (locale: string | undefined) =>

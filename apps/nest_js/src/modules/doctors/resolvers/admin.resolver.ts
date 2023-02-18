@@ -38,12 +38,12 @@ export class AdminDoctor {
       );
       const calUser = res.data.user;
 
-      // mainPrismaClient.doctor.update({
-      //   where: { id: newDoctor.id },
-      //   data: {
-      //     calcomAccountId: calUser.id,
-      //   }});
-      console.log(calUser)
+      mainPrismaClient.doctor.update({
+        where: { id: newDoctor.id },
+        data: {
+          calUserId: calUser.id,
+        }
+      });
     } catch (e) {
       console.log(e);
     }

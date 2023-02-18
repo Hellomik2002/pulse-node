@@ -14,6 +14,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import config from './common/configs/config';
 import { DoctorModule } from './modules/doctors/doctor.module';
 import { SpecializatonModule } from './modules/specialization/specialization.module';
+import { BookingResolver } from './booking/booking.resolver';
 
 @Module({
 	imports: [
@@ -44,6 +45,6 @@ import { SpecializatonModule } from './modules/specialization/specialization.mod
 		SpecializatonModule,
 	],
 	controllers: [AppController],
-	providers: [AppService],
+	providers: [AppService, BookingResolver],
 })
 export class AppModule {}

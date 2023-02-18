@@ -1,0 +1,13 @@
+{
+    "connected_vital_app": "Байланышкан",
+    "vital_app_sleep_automation": "Уйку режимин өзгөртүүнү автоматташтыруу",
+    "vital_app_automation_description": "Уйкудагы көрсөткүчтөрүңүздүн негизинде кайра графикти иштетүү үчүн ар кандай параметрлерди тандай аласыз.",
+    "vital_app_parameter": "Параметр",
+    "vital_app_trigger": "Төмөндө же ага барабар болгон триггер",
+    "vital_app_save_button": "Конфигурацияны сактоо",
+    "vital_app_total_label": "Бардыгы (бардыгы = rem + жеңил уйку + терең уйку)",
+    "vital_app_duration_label": "Узактыгы (узактыгы = уктоо маалынын аягы - уктоо маалынын башталышы)",
+    "vital_app_hours": "saatlar",
+    "vital_app_save_success": "Vital конфигурацияларыңыз ийгиликтүү сакталды",
+    "vital_app_save_error": "Vital конфигурацияңызды сактоодо ката кетти"
+}
