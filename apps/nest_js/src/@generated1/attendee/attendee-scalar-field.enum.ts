@@ -5,7 +5,6 @@ export enum AttendeeScalarFieldEnum {
     email = "email",
     name = "name",
     timeZone = "timeZone",
-    pulseUserId = "pulseUserId",
     locale = "locale",
     bookingId = "bookingId"
 }

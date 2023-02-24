@@ -4,7 +4,7 @@ import { randomUUID } from 'crypto';
 import { calPrismaClient } from 'src/prisma/client_cal';
 import { GqlAuthGuard } from 'src/modules/auth/tools/gql-auth.guard';
 import { UserEntity } from 'src/modules/auth/tools/user.decorator';
-import { User } from '@calcom/prisma_pulse';
+import { PulseUser } from '@calcom/prisma_pulse';
 import { mainPrismaClient } from 'src/prisma/main_client';
 
 @Resolver()
@@ -15,10 +15,10 @@ export class CreateBookingResolver {
 		@Args('calUserId') calUserId: number,
 		@Args('eventTypeId') eventTypeId: number,
 		@Args('startTime') startTime1: Date,
-		@UserEntity() { id: userId }: User,
+		@UserEntity() { id: userId }: PulseUser,
 	) {
 		const [user, eventType] = await Promise.all([
-			mainPrismaClient.user.findUnique({
+			mainPrismaClient.pulseUser.findUnique({
 				where: {
 					id: userId,
 				},
@@ -85,7 +85,7 @@ export class CreateBookingResolver {
 		@Args('userId') userId: string,
 	) {
 		const [user, eventType] = await Promise.all([
-			mainPrismaClient.user.findUnique({
+			mainPrismaClient.pulseUser.findUnique({
 				where: {
 					id: userId,
 				},

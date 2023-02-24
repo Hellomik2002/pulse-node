@@ -16,6 +16,7 @@ import { DoctorModule } from './modules/doctors/doctor.module';
 import { SpecializatonModule } from './modules/specialization/specialization.module';
 import { BookingResolver } from './booking/booking.resolver';
 import { BookingModule } from './modules/booking/booking.module';
+import { FilemanagerModule } from './filemanager/filemanager.module';
 
 @Module({
 	imports: [
@@ -45,6 +46,7 @@ import { BookingModule } from './modules/booking/booking.module';
 		DoctorModule,
 		SpecializatonModule,
 		BookingModule,
+		FilemanagerModule,
 	],
 	controllers: [AppController],
 	providers: [AppService, BookingResolver],

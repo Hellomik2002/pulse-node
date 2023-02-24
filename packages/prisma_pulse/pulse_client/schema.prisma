@@ -19,7 +19,7 @@ generator nestgraphql {
   output   = "../../apps/nest_js/src/@generated"
 }
 
-model User {
+model PulseUser {
   id                    String        @id @default(auto()) @map("_id") @db.ObjectId
   createdAt             DateTime      @default(now())
   updatedAt             DateTime      @updatedAt
@@ -33,6 +33,7 @@ model User {
   appointmentsAsAuthor  Appointment[] @relation("Author")
   appointmentsAsPatient Appointment[] @relation("Patient")
   doctor                Doctor?
+	@@map("User")
 }
 
 model Appointment {
@@ -42,9 +43,9 @@ model Appointment {
   date      DateTime
   title     String
   content   String?
-  author    User     @relation("Author", fields: [authorId], references: [id])
+  author    PulseUser     @relation("Author", fields: [authorId], references: [id])
   authorId  String   @db.ObjectId
-  patient   User     @relation("Patient", fields: [patientId], references: [id])
+  patient   PulseUser     @relation("Patient", fields: [patientId], references: [id])
   patientId String   @db.ObjectId
 }
 
@@ -62,7 +63,7 @@ model Doctor {
   updatedAt          DateTime         @updatedAt
   calLink            String           @default("")
   calUserId          Int              @default(0)
-  user               User             @relation(fields: [userId], references: [id])
+  user               PulseUser             @relation(fields: [userId], references: [id])
   userId             String           @unique @db.ObjectId
   specializationsIds String[]         @db.ObjectId
   specializations    Specialization[] @relation(fields: [specializationsIds], references: [id])

@@ -110,6 +110,19 @@ exports.Prisma.DoctorScalarFieldEnum = makeEnum({
   specializationsIds: 'specializationsIds'
 });
 
+exports.Prisma.PulseUserScalarFieldEnum = makeEnum({
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  email: 'email',
+  password: 'password',
+  fullName: 'fullName',
+  uniqueName: 'uniqueName',
+  phoneNumber: 'phoneNumber',
+  address: 'address',
+  role: 'role'
+});
+
 exports.Prisma.QueryMode = makeEnum({
   default: 'default',
   insensitive: 'insensitive'
@@ -126,19 +139,6 @@ exports.Prisma.SpecializationScalarFieldEnum = makeEnum({
   description: 'description',
   doctorIds: 'doctorIds'
 });
-
-exports.Prisma.UserScalarFieldEnum = makeEnum({
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  email: 'email',
-  password: 'password',
-  fullName: 'fullName',
-  uniqueName: 'uniqueName',
-  phoneNumber: 'phoneNumber',
-  address: 'address',
-  role: 'role'
-});
 exports.Role = makeEnum({
   ADMIN: 'ADMIN',
   USER: 'USER',
@@ -148,7 +148,7 @@ exports.Role = makeEnum({
 });
 
 exports.Prisma.ModelName = makeEnum({
-  User: 'User',
+  PulseUser: 'PulseUser',
   Appointment: 'Appointment',
   Doctor: 'Doctor',
   Specialization: 'Specialization'

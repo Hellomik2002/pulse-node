@@ -23,7 +23,7 @@ export class AdminDoctor {
       },
     });
     // find user by user id from doctor;
-    const user = await mainPrismaClient.user.findUnique({
+    const user = await mainPrismaClient.pulseUser.findUnique({
       where: { id: newDoctor.userId },
     });
 

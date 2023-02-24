@@ -8,8 +8,8 @@ import {
 } from '@nestjs/graphql';
 import { ApolloError } from 'apollo-server-core';
 import { Cache } from 'cache-manager';
-import { UserCreateInput } from 'src/@generated/user/user-create.input';
-import { User } from 'src/@generated/user/user.model';
+import { PulseUserCreateInput } from 'src/@generated/pulse-user/pulse-user-create.input';
+import { PulseUser } from 'src/@generated/pulse-user/pulse-user.model';
 
 import { mainPrismaClient } from 'src/prisma/main_client';
 import { LoginInput } from '../dto/login.input';
@@ -30,11 +30,11 @@ export class AuthResolver {
 	) {}
 
 	@Mutation(() => Boolean)
-	async signup(@Args('data') data: UserCreateInput): Promise<boolean> {
+	async signup(@Args('data') data: PulseUserCreateInput): Promise<boolean> {
 		data.email = data.email.toLowerCase();
 		// 300 * 1000 = 5 min
 		const CACHE_TTL = 300 * 1000;
-		const user = await mainPrismaClient.user.findFirst({
+		const user = await mainPrismaClient.pulseUser.findFirst({
 			where: {
 				email: data.email,
 				phoneNumber: data.phoneNumber,
@@ -57,9 +57,9 @@ export class AuthResolver {
 
 	@Mutation(() => Auth)
 	async signUpDoctor(
-		@Args('data') data: UserCreateInput,
-	): Promise<Token & { user: User }> {
-		const existingUser = await mainPrismaClient.user.findFirst({
+		@Args('data') data: PulseUserCreateInput,
+	): Promise<Token & { user: PulseUser }> {
+		const existingUser = await mainPrismaClient.pulseUser.findFirst({
 			where: {
 				email: data.email,
 				phoneNumber: data.phoneNumber,
@@ -67,8 +67,9 @@ export class AuthResolver {
 			},
 		});
 		if (existingUser != null) throw new ApolloError('User exist');
-		const { accessToken, refreshToken  } =
-			await this.auth.createDoctor(data);
+		const { accessToken, refreshToken } = await this.auth.createDoctor(
+			data,
+		);
 
 		return {
 			accessToken,
@@ -79,9 +80,9 @@ export class AuthResolver {
 
 	@Mutation(() => Auth)
 	async verifyCode(
-		@Args('data') data: UserCreateInput,
+		@Args('data') data: PulseUserCreateInput,
 		@Args('code') code: string,
-	): Promise<Token & { user: User }> {
+	): Promise<Token & { user: PulseUser }> {
 		data.email = data.email.toLowerCase();
 		const val = await this.cacheManager.get(
 			data.email + data.fullName + data.uniqueName + data.phoneNumber,
@@ -117,7 +118,7 @@ export class AuthResolver {
 		return this.auth.refreshToken(token);
 	}
 
-	@ResolveField('user', () => User)
+	@ResolveField('user', () => PulseUser)
 	async user(@Parent() auth: Auth) {
 		return await this.auth.getUserFromToken(auth.accessToken);
 	}
