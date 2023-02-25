@@ -81,7 +81,7 @@ const regularDirname = hasDirname && fs.existsSync(path.join(__dirname, 'schema.
 // if the client has been bundled, we need to look for the folders
 const foundDirname = !regularDirname && findSync(process.cwd(), [
     "pulse_client",
-    
+
 ], ['d'], ['d'], 1)[0]
 
 const dirname = regularDirname || foundDirname || __dirname
@@ -114,6 +114,19 @@ exports.Prisma.DoctorScalarFieldEnum = makeEnum({
   specializationsIds: 'specializationsIds'
 });
 
+exports.Prisma.PulseUserScalarFieldEnum = makeEnum({
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  email: 'email',
+  password: 'password',
+  fullName: 'fullName',
+  uniqueName: 'uniqueName',
+  phoneNumber: 'phoneNumber',
+  address: 'address',
+  role: 'role'
+});
+
 exports.Prisma.QueryMode = makeEnum({
   default: 'default',
   insensitive: 'insensitive'
@@ -130,19 +143,6 @@ exports.Prisma.SpecializationScalarFieldEnum = makeEnum({
   description: 'description',
   doctorIds: 'doctorIds'
 });
-
-exports.Prisma.UserScalarFieldEnum = makeEnum({
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  email: 'email',
-  password: 'password',
-  fullName: 'fullName',
-  uniqueName: 'uniqueName',
-  phoneNumber: 'phoneNumber',
-  address: 'address',
-  role: 'role'
-});
 exports.Role = makeEnum({
   ADMIN: 'ADMIN',
   USER: 'USER',
@@ -152,7 +152,7 @@ exports.Role = makeEnum({
 });
 
 exports.Prisma.ModelName = makeEnum({
-  User: 'User',
+  PulseUser: 'PulseUser',
   Appointment: 'Appointment',
   Doctor: 'Doctor',
   Specialization: 'Specialization'

@@ -10,7 +10,6 @@ import { ApolloError } from 'apollo-server-core';
 import { Cache } from 'cache-manager';
 import { randomUUID } from 'crypto';
 
-import { User } from 'src/@generated/user/user.model';
 
 import { prismaClient } from 'src/main';
 import { calPrismaClient } from 'src/prisma/client_cal';
@@ -26,6 +25,7 @@ import { Token } from '../models/token.model';
 import { AuthService } from '../services/auth.service';
 import { makeNumber, SMSService } from '../services/sms.service';
 import { mainPrismaClient } from 'src/prisma/main_client';
+import { PulseUser } from 'src/@generated/pulse-user/pulse-user.model';
 
 
 @Resolver(() => Auth)
@@ -45,9 +45,9 @@ export class AuthResolver {
 		data.phoneNumber = data.phoneNumber.trim();
 		data.uniqueName = data.uniqueName.trim();
 
-		let user: User | null = null;
+		let user: PulseUser | null = null;
 		try {
-			user = await mainPrismaClient.user.findFirstOrThrow({
+			user = await mainPrismaClient.pulseUser.findFirstOrThrow({
 				where: {
 					OR: [
 						{ email: data.email },
@@ -115,7 +115,7 @@ export class AuthResolver {
 		this.smsService.sendCode(val, phoneNumber);
 		return true;
 	}
-	
+
 	@Mutation(() => Auth)
 	async loginVerify(@Args('data') { phoneNumber, code }: PhoneCodeInput) {
 		const keyCache = phoneNumber;
@@ -138,7 +138,7 @@ export class AuthResolver {
 		return this.auth.refreshToken(token);
 	}
 
-	@ResolveField('user', () => User)
+	@ResolveField('user', () => PulseUser)
 	async user(@Parent() auth: Auth) {
 		return await this.auth.getUserFromToken(auth.accessToken);
 	}

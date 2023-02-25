@@ -1,5 +1,5 @@
 import { PrismaService } from 'nestjs-prisma';
-import { Prisma, User } from '@calcom/prisma_pulse/pulse_client';
+import { Prisma, PulseUser,  } from '@calcom/prisma_pulse/pulse_client';
 import {
 	Injectable,
 	NotFoundException,
@@ -30,7 +30,7 @@ export class AuthService {
 		);
 
 		// try {
-		const user = await mainPrismaClient.user.create({
+		const user = await mainPrismaClient.pulseUser.create({
 			data: {
 				...payload,
 				password: hashedPassword,
@@ -54,11 +54,14 @@ export class AuthService {
 		// }
 	}
 
-	async login(uniqueName: string, password: string): Promise<{
-    tokens: Token;
-    user: User;
-  }> {
-		const user = await mainPrismaClient.user.findUnique({
+	async login(
+		uniqueName: string,
+		password: string,
+	): Promise<{
+		tokens: Token;
+		user: PulseUser;
+	}> {
+		const user = await mainPrismaClient.pulseUser.findUnique({
 			where: { uniqueName },
 		});
 
@@ -77,25 +80,27 @@ export class AuthService {
 			throw new BadRequestException('Invalid password');
 		}
 
-		const tokens=  this.generateTokens({
+		const tokens = this.generateTokens({
 			userId: user.id,
 		});
 
-    return {
-      tokens,
-      user
-    }
+		return {
+			tokens,
+			user,
+		};
 	}
 
-	validateUser(userId: string): Promise<User> {
-		return mainPrismaClient.user.findUnique({ where: { id: userId } });
+	validateUser(userId: string): Promise<PulseUser> {
+		return mainPrismaClient.pulseUser.findUnique({ where: { id: userId } });
 	}
-	getUserFromPhoneNumber(phoneNumber: string): Promise<User> {
-		return mainPrismaClient.user.findUnique({ where: { phoneNumber } });
+	getUserFromPhoneNumber(phoneNumber: string): Promise<PulseUser> {
+		return mainPrismaClient.pulseUser.findUnique({
+			where: { phoneNumber },
+		});
 	}
-	getUserFromToken(token: string): Promise<User> {
+	getUserFromToken(token: string): Promise<PulseUser> {
 		const id = this.jwtService.decode(token)['userId'];
-		return mainPrismaClient.user.findUnique({ where: { id } });
+		return mainPrismaClient.pulseUser.findUnique({ where: { id } });
 	}
 
 	generateTokens(payload: { userId: string }): Token {

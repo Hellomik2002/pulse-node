@@ -11,7 +11,7 @@ export class UsersService {
 	constructor(private passwordService: PasswordService) {}
 
 	updateUser(userId: string, newUserData: UpdateUserInput) {
-		return mainPrismaClient.user.update({
+		return mainPrismaClient.pulseUser.update({
 			data: newUserData,
 			where: {
 				id: userId,
@@ -37,7 +37,7 @@ export class UsersService {
 			changePassword.newPassword,
 		);
 
-		return mainPrismaClient.user.update({
+		return mainPrismaClient.pulseUser.update({
 			data: {
 				password: hashedPassword,
 			},

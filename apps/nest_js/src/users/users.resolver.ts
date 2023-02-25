@@ -10,35 +10,35 @@ import {
 import { UseGuards } from '@nestjs/common';
 
 import { UsersService } from './users.service';
-import { User } from 'src/@generated/user/user.model';
 import { UpdateUserInput } from './dto/update-user.input';
 import { ChangePasswordInput } from './dto/change-password.input';
 import { GqlAuthGuard } from 'src/modules/auth/tools/gql-auth.guard';
 import { UserEntity } from 'src/modules/auth/tools/user.decorator';
+import { PulseUser } from 'src/@generated/pulse-user/pulse-user.model';
 
-@Resolver(() => User)
+@Resolver(() => PulseUser)
 @UseGuards(GqlAuthGuard)
 export class UsersResolver {
 	constructor(private usersService: UsersService) {}
 
-	@Query(() => User)
-	async me(@UserEntity() user: User): Promise<User> {
+	@Query(() => PulseUser)
+	async me(@UserEntity() user: PulseUser): Promise<PulseUser> {
 		return user;
 	}
 
 	@UseGuards(GqlAuthGuard)
-	@Mutation(() => User)
+	@Mutation(() => PulseUser)
 	async updateUser(
-		@UserEntity() user: User,
+		@UserEntity() user: PulseUser,
 		@Args('data') newUserData: UpdateUserInput,
 	) {
 		return this.usersService.updateUser(user.id, newUserData);
 	}
 
 	@UseGuards(GqlAuthGuard)
-	@Mutation(() => User)
+	@Mutation(() => PulseUser)
 	async changePassword(
-		@UserEntity() user: User,
+		@UserEntity() user: PulseUser,
 		@Args('data') changePassword: ChangePasswordInput,
 	) {
 		return this.usersService.changePassword(

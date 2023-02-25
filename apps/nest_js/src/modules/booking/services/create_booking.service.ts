@@ -18,7 +18,7 @@ export class CreateBookingService {
 		userId: string;
 	}) {
 		const [user, eventType] = await Promise.all([
-			mainPrismaClient.user.findUnique({
+			mainPrismaClient.pulseUser.findUnique({
 				where: {
 					id: userId.toString(),
 				},

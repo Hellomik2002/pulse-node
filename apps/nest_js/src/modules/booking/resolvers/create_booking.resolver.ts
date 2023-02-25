@@ -4,10 +4,10 @@ import { randomUUID } from 'crypto';
 import { calPrismaClient } from 'src/prisma/client_cal';
 import { GqlAuthGuard } from 'src/modules/auth/tools/gql-auth.guard';
 import { UserEntity } from 'src/modules/auth/tools/user.decorator';
-import { User } from '@calcom/prisma_pulse';
 import { mainPrismaClient } from 'src/prisma/main_client';
 import { CreateBookingService } from 'src/modules/booking/services/create_booking.service';
 import { Booking } from 'src/@generated1/booking/booking.model';
+import { PulseUser } from '@calcom/prisma_pulse';
 
 @Resolver()
 export class CreateBookingResolver {
@@ -19,7 +19,7 @@ export class CreateBookingResolver {
 		@Args('calUserId') calUserId: number,
 		@Args('eventTypeId') eventTypeId: number,
 		@Args('startTime') startTime1: Date,
-		@UserEntity() { id: userId }: User,
+		@UserEntity() { id: userId }: PulseUser,
 	): Promise<Booking> {
 		return this.createBookingService.createBokoing({
 			calUserId: calUserId,

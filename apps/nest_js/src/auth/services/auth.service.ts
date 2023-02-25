@@ -12,13 +12,13 @@ import { JwtService } from '@nestjs/jwt';
 import { PasswordService } from './password.service';
 import { SecurityConfig } from 'src/common/configs/config.interface';
 import { Token } from '../models/token.model';
-import { UserCreateInput } from 'src/@generated/user/user-create.input';
 import { CalComAccountManagerService } from 'src/cal-com/cal-com-account-manager/cal-com-account-manager.service';
 import { CalComAccountSignUpDto } from 'src/cal-com/cal-com-account-manager/dto/createCalAccountDto';
 import { Prisma } from '@prisma/client';
-import { User } from '@calcom/prisma_pulse';
+import { PulseUserCreateInput } from 'src/@generated/pulse-user/pulse-user-create.input';
+import { PulseUser } from '@calcom/prisma_pulse';
 
-type AuthResponse = Token & { user: User };
+type AuthResponse = Token & { user: PulseUser };
 
 @Injectable()
 export class AuthService {
@@ -30,13 +30,13 @@ export class AuthService {
 		private readonly calcomAccountManagerService: CalComAccountManagerService,
 	) {}
 
-	async createUser(payload: UserCreateInput): Promise<AuthResponse> {
+	async createUser(payload: PulseUserCreateInput): Promise<AuthResponse> {
 		const hashedPassword = await this.passwordService.hashPassword(
 			payload.password,
 		);
 
 		try {
-			const user = await mainPrismaClient.user.create({
+			const user = await mainPrismaClient.pulseUser.create({
 				data: {
 					...payload,
 					password: hashedPassword,
@@ -62,13 +62,13 @@ export class AuthService {
 		}
 	}
 
-	async createDoctor(payload: UserCreateInput): Promise<AuthResponse> {
+	async createDoctor(payload: PulseUserCreateInput): Promise<AuthResponse> {
 		const hashedPassword = await this.passwordService.hashPassword(
 			payload.password,
 		);
 
 		try {
-			const user = await mainPrismaClient.user.create({
+			const user = await mainPrismaClient.pulseUser.create({
 				data: {
 					...payload,
 					password: hashedPassword,
@@ -110,7 +110,7 @@ export class AuthService {
 	}
 
 	async login(uniqueName: string, password: string): Promise<AuthResponse> {
-		const user = await mainPrismaClient.user.findUnique({
+		const user = await mainPrismaClient.pulseUser.findUnique({
 			where: { uniqueName },
 		});
 
@@ -137,13 +137,13 @@ export class AuthService {
 		};
 	}
 
-	validateUser(userId: string): Promise<User> {
-		return mainPrismaClient.user.findUnique({ where: { id: userId } });
+	validateUser(userId: string): Promise<PulseUser> {
+		return mainPrismaClient.pulseUser.findUnique({ where: { id: userId } });
 	}
 
-	getUserFromToken(token: string): Promise<User> {
+	getUserFromToken(token: string): Promise<PulseUser> {
 		const id = this.jwtService.decode(token)['userId'];
-		return mainPrismaClient.user.findUnique({ where: { id } });
+		return mainPrismaClient.pulseUser.findUnique({ where: { id } });
 	}
 
 	generateTokens(payload: { userId: string }): Token {

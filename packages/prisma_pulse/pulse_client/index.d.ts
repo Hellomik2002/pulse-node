@@ -11,10 +11,10 @@ type UnwrapTuple<Tuple extends readonly unknown[]> = {
 
 
 /**
- * Model User
+ * Model PulseUser
  * 
  */
-export type User = {
+export type PulseUser = {
   id: string
   createdAt: Date
   updatedAt: Date
@@ -93,8 +93,8 @@ export type Role = (typeof Role)[keyof typeof Role]
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more Users
- * const users = await prisma.user.findMany()
+ * // Fetch zero or more PulseUsers
+ * const pulseUsers = await prisma.pulseUser.findMany()
  * ```
  *
  * 
@@ -114,8 +114,8 @@ export class PrismaClient<
    * @example
    * ```
    * const prisma = new PrismaClient()
-   * // Fetch zero or more Users
-   * const users = await prisma.user.findMany()
+   * // Fetch zero or more PulseUsers
+   * const pulseUsers = await prisma.pulseUser.findMany()
    * ```
    *
    * 
@@ -173,14 +173,14 @@ export class PrismaClient<
   $runCommandRaw(command: Prisma.InputJsonObject): Prisma.PrismaPromise<Prisma.JsonObject>
 
       /**
-   * `prisma.user`: Exposes CRUD operations for the **User** model.
+   * `prisma.pulseUser`: Exposes CRUD operations for the **PulseUser** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more Users
-    * const users = await prisma.user.findMany()
+    * // Fetch zero or more PulseUsers
+    * const pulseUsers = await prisma.pulseUser.findMany()
     * ```
     */
-  get user(): Prisma.UserDelegate<GlobalReject>;
+  get pulseUser(): Prisma.PulseUserDelegate<GlobalReject>;
 
   /**
    * `prisma.appointment`: Exposes CRUD operations for the **Appointment** model.
@@ -680,7 +680,7 @@ export namespace Prisma {
 
 
   export const ModelName: {
-    User: 'User',
+    PulseUser: 'PulseUser',
     Appointment: 'Appointment',
     Doctor: 'Doctor',
     Specialization: 'Specialization'
@@ -845,32 +845,32 @@ export namespace Prisma {
 
 
   /**
-   * Count Type UserCountOutputType
+   * Count Type PulseUserCountOutputType
    */
 
 
-  export type UserCountOutputType = {
+  export type PulseUserCountOutputType = {
     appointmentsAsAuthor: number
     appointmentsAsPatient: number
   }
 
-  export type UserCountOutputTypeSelect = {
+  export type PulseUserCountOutputTypeSelect = {
     appointmentsAsAuthor?: boolean
     appointmentsAsPatient?: boolean
   }
 
-  export type UserCountOutputTypeGetPayload<S extends boolean | null | undefined | UserCountOutputTypeArgs> =
+  export type PulseUserCountOutputTypeGetPayload<S extends boolean | null | undefined | PulseUserCountOutputTypeArgs> =
     S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
-    S extends true ? UserCountOutputType :
+    S extends true ? PulseUserCountOutputType :
     S extends undefined ? never :
-    S extends { include: any } & (UserCountOutputTypeArgs)
-    ? UserCountOutputType 
-    : S extends { select: any } & (UserCountOutputTypeArgs)
+    S extends { include: any } & (PulseUserCountOutputTypeArgs)
+    ? PulseUserCountOutputType 
+    : S extends { select: any } & (PulseUserCountOutputTypeArgs)
       ? {
     [P in TruthyKeys<S['select']>]:
-    P extends keyof UserCountOutputType ? UserCountOutputType[P] : never
+    P extends keyof PulseUserCountOutputType ? PulseUserCountOutputType[P] : never
   } 
-      : UserCountOutputType
+      : PulseUserCountOutputType
 
 
 
@@ -878,13 +878,20 @@ export namespace Prisma {
   // Custom InputTypes
 
   /**
-   * UserCountOutputType without action
+   * PulseUserCountOutputType without action
    */
-  export type UserCountOutputTypeArgs = {
+  export type PulseUserCountOutputTypeArgs = {
     /**
+<<<<<<< HEAD
      * Select specific fields to fetch from the UserCountOutputType
      */
     select?: UserCountOutputTypeSelect | null
+=======
+     * Select specific fields to fetch from the PulseUserCountOutputType
+     * 
+    **/
+    select?: PulseUserCountOutputTypeSelect | null
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
   }
 
 
@@ -980,17 +987,17 @@ export namespace Prisma {
    */
 
   /**
-   * Model User
+   * Model PulseUser
    */
 
 
-  export type AggregateUser = {
-    _count: UserCountAggregateOutputType | null
-    _min: UserMinAggregateOutputType | null
-    _max: UserMaxAggregateOutputType | null
+  export type AggregatePulseUser = {
+    _count: PulseUserCountAggregateOutputType | null
+    _min: PulseUserMinAggregateOutputType | null
+    _max: PulseUserMaxAggregateOutputType | null
   }
 
-  export type UserMinAggregateOutputType = {
+  export type PulseUserMinAggregateOutputType = {
     id: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -1003,7 +1010,7 @@ export namespace Prisma {
     role: Role | null
   }
 
-  export type UserMaxAggregateOutputType = {
+  export type PulseUserMaxAggregateOutputType = {
     id: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -1016,7 +1023,7 @@ export namespace Prisma {
     role: Role | null
   }
 
-  export type UserCountAggregateOutputType = {
+  export type PulseUserCountAggregateOutputType = {
     id: number
     createdAt: number
     updatedAt: number
@@ -1031,7 +1038,7 @@ export namespace Prisma {
   }
 
 
-  export type UserMinAggregateInputType = {
+  export type PulseUserMinAggregateInputType = {
     id?: true
     createdAt?: true
     updatedAt?: true
@@ -1044,7 +1051,7 @@ export namespace Prisma {
     role?: true
   }
 
-  export type UserMaxAggregateInputType = {
+  export type PulseUserMaxAggregateInputType = {
     id?: true
     createdAt?: true
     updatedAt?: true
@@ -1057,7 +1064,7 @@ export namespace Prisma {
     role?: true
   }
 
-  export type UserCountAggregateInputType = {
+  export type PulseUserCountAggregateInputType = {
     id?: true
     createdAt?: true
     updatedAt?: true
@@ -1071,8 +1078,9 @@ export namespace Prisma {
     _all?: true
   }
 
-  export type UserAggregateArgs = {
+  export type PulseUserAggregateArgs = {
     /**
+<<<<<<< HEAD
      * Filter which User to aggregate.
      */
     where?: UserWhereInput
@@ -1082,10 +1090,24 @@ export namespace Prisma {
      * Determine the order of Users to fetch.
      */
     orderBy?: Enumerable<UserOrderByWithRelationInput>
+=======
+     * Filter which PulseUser to aggregate.
+     * 
+    **/
+    where?: PulseUserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PulseUsers to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<PulseUserOrderByWithRelationInput>
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
+<<<<<<< HEAD
      */
     cursor?: UserWhereUniqueInput
     /**
@@ -1093,58 +1115,83 @@ export namespace Prisma {
      * 
      * Take `±n` Users from the position of the cursor.
      */
+=======
+     * 
+    **/
+    cursor?: PulseUserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PulseUsers from the position of the cursor.
+     * 
+    **/
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
+<<<<<<< HEAD
      * Skip the first `n` Users.
      */
+=======
+     * Skip the first `n` PulseUsers.
+     * 
+    **/
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned Users
+     * Count returned PulseUsers
     **/
-    _count?: true | UserCountAggregateInputType
+    _count?: true | PulseUserCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: UserMinAggregateInputType
+    _min?: PulseUserMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: UserMaxAggregateInputType
+    _max?: PulseUserMaxAggregateInputType
   }
 
-  export type GetUserAggregateType<T extends UserAggregateArgs> = {
-        [P in keyof T & keyof AggregateUser]: P extends '_count' | 'count'
+  export type GetPulseUserAggregateType<T extends PulseUserAggregateArgs> = {
+        [P in keyof T & keyof AggregatePulseUser]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregateUser[P]>
-      : GetScalarType<T[P], AggregateUser[P]>
+        : GetScalarType<T[P], AggregatePulseUser[P]>
+      : GetScalarType<T[P], AggregatePulseUser[P]>
   }
 
 
 
 
+<<<<<<< HEAD
   export type UserGroupByArgs = {
     where?: UserWhereInput
     orderBy?: Enumerable<UserOrderByWithAggregationInput>
     by: UserScalarFieldEnum[]
     having?: UserScalarWhereWithAggregatesInput
+=======
+  export type PulseUserGroupByArgs = {
+    where?: PulseUserWhereInput
+    orderBy?: Enumerable<PulseUserOrderByWithAggregationInput>
+    by: Array<PulseUserScalarFieldEnum>
+    having?: PulseUserScalarWhereWithAggregatesInput
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
     take?: number
     skip?: number
-    _count?: UserCountAggregateInputType | true
-    _min?: UserMinAggregateInputType
-    _max?: UserMaxAggregateInputType
+    _count?: PulseUserCountAggregateInputType | true
+    _min?: PulseUserMinAggregateInputType
+    _max?: PulseUserMaxAggregateInputType
   }
 
 
-  export type UserGroupByOutputType = {
+  export type PulseUserGroupByOutputType = {
     id: string
     createdAt: Date
     updatedAt: Date
@@ -1155,26 +1202,30 @@ export namespace Prisma {
     phoneNumber: string
     address: string
     role: Role
-    _count: UserCountAggregateOutputType | null
-    _min: UserMinAggregateOutputType | null
-    _max: UserMaxAggregateOutputType | null
+    _count: PulseUserCountAggregateOutputType | null
+    _min: PulseUserMinAggregateOutputType | null
+    _max: PulseUserMaxAggregateOutputType | null
   }
 
+<<<<<<< HEAD
   type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
+=======
+  type GetPulseUserGroupByPayload<T extends PulseUserGroupByArgs> = PrismaPromise<
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
     Array<
-      PickArray<UserGroupByOutputType, T['by']> &
+      PickArray<PulseUserGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof UserGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof PulseUserGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], UserGroupByOutputType[P]>
-            : GetScalarType<T[P], UserGroupByOutputType[P]>
+              : GetScalarType<T[P], PulseUserGroupByOutputType[P]>
+            : GetScalarType<T[P], PulseUserGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type UserSelect = {
+  export type PulseUserSelect = {
     id?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -1185,190 +1236,217 @@ export namespace Prisma {
     phoneNumber?: boolean
     address?: boolean
     role?: boolean
-    appointmentsAsAuthor?: boolean | User$appointmentsAsAuthorArgs
-    appointmentsAsPatient?: boolean | User$appointmentsAsPatientArgs
+    appointmentsAsAuthor?: boolean | PulseUser$appointmentsAsAuthorArgs
+    appointmentsAsPatient?: boolean | PulseUser$appointmentsAsPatientArgs
     doctor?: boolean | DoctorArgs
-    _count?: boolean | UserCountOutputTypeArgs
+    _count?: boolean | PulseUserCountOutputTypeArgs
   }
 
 
-  export type UserInclude = {
-    appointmentsAsAuthor?: boolean | User$appointmentsAsAuthorArgs
-    appointmentsAsPatient?: boolean | User$appointmentsAsPatientArgs
+  export type PulseUserInclude = {
+    appointmentsAsAuthor?: boolean | PulseUser$appointmentsAsAuthorArgs
+    appointmentsAsPatient?: boolean | PulseUser$appointmentsAsPatientArgs
     doctor?: boolean | DoctorArgs
+<<<<<<< HEAD
     _count?: boolean | UserCountOutputTypeArgs
   }
+=======
+    _count?: boolean | PulseUserCountOutputTypeArgs
+  } 
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
 
-  export type UserGetPayload<S extends boolean | null | undefined | UserArgs> =
+  export type PulseUserGetPayload<S extends boolean | null | undefined | PulseUserArgs> =
     S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
-    S extends true ? User :
+    S extends true ? PulseUser :
     S extends undefined ? never :
-    S extends { include: any } & (UserArgs | UserFindManyArgs)
-    ? User  & {
+    S extends { include: any } & (PulseUserArgs | PulseUserFindManyArgs)
+    ? PulseUser  & {
     [P in TruthyKeys<S['include']>]:
         P extends 'appointmentsAsAuthor' ? Array < AppointmentGetPayload<S['include'][P]>>  :
         P extends 'appointmentsAsPatient' ? Array < AppointmentGetPayload<S['include'][P]>>  :
         P extends 'doctor' ? DoctorGetPayload<S['include'][P]> | null :
-        P extends '_count' ? UserCountOutputTypeGetPayload<S['include'][P]> :  never
+        P extends '_count' ? PulseUserCountOutputTypeGetPayload<S['include'][P]> :  never
   } 
-    : S extends { select: any } & (UserArgs | UserFindManyArgs)
+    : S extends { select: any } & (PulseUserArgs | PulseUserFindManyArgs)
       ? {
     [P in TruthyKeys<S['select']>]:
         P extends 'appointmentsAsAuthor' ? Array < AppointmentGetPayload<S['select'][P]>>  :
         P extends 'appointmentsAsPatient' ? Array < AppointmentGetPayload<S['select'][P]>>  :
         P extends 'doctor' ? DoctorGetPayload<S['select'][P]> | null :
-        P extends '_count' ? UserCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof User ? User[P] : never
+        P extends '_count' ? PulseUserCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof PulseUser ? PulseUser[P] : never
   } 
-      : User
+      : PulseUser
 
 
+<<<<<<< HEAD
   type UserCountArgs = 
     Omit<UserFindManyArgs, 'select' | 'include'> & {
       select?: UserCountAggregateInputType | true
+=======
+  type PulseUserCountArgs = Merge<
+    Omit<PulseUserFindManyArgs, 'select' | 'include'> & {
+      select?: PulseUserCountAggregateInputType | true
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
     }
 
+<<<<<<< HEAD
   export interface UserDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
 
+=======
+  export interface PulseUserDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
     /**
-     * Find zero or one User that matches the filter.
-     * @param {UserFindUniqueArgs} args - Arguments to find a User
+     * Find zero or one PulseUser that matches the filter.
+     * @param {PulseUserFindUniqueArgs} args - Arguments to find a PulseUser
      * @example
-     * // Get one User
-     * const user = await prisma.user.findUnique({
+     * // Get one PulseUser
+     * const pulseUser = await prisma.pulseUser.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
     **/
-    findUnique<T extends UserFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
-      args: SelectSubset<T, UserFindUniqueArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'User'> extends True ? Prisma__UserClient<UserGetPayload<T>> : Prisma__UserClient<UserGetPayload<T> | null, null>
+    findUnique<T extends PulseUserFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, PulseUserFindUniqueArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'PulseUser'> extends True ? Prisma__PulseUserClient<PulseUserGetPayload<T>> : Prisma__PulseUserClient<PulseUserGetPayload<T> | null, null>
 
     /**
-     * Find one User that matches the filter or throw an error  with `error.code='P2025'` 
+     * Find one PulseUser that matches the filter or throw an error  with `error.code='P2025'` 
      *     if no matches were found.
-     * @param {UserFindUniqueOrThrowArgs} args - Arguments to find a User
+     * @param {PulseUserFindUniqueOrThrowArgs} args - Arguments to find a PulseUser
      * @example
-     * // Get one User
-     * const user = await prisma.user.findUniqueOrThrow({
+     * // Get one PulseUser
+     * const pulseUser = await prisma.pulseUser.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
     **/
-    findUniqueOrThrow<T extends UserFindUniqueOrThrowArgs>(
-      args?: SelectSubset<T, UserFindUniqueOrThrowArgs>
-    ): Prisma__UserClient<UserGetPayload<T>>
+    findUniqueOrThrow<T extends PulseUserFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, PulseUserFindUniqueOrThrowArgs>
+    ): Prisma__PulseUserClient<PulseUserGetPayload<T>>
 
     /**
-     * Find the first User that matches the filter.
+     * Find the first PulseUser that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserFindFirstArgs} args - Arguments to find a User
+     * @param {PulseUserFindFirstArgs} args - Arguments to find a PulseUser
      * @example
-     * // Get one User
-     * const user = await prisma.user.findFirst({
+     * // Get one PulseUser
+     * const pulseUser = await prisma.pulseUser.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
     **/
-    findFirst<T extends UserFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
-      args?: SelectSubset<T, UserFindFirstArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'User'> extends True ? Prisma__UserClient<UserGetPayload<T>> : Prisma__UserClient<UserGetPayload<T> | null, null>
+    findFirst<T extends PulseUserFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, PulseUserFindFirstArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'PulseUser'> extends True ? Prisma__PulseUserClient<PulseUserGetPayload<T>> : Prisma__PulseUserClient<PulseUserGetPayload<T> | null, null>
 
     /**
-     * Find the first User that matches the filter or
+     * Find the first PulseUser that matches the filter or
      * throw `NotFoundError` if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserFindFirstOrThrowArgs} args - Arguments to find a User
+     * @param {PulseUserFindFirstOrThrowArgs} args - Arguments to find a PulseUser
      * @example
-     * // Get one User
-     * const user = await prisma.user.findFirstOrThrow({
+     * // Get one PulseUser
+     * const pulseUser = await prisma.pulseUser.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
     **/
-    findFirstOrThrow<T extends UserFindFirstOrThrowArgs>(
-      args?: SelectSubset<T, UserFindFirstOrThrowArgs>
-    ): Prisma__UserClient<UserGetPayload<T>>
+    findFirstOrThrow<T extends PulseUserFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, PulseUserFindFirstOrThrowArgs>
+    ): Prisma__PulseUserClient<PulseUserGetPayload<T>>
 
     /**
-     * Find zero or more Users that matches the filter.
+     * Find zero or more PulseUsers that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @param {PulseUserFindManyArgs=} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all Users
-     * const users = await prisma.user.findMany()
+     * // Get all PulseUsers
+     * const pulseUsers = await prisma.pulseUser.findMany()
      * 
-     * // Get first 10 Users
-     * const users = await prisma.user.findMany({ take: 10 })
+     * // Get first 10 PulseUsers
+     * const pulseUsers = await prisma.pulseUser.findMany({ take: 10 })
      * 
      * // Only select the `id`
-     * const userWithIdOnly = await prisma.user.findMany({ select: { id: true } })
+     * const pulseUserWithIdOnly = await prisma.pulseUser.findMany({ select: { id: true } })
      * 
     **/
+<<<<<<< HEAD
     findMany<T extends UserFindManyArgs>(
       args?: SelectSubset<T, UserFindManyArgs>
     ): Prisma.PrismaPromise<Array<UserGetPayload<T>>>
+=======
+    findMany<T extends PulseUserFindManyArgs>(
+      args?: SelectSubset<T, PulseUserFindManyArgs>
+    ): PrismaPromise<Array<PulseUserGetPayload<T>>>
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
 
     /**
-     * Create a User.
-     * @param {UserCreateArgs} args - Arguments to create a User.
+     * Create a PulseUser.
+     * @param {PulseUserCreateArgs} args - Arguments to create a PulseUser.
      * @example
-     * // Create one User
-     * const User = await prisma.user.create({
+     * // Create one PulseUser
+     * const PulseUser = await prisma.pulseUser.create({
      *   data: {
-     *     // ... data to create a User
+     *     // ... data to create a PulseUser
      *   }
      * })
      * 
     **/
-    create<T extends UserCreateArgs>(
-      args: SelectSubset<T, UserCreateArgs>
-    ): Prisma__UserClient<UserGetPayload<T>>
+    create<T extends PulseUserCreateArgs>(
+      args: SelectSubset<T, PulseUserCreateArgs>
+    ): Prisma__PulseUserClient<PulseUserGetPayload<T>>
 
     /**
-     * Create many Users.
-     *     @param {UserCreateManyArgs} args - Arguments to create many Users.
+     * Create many PulseUsers.
+     *     @param {PulseUserCreateManyArgs} args - Arguments to create many PulseUsers.
      *     @example
-     *     // Create many Users
-     *     const user = await prisma.user.createMany({
+     *     // Create many PulseUsers
+     *     const pulseUser = await prisma.pulseUser.createMany({
      *       data: {
      *         // ... provide data here
      *       }
      *     })
      *     
     **/
+<<<<<<< HEAD
     createMany<T extends UserCreateManyArgs>(
       args?: SelectSubset<T, UserCreateManyArgs>
     ): Prisma.PrismaPromise<BatchPayload>
+=======
+    createMany<T extends PulseUserCreateManyArgs>(
+      args?: SelectSubset<T, PulseUserCreateManyArgs>
+    ): PrismaPromise<BatchPayload>
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
 
     /**
-     * Delete a User.
-     * @param {UserDeleteArgs} args - Arguments to delete one User.
+     * Delete a PulseUser.
+     * @param {PulseUserDeleteArgs} args - Arguments to delete one PulseUser.
      * @example
-     * // Delete one User
-     * const User = await prisma.user.delete({
+     * // Delete one PulseUser
+     * const PulseUser = await prisma.pulseUser.delete({
      *   where: {
-     *     // ... filter to delete one User
+     *     // ... filter to delete one PulseUser
      *   }
      * })
      * 
     **/
-    delete<T extends UserDeleteArgs>(
-      args: SelectSubset<T, UserDeleteArgs>
-    ): Prisma__UserClient<UserGetPayload<T>>
+    delete<T extends PulseUserDeleteArgs>(
+      args: SelectSubset<T, PulseUserDeleteArgs>
+    ): Prisma__PulseUserClient<PulseUserGetPayload<T>>
 
     /**
-     * Update one User.
-     * @param {UserUpdateArgs} args - Arguments to update one User.
+     * Update one PulseUser.
+     * @param {PulseUserUpdateArgs} args - Arguments to update one PulseUser.
      * @example
-     * // Update one User
-     * const user = await prisma.user.update({
+     * // Update one PulseUser
+     * const pulseUser = await prisma.pulseUser.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -1378,34 +1456,40 @@ export namespace Prisma {
      * })
      * 
     **/
-    update<T extends UserUpdateArgs>(
-      args: SelectSubset<T, UserUpdateArgs>
-    ): Prisma__UserClient<UserGetPayload<T>>
+    update<T extends PulseUserUpdateArgs>(
+      args: SelectSubset<T, PulseUserUpdateArgs>
+    ): Prisma__PulseUserClient<PulseUserGetPayload<T>>
 
     /**
-     * Delete zero or more Users.
-     * @param {UserDeleteManyArgs} args - Arguments to filter Users to delete.
+     * Delete zero or more PulseUsers.
+     * @param {PulseUserDeleteManyArgs} args - Arguments to filter PulseUsers to delete.
      * @example
-     * // Delete a few Users
-     * const { count } = await prisma.user.deleteMany({
+     * // Delete a few PulseUsers
+     * const { count } = await prisma.pulseUser.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
     **/
+<<<<<<< HEAD
     deleteMany<T extends UserDeleteManyArgs>(
       args?: SelectSubset<T, UserDeleteManyArgs>
     ): Prisma.PrismaPromise<BatchPayload>
+=======
+    deleteMany<T extends PulseUserDeleteManyArgs>(
+      args?: SelectSubset<T, PulseUserDeleteManyArgs>
+    ): PrismaPromise<BatchPayload>
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
 
     /**
-     * Update zero or more Users.
+     * Update zero or more PulseUsers.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {PulseUserUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many Users
-     * const user = await prisma.user.updateMany({
+     * // Update many PulseUsers
+     * const pulseUser = await prisma.pulseUser.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -1415,48 +1499,59 @@ export namespace Prisma {
      * })
      * 
     **/
+<<<<<<< HEAD
     updateMany<T extends UserUpdateManyArgs>(
       args: SelectSubset<T, UserUpdateManyArgs>
     ): Prisma.PrismaPromise<BatchPayload>
+=======
+    updateMany<T extends PulseUserUpdateManyArgs>(
+      args: SelectSubset<T, PulseUserUpdateManyArgs>
+    ): PrismaPromise<BatchPayload>
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
 
     /**
-     * Create or update one User.
-     * @param {UserUpsertArgs} args - Arguments to update or create a User.
+     * Create or update one PulseUser.
+     * @param {PulseUserUpsertArgs} args - Arguments to update or create a PulseUser.
      * @example
-     * // Update or create a User
-     * const user = await prisma.user.upsert({
+     * // Update or create a PulseUser
+     * const pulseUser = await prisma.pulseUser.upsert({
      *   create: {
-     *     // ... data to create a User
+     *     // ... data to create a PulseUser
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the User we want to update
+     *     // ... the filter for the PulseUser we want to update
      *   }
      * })
     **/
-    upsert<T extends UserUpsertArgs>(
-      args: SelectSubset<T, UserUpsertArgs>
-    ): Prisma__UserClient<UserGetPayload<T>>
+    upsert<T extends PulseUserUpsertArgs>(
+      args: SelectSubset<T, PulseUserUpsertArgs>
+    ): Prisma__PulseUserClient<PulseUserGetPayload<T>>
 
     /**
-     * Find zero or more Users that matches the filter.
-     * @param {UserFindRawArgs} args - Select which filters you would like to apply.
+     * Find zero or more PulseUsers that matches the filter.
+     * @param {PulseUserFindRawArgs} args - Select which filters you would like to apply.
      * @example
-     * const user = await prisma.user.findRaw({
+     * const pulseUser = await prisma.pulseUser.findRaw({
      *   filter: { age: { $gt: 25 } } 
      * })
     **/
     findRaw(
+<<<<<<< HEAD
       args?: UserFindRawArgs
     ): Prisma.PrismaPromise<JsonObject>
+=======
+      args?: PulseUserFindRawArgs
+    ): PrismaPromise<JsonObject>
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
 
     /**
-     * Perform aggregation operations on a User.
-     * @param {UserAggregateRawArgs} args - Select which aggregations you would like to apply.
+     * Perform aggregation operations on a PulseUser.
+     * @param {PulseUserAggregateRawArgs} args - Select which aggregations you would like to apply.
      * @example
-     * const user = await prisma.user.aggregateRaw({
+     * const pulseUser = await prisma.pulseUser.aggregateRaw({
      *   pipeline: [
      *     { $match: { status: "registered" } },
      *     { $group: { _id: "$country", total: { $sum: 1 } } }
@@ -1464,37 +1559,48 @@ export namespace Prisma {
      * })
     **/
     aggregateRaw(
+<<<<<<< HEAD
       args?: UserAggregateRawArgs
     ): Prisma.PrismaPromise<JsonObject>
+=======
+      args?: PulseUserAggregateRawArgs
+    ): PrismaPromise<JsonObject>
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
 
     /**
-     * Count the number of Users.
+     * Count the number of PulseUsers.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserCountArgs} args - Arguments to filter Users to count.
+     * @param {PulseUserCountArgs} args - Arguments to filter PulseUsers to count.
      * @example
-     * // Count the number of Users
-     * const count = await prisma.user.count({
+     * // Count the number of PulseUsers
+     * const count = await prisma.pulseUser.count({
      *   where: {
-     *     // ... the filter for the Users we want to count
+     *     // ... the filter for the PulseUsers we want to count
      *   }
      * })
     **/
+<<<<<<< HEAD
     count<T extends UserCountArgs>(
       args?: Subset<T, UserCountArgs>,
     ): Prisma.PrismaPromise<
+=======
+    count<T extends PulseUserCountArgs>(
+      args?: Subset<T, PulseUserCountArgs>,
+    ): PrismaPromise<
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
       T extends _Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], UserCountAggregateOutputType>
+          : GetScalarType<T['select'], PulseUserCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a User.
+     * Allows you to perform aggregations operations on a PulseUser.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {PulseUserAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -1514,13 +1620,17 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
+<<<<<<< HEAD
     aggregate<T extends UserAggregateArgs>(args: Subset<T, UserAggregateArgs>): Prisma.PrismaPromise<GetUserAggregateType<T>>
+=======
+    aggregate<T extends PulseUserAggregateArgs>(args: Subset<T, PulseUserAggregateArgs>): PrismaPromise<GetPulseUserAggregateType<T>>
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
 
     /**
-     * Group by User.
+     * Group by PulseUser.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserGroupByArgs} args - Group by arguments.
+     * @param {PulseUserGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -1535,14 +1645,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends UserGroupByArgs,
+      T extends PulseUserGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: UserGroupByArgs['orderBy'] }
-        : { orderBy?: UserGroupByArgs['orderBy'] },
+        ? { orderBy: PulseUserGroupByArgs['orderBy'] }
+        : { orderBy?: PulseUserGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends TupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -1591,17 +1701,26 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
+<<<<<<< HEAD
     >(args: SubsetIntersection<T, UserGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+=======
+    >(args: SubsetIntersection<T, PulseUserGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPulseUserGroupByPayload<T> : PrismaPromise<InputErrors>
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
 
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for User.
+   * The delegate class that acts as a "Promise-like" for PulseUser.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
+<<<<<<< HEAD
   export class Prisma__UserClient<T, Null = never> implements Prisma.PrismaPromise<T> {
+=======
+  export class Prisma__PulseUserClient<T, Null = never> implements PrismaPromise<T> {
+    [prisma]: true;
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
     private readonly _dmmf;
     private readonly _queryType;
     private readonly _rootField;
@@ -1616,9 +1735,15 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: 'PrismaPromise';
     constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
+<<<<<<< HEAD
     appointmentsAsAuthor<T extends User$appointmentsAsAuthorArgs= {}>(args?: Subset<T, User$appointmentsAsAuthorArgs>): Prisma.PrismaPromise<Array<AppointmentGetPayload<T>>| Null>;
 
     appointmentsAsPatient<T extends User$appointmentsAsPatientArgs= {}>(args?: Subset<T, User$appointmentsAsPatientArgs>): Prisma.PrismaPromise<Array<AppointmentGetPayload<T>>| Null>;
+=======
+    appointmentsAsAuthor<T extends PulseUser$appointmentsAsAuthorArgs= {}>(args?: Subset<T, PulseUser$appointmentsAsAuthorArgs>): PrismaPromise<Array<AppointmentGetPayload<T>>| Null>;
+
+    appointmentsAsPatient<T extends PulseUser$appointmentsAsPatientArgs= {}>(args?: Subset<T, PulseUser$appointmentsAsPatientArgs>): PrismaPromise<Array<AppointmentGetPayload<T>>| Null>;
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
 
     doctor<T extends DoctorArgs= {}>(args?: Subset<T, DoctorArgs>): Prisma__DoctorClient<DoctorGetPayload<T> | Null>;
 
@@ -1650,10 +1775,11 @@ export namespace Prisma {
   // Custom InputTypes
 
   /**
-   * User base type for findUnique actions
+   * PulseUser base type for findUnique actions
    */
-  export type UserFindUniqueArgsBase = {
+  export type PulseUserFindUniqueArgsBase = {
     /**
+<<<<<<< HEAD
      * Select specific fields to fetch from the User
      */
     select?: UserSelect | null
@@ -1665,12 +1791,28 @@ export namespace Prisma {
      * Filter, which User to fetch.
      */
     where: UserWhereUniqueInput
+=======
+     * Select specific fields to fetch from the PulseUser
+     * 
+    **/
+    select?: PulseUserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: PulseUserInclude | null
+    /**
+     * Filter, which PulseUser to fetch.
+     * 
+    **/
+    where: PulseUserWhereUniqueInput
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
   }
 
   /**
-   * User findUnique
+   * PulseUser findUnique
    */
-  export interface UserFindUniqueArgs extends UserFindUniqueArgsBase {
+  export interface PulseUserFindUniqueArgs extends PulseUserFindUniqueArgsBase {
    /**
     * Throw an Error if query returns no results
     * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
@@ -1680,10 +1822,11 @@ export namespace Prisma {
       
 
   /**
-   * User findUniqueOrThrow
+   * PulseUser findUniqueOrThrow
    */
-  export type UserFindUniqueOrThrowArgs = {
+  export type PulseUserFindUniqueOrThrowArgs = {
     /**
+<<<<<<< HEAD
      * Select specific fields to fetch from the User
      */
     select?: UserSelect | null
@@ -1695,14 +1838,31 @@ export namespace Prisma {
      * Filter, which User to fetch.
      */
     where: UserWhereUniqueInput
+=======
+     * Select specific fields to fetch from the PulseUser
+     * 
+    **/
+    select?: PulseUserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: PulseUserInclude | null
+    /**
+     * Filter, which PulseUser to fetch.
+     * 
+    **/
+    where: PulseUserWhereUniqueInput
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
   }
 
 
   /**
-   * User base type for findFirst actions
+   * PulseUser base type for findFirst actions
    */
-  export type UserFindFirstArgsBase = {
+  export type PulseUserFindFirstArgsBase = {
     /**
+<<<<<<< HEAD
      * Select specific fields to fetch from the User
      */
     select?: UserSelect | null
@@ -1731,25 +1891,74 @@ export namespace Prisma {
      * 
      * Take `±n` Users from the position of the cursor.
      */
+=======
+     * Select specific fields to fetch from the PulseUser
+     * 
+    **/
+    select?: PulseUserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: PulseUserInclude | null
+    /**
+     * Filter, which PulseUser to fetch.
+     * 
+    **/
+    where?: PulseUserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PulseUsers to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<PulseUserOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PulseUsers.
+     * 
+    **/
+    cursor?: PulseUserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PulseUsers from the position of the cursor.
+     * 
+    **/
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
+<<<<<<< HEAD
      * Skip the first `n` Users.
      */
+=======
+     * Skip the first `n` PulseUsers.
+     * 
+    **/
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
+<<<<<<< HEAD
      * Filter by unique combinations of Users.
      */
     distinct?: Enumerable<UserScalarFieldEnum>
+=======
+     * Filter by unique combinations of PulseUsers.
+     * 
+    **/
+    distinct?: Enumerable<PulseUserScalarFieldEnum>
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
   }
 
   /**
-   * User findFirst
+   * PulseUser findFirst
    */
-  export interface UserFindFirstArgs extends UserFindFirstArgsBase {
+  export interface PulseUserFindFirstArgs extends PulseUserFindFirstArgsBase {
    /**
     * Throw an Error if query returns no results
     * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
@@ -1759,10 +1968,11 @@ export namespace Prisma {
       
 
   /**
-   * User findFirstOrThrow
+   * PulseUser findFirstOrThrow
    */
-  export type UserFindFirstOrThrowArgs = {
+  export type PulseUserFindFirstOrThrowArgs = {
     /**
+<<<<<<< HEAD
      * Select specific fields to fetch from the User
      */
     select?: UserSelect | null
@@ -1791,27 +2001,77 @@ export namespace Prisma {
      * 
      * Take `±n` Users from the position of the cursor.
      */
+=======
+     * Select specific fields to fetch from the PulseUser
+     * 
+    **/
+    select?: PulseUserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: PulseUserInclude | null
+    /**
+     * Filter, which PulseUser to fetch.
+     * 
+    **/
+    where?: PulseUserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PulseUsers to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<PulseUserOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PulseUsers.
+     * 
+    **/
+    cursor?: PulseUserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PulseUsers from the position of the cursor.
+     * 
+    **/
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
+<<<<<<< HEAD
      * Skip the first `n` Users.
      */
+=======
+     * Skip the first `n` PulseUsers.
+     * 
+    **/
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
+<<<<<<< HEAD
      * Filter by unique combinations of Users.
      */
     distinct?: Enumerable<UserScalarFieldEnum>
+=======
+     * Filter by unique combinations of PulseUsers.
+     * 
+    **/
+    distinct?: Enumerable<PulseUserScalarFieldEnum>
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
   }
 
 
   /**
-   * User findMany
+   * PulseUser findMany
    */
-  export type UserFindManyArgs = {
+  export type PulseUserFindManyArgs = {
     /**
+<<<<<<< HEAD
      * Select specific fields to fetch from the User
      */
     select?: UserSelect | null
@@ -1840,22 +2100,65 @@ export namespace Prisma {
      * 
      * Take `±n` Users from the position of the cursor.
      */
+=======
+     * Select specific fields to fetch from the PulseUser
+     * 
+    **/
+    select?: PulseUserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: PulseUserInclude | null
+    /**
+     * Filter, which PulseUsers to fetch.
+     * 
+    **/
+    where?: PulseUserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PulseUsers to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<PulseUserOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PulseUsers.
+     * 
+    **/
+    cursor?: PulseUserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PulseUsers from the position of the cursor.
+     * 
+    **/
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
+<<<<<<< HEAD
      * Skip the first `n` Users.
      */
+=======
+     * Skip the first `n` PulseUsers.
+     * 
+    **/
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
     skip?: number
-    distinct?: Enumerable<UserScalarFieldEnum>
+    distinct?: Enumerable<PulseUserScalarFieldEnum>
   }
 
 
   /**
-   * User create
+   * PulseUser create
    */
-  export type UserCreateArgs = {
+  export type PulseUserCreateArgs = {
     /**
+<<<<<<< HEAD
      * Select specific fields to fetch from the User
      */
     select?: UserSelect | null
@@ -1867,25 +2170,49 @@ export namespace Prisma {
      * The data needed to create a User.
      */
     data: XOR<UserCreateInput, UserUncheckedCreateInput>
+=======
+     * Select specific fields to fetch from the PulseUser
+     * 
+    **/
+    select?: PulseUserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: PulseUserInclude | null
+    /**
+     * The data needed to create a PulseUser.
+     * 
+    **/
+    data: XOR<PulseUserCreateInput, PulseUserUncheckedCreateInput>
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
   }
 
 
   /**
-   * User createMany
+   * PulseUser createMany
    */
-  export type UserCreateManyArgs = {
+  export type PulseUserCreateManyArgs = {
     /**
+<<<<<<< HEAD
      * The data used to create many Users.
      */
     data: Enumerable<UserCreateManyInput>
+=======
+     * The data used to create many PulseUsers.
+     * 
+    **/
+    data: Enumerable<PulseUserCreateManyInput>
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
   }
 
 
   /**
-   * User update
+   * PulseUser update
    */
-  export type UserUpdateArgs = {
+  export type PulseUserUpdateArgs = {
     /**
+<<<<<<< HEAD
      * Select specific fields to fetch from the User
      */
     select?: UserSelect | null
@@ -1901,14 +2228,36 @@ export namespace Prisma {
      * Choose, which User to update.
      */
     where: UserWhereUniqueInput
+=======
+     * Select specific fields to fetch from the PulseUser
+     * 
+    **/
+    select?: PulseUserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: PulseUserInclude | null
+    /**
+     * The data needed to update a PulseUser.
+     * 
+    **/
+    data: XOR<PulseUserUpdateInput, PulseUserUncheckedUpdateInput>
+    /**
+     * Choose, which PulseUser to update.
+     * 
+    **/
+    where: PulseUserWhereUniqueInput
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
   }
 
 
   /**
-   * User updateMany
+   * PulseUser updateMany
    */
-  export type UserUpdateManyArgs = {
+  export type PulseUserUpdateManyArgs = {
     /**
+<<<<<<< HEAD
      * The data used to update Users.
      */
     data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyInput>
@@ -1916,14 +2265,26 @@ export namespace Prisma {
      * Filter which Users to update
      */
     where?: UserWhereInput
+=======
+     * The data used to update PulseUsers.
+     * 
+    **/
+    data: XOR<PulseUserUpdateManyMutationInput, PulseUserUncheckedUpdateManyInput>
+    /**
+     * Filter which PulseUsers to update
+     * 
+    **/
+    where?: PulseUserWhereInput
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
   }
 
 
   /**
-   * User upsert
+   * PulseUser upsert
    */
-  export type UserUpsertArgs = {
+  export type PulseUserUpsertArgs = {
     /**
+<<<<<<< HEAD
      * Select specific fields to fetch from the User
      */
     select?: UserSelect | null
@@ -1943,14 +2304,41 @@ export namespace Prisma {
      * In case the User was found with the provided `where` argument, update it with this data.
      */
     update: XOR<UserUpdateInput, UserUncheckedUpdateInput>
+=======
+     * Select specific fields to fetch from the PulseUser
+     * 
+    **/
+    select?: PulseUserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: PulseUserInclude | null
+    /**
+     * The filter to search for the PulseUser to update in case it exists.
+     * 
+    **/
+    where: PulseUserWhereUniqueInput
+    /**
+     * In case the PulseUser found by the `where` argument doesn't exist, create a new PulseUser with this data.
+     * 
+    **/
+    create: XOR<PulseUserCreateInput, PulseUserUncheckedCreateInput>
+    /**
+     * In case the PulseUser was found with the provided `where` argument, update it with this data.
+     * 
+    **/
+    update: XOR<PulseUserUpdateInput, PulseUserUncheckedUpdateInput>
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
   }
 
 
   /**
-   * User delete
+   * PulseUser delete
    */
-  export type UserDeleteArgs = {
+  export type PulseUserDeleteArgs = {
     /**
+<<<<<<< HEAD
      * Select specific fields to fetch from the User
      */
     select?: UserSelect | null
@@ -1962,24 +2350,47 @@ export namespace Prisma {
      * Filter which User to delete.
      */
     where: UserWhereUniqueInput
+=======
+     * Select specific fields to fetch from the PulseUser
+     * 
+    **/
+    select?: PulseUserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: PulseUserInclude | null
+    /**
+     * Filter which PulseUser to delete.
+     * 
+    **/
+    where: PulseUserWhereUniqueInput
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
   }
 
 
   /**
-   * User deleteMany
+   * PulseUser deleteMany
    */
-  export type UserDeleteManyArgs = {
+  export type PulseUserDeleteManyArgs = {
     /**
+<<<<<<< HEAD
      * Filter which Users to delete
      */
     where?: UserWhereInput
+=======
+     * Filter which PulseUsers to delete
+     * 
+    **/
+    where?: PulseUserWhereInput
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
   }
 
 
   /**
-   * User findRaw
+   * PulseUser findRaw
    */
-  export type UserFindRawArgs = {
+  export type PulseUserFindRawArgs = {
     /**
      * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
      */
@@ -1992,9 +2403,9 @@ export namespace Prisma {
 
 
   /**
-   * User aggregateRaw
+   * PulseUser aggregateRaw
    */
-  export type UserAggregateRawArgs = {
+  export type PulseUserAggregateRawArgs = {
     /**
      * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
      */
@@ -2007,9 +2418,9 @@ export namespace Prisma {
 
 
   /**
-   * User.appointmentsAsAuthor
+   * PulseUser.appointmentsAsAuthor
    */
-  export type User$appointmentsAsAuthorArgs = {
+  export type PulseUser$appointmentsAsAuthorArgs = {
     /**
      * Select specific fields to fetch from the Appointment
      */
@@ -2028,9 +2439,9 @@ export namespace Prisma {
 
 
   /**
-   * User.appointmentsAsPatient
+   * PulseUser.appointmentsAsPatient
    */
-  export type User$appointmentsAsPatientArgs = {
+  export type PulseUser$appointmentsAsPatientArgs = {
     /**
      * Select specific fields to fetch from the Appointment
      */
@@ -2049,10 +2460,11 @@ export namespace Prisma {
 
 
   /**
-   * User without action
+   * PulseUser without action
    */
-  export type UserArgs = {
+  export type PulseUserArgs = {
     /**
+<<<<<<< HEAD
      * Select specific fields to fetch from the User
      */
     select?: UserSelect | null
@@ -2060,6 +2472,17 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well.
      */
     include?: UserInclude | null
+=======
+     * Select specific fields to fetch from the PulseUser
+     * 
+    **/
+    select?: PulseUserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: PulseUserInclude | null
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
   }
 
 
@@ -2252,17 +2675,23 @@ export namespace Prisma {
     date?: boolean
     title?: boolean
     content?: boolean
-    author?: boolean | UserArgs
+    author?: boolean | PulseUserArgs
     authorId?: boolean
-    patient?: boolean | UserArgs
+    patient?: boolean | PulseUserArgs
     patientId?: boolean
   }
 
 
   export type AppointmentInclude = {
+<<<<<<< HEAD
     author?: boolean | UserArgs
     patient?: boolean | UserArgs
   }
+=======
+    author?: boolean | PulseUserArgs
+    patient?: boolean | PulseUserArgs
+  } 
+>>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
 
   export type AppointmentGetPayload<S extends boolean | null | undefined | AppointmentArgs> =
     S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
@@ -2271,14 +2700,14 @@ export namespace Prisma {
     S extends { include: any } & (AppointmentArgs | AppointmentFindManyArgs)
     ? Appointment  & {
     [P in TruthyKeys<S['include']>]:
-        P extends 'author' ? UserGetPayload<S['include'][P]> :
-        P extends 'patient' ? UserGetPayload<S['include'][P]> :  never
+        P extends 'author' ? PulseUserGetPayload<S['include'][P]> :
+        P extends 'patient' ? PulseUserGetPayload<S['include'][P]> :  never
   } 
     : S extends { select: any } & (AppointmentArgs | AppointmentFindManyArgs)
       ? {
     [P in TruthyKeys<S['select']>]:
-        P extends 'author' ? UserGetPayload<S['select'][P]> :
-        P extends 'patient' ? UserGetPayload<S['select'][P]> :  P extends keyof Appointment ? Appointment[P] : never
+        P extends 'author' ? PulseUserGetPayload<S['select'][P]> :
+        P extends 'patient' ? PulseUserGetPayload<S['select'][P]> :  P extends keyof Appointment ? Appointment[P] : never
   } 
       : Appointment
 
@@ -2677,9 +3106,9 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: 'PrismaPromise';
     constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
-    author<T extends UserArgs= {}>(args?: Subset<T, UserArgs>): Prisma__UserClient<UserGetPayload<T> | Null>;
+    author<T extends PulseUserArgs= {}>(args?: Subset<T, PulseUserArgs>): Prisma__PulseUserClient<PulseUserGetPayload<T> | Null>;
 
-    patient<T extends UserArgs= {}>(args?: Subset<T, UserArgs>): Prisma__UserClient<UserGetPayload<T> | Null>;
+    patient<T extends PulseUserArgs= {}>(args?: Subset<T, PulseUserArgs>): Prisma__PulseUserClient<PulseUserGetPayload<T> | Null>;
 
     private get _document();
     /**
@@ -3291,7 +3720,7 @@ export namespace Prisma {
     updatedAt?: boolean
     calLink?: boolean
     calUserId?: boolean
-    user?: boolean | UserArgs
+    user?: boolean | PulseUserArgs
     userId?: boolean
     specializationsIds?: boolean
     specializations?: boolean | Doctor$specializationsArgs
@@ -3300,7 +3729,7 @@ export namespace Prisma {
 
 
   export type DoctorInclude = {
-    user?: boolean | UserArgs
+    user?: boolean | PulseUserArgs
     specializations?: boolean | Doctor$specializationsArgs
     _count?: boolean | DoctorCountOutputTypeArgs
   }
@@ -3312,14 +3741,14 @@ export namespace Prisma {
     S extends { include: any } & (DoctorArgs | DoctorFindManyArgs)
     ? Doctor  & {
     [P in TruthyKeys<S['include']>]:
-        P extends 'user' ? UserGetPayload<S['include'][P]> :
+        P extends 'user' ? PulseUserGetPayload<S['include'][P]> :
         P extends 'specializations' ? Array < SpecializationGetPayload<S['include'][P]>>  :
         P extends '_count' ? DoctorCountOutputTypeGetPayload<S['include'][P]> :  never
   } 
     : S extends { select: any } & (DoctorArgs | DoctorFindManyArgs)
       ? {
     [P in TruthyKeys<S['select']>]:
-        P extends 'user' ? UserGetPayload<S['select'][P]> :
+        P extends 'user' ? PulseUserGetPayload<S['select'][P]> :
         P extends 'specializations' ? Array < SpecializationGetPayload<S['select'][P]>>  :
         P extends '_count' ? DoctorCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof Doctor ? Doctor[P] : never
   } 
@@ -3720,7 +4149,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: 'PrismaPromise';
     constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
-    user<T extends UserArgs= {}>(args?: Subset<T, UserArgs>): Prisma__UserClient<UserGetPayload<T> | Null>;
+    user<T extends PulseUserArgs= {}>(args?: Subset<T, PulseUserArgs>): Prisma__PulseUserClient<PulseUserGetPayload<T> | Null>;
 
     specializations<T extends Doctor$specializationsArgs= {}>(args?: Subset<T, Doctor$specializationsArgs>): Prisma.PrismaPromise<Array<SpecializationGetPayload<T>>| Null>;
 
@@ -5179,6 +5608,22 @@ export namespace Prisma {
   export type DoctorScalarFieldEnum = (typeof DoctorScalarFieldEnum)[keyof typeof DoctorScalarFieldEnum]
 
 
+  export const PulseUserScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    email: 'email',
+    password: 'password',
+    fullName: 'fullName',
+    uniqueName: 'uniqueName',
+    phoneNumber: 'phoneNumber',
+    address: 'address',
+    role: 'role'
+  };
+
+  export type PulseUserScalarFieldEnum = (typeof PulseUserScalarFieldEnum)[keyof typeof PulseUserScalarFieldEnum]
+
+
   export const QueryMode: {
     default: 'default',
     insensitive: 'insensitive'
@@ -5205,31 +5650,15 @@ export namespace Prisma {
   export type SpecializationScalarFieldEnum = (typeof SpecializationScalarFieldEnum)[keyof typeof SpecializationScalarFieldEnum]
 
 
-  export const UserScalarFieldEnum: {
-    id: 'id',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    email: 'email',
-    password: 'password',
-    fullName: 'fullName',
-    uniqueName: 'uniqueName',
-    phoneNumber: 'phoneNumber',
-    address: 'address',
-    role: 'role'
-  };
-
-  export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
-
-
   /**
    * Deep Input Types
    */
 
 
-  export type UserWhereInput = {
-    AND?: Enumerable<UserWhereInput>
-    OR?: Enumerable<UserWhereInput>
-    NOT?: Enumerable<UserWhereInput>
+  export type PulseUserWhereInput = {
+    AND?: Enumerable<PulseUserWhereInput>
+    OR?: Enumerable<PulseUserWhereInput>
+    NOT?: Enumerable<PulseUserWhereInput>
     id?: StringFilter | string
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
@@ -5245,7 +5674,7 @@ export namespace Prisma {
     doctor?: XOR<DoctorRelationFilter, DoctorWhereInput> | null
   }
 
-  export type UserOrderByWithRelationInput = {
+  export type PulseUserOrderByWithRelationInput = {
     id?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -5261,14 +5690,14 @@ export namespace Prisma {
     doctor?: DoctorOrderByWithRelationInput
   }
 
-  export type UserWhereUniqueInput = {
+  export type PulseUserWhereUniqueInput = {
     id?: string
     email?: string
     uniqueName?: string
     phoneNumber?: string
   }
 
-  export type UserOrderByWithAggregationInput = {
+  export type PulseUserOrderByWithAggregationInput = {
     id?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -5279,15 +5708,15 @@ export namespace Prisma {
     phoneNumber?: SortOrder
     address?: SortOrder
     role?: SortOrder
-    _count?: UserCountOrderByAggregateInput
-    _max?: UserMaxOrderByAggregateInput
-    _min?: UserMinOrderByAggregateInput
+    _count?: PulseUserCountOrderByAggregateInput
+    _max?: PulseUserMaxOrderByAggregateInput
+    _min?: PulseUserMinOrderByAggregateInput
   }
 
-  export type UserScalarWhereWithAggregatesInput = {
-    AND?: Enumerable<UserScalarWhereWithAggregatesInput>
-    OR?: Enumerable<UserScalarWhereWithAggregatesInput>
-    NOT?: Enumerable<UserScalarWhereWithAggregatesInput>
+  export type PulseUserScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<PulseUserScalarWhereWithAggregatesInput>
+    OR?: Enumerable<PulseUserScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<PulseUserScalarWhereWithAggregatesInput>
     id?: StringWithAggregatesFilter | string
     createdAt?: DateTimeWithAggregatesFilter | Date | string
     updatedAt?: DateTimeWithAggregatesFilter | Date | string
@@ -5310,9 +5739,9 @@ export namespace Prisma {
     date?: DateTimeFilter | Date | string
     title?: StringFilter | string
     content?: StringNullableFilter | string | null
-    author?: XOR<UserRelationFilter, UserWhereInput>
+    author?: XOR<PulseUserRelationFilter, PulseUserWhereInput>
     authorId?: StringFilter | string
-    patient?: XOR<UserRelationFilter, UserWhereInput>
+    patient?: XOR<PulseUserRelationFilter, PulseUserWhereInput>
     patientId?: StringFilter | string
   }
 
@@ -5323,9 +5752,9 @@ export namespace Prisma {
     date?: SortOrder
     title?: SortOrder
     content?: SortOrder
-    author?: UserOrderByWithRelationInput
+    author?: PulseUserOrderByWithRelationInput
     authorId?: SortOrder
-    patient?: UserOrderByWithRelationInput
+    patient?: PulseUserOrderByWithRelationInput
     patientId?: SortOrder
   }
 
@@ -5370,7 +5799,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter | Date | string
     calLink?: StringFilter | string
     calUserId?: IntFilter | number
-    user?: XOR<UserRelationFilter, UserWhereInput>
+    user?: XOR<PulseUserRelationFilter, PulseUserWhereInput>
     userId?: StringFilter | string
     specializationsIds?: StringNullableListFilter
     specializations?: SpecializationListRelationFilter
@@ -5382,7 +5811,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     calLink?: SortOrder
     calUserId?: SortOrder
-    user?: UserOrderByWithRelationInput
+    user?: PulseUserOrderByWithRelationInput
     userId?: SortOrder
     specializationsIds?: SortOrder
     specializations?: SpecializationOrderByRelationAggregateInput
@@ -5464,7 +5893,7 @@ export namespace Prisma {
     doctorIds?: StringNullableListFilter
   }
 
-  export type UserCreateInput = {
+  export type PulseUserCreateInput = {
     id?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -5480,7 +5909,7 @@ export namespace Prisma {
     doctor?: DoctorCreateNestedOneWithoutUserInput
   }
 
-  export type UserUncheckedCreateInput = {
+  export type PulseUserUncheckedCreateInput = {
     id?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -5496,7 +5925,7 @@ export namespace Prisma {
     doctor?: DoctorUncheckedCreateNestedOneWithoutUserInput
   }
 
-  export type UserUpdateInput = {
+  export type PulseUserUpdateInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     email?: StringFieldUpdateOperationsInput | string
@@ -5511,7 +5940,7 @@ export namespace Prisma {
     doctor?: DoctorUpdateOneWithoutUserNestedInput
   }
 
-  export type UserUncheckedUpdateInput = {
+  export type PulseUserUncheckedUpdateInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     email?: StringFieldUpdateOperationsInput | string
@@ -5526,7 +5955,7 @@ export namespace Prisma {
     doctor?: DoctorUncheckedUpdateOneWithoutUserNestedInput
   }
 
-  export type UserCreateManyInput = {
+  export type PulseUserCreateManyInput = {
     id?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -5539,7 +5968,7 @@ export namespace Prisma {
     role?: Role
   }
 
-  export type UserUpdateManyMutationInput = {
+  export type PulseUserUpdateManyMutationInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     email?: StringFieldUpdateOperationsInput | string
@@ -5551,7 +5980,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | Role
   }
 
-  export type UserUncheckedUpdateManyInput = {
+  export type PulseUserUncheckedUpdateManyInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     email?: StringFieldUpdateOperationsInput | string
@@ -5570,8 +5999,8 @@ export namespace Prisma {
     date: Date | string
     title: string
     content?: string | null
-    author: UserCreateNestedOneWithoutAppointmentsAsAuthorInput
-    patient: UserCreateNestedOneWithoutAppointmentsAsPatientInput
+    author: PulseUserCreateNestedOneWithoutAppointmentsAsAuthorInput
+    patient: PulseUserCreateNestedOneWithoutAppointmentsAsPatientInput
   }
 
   export type AppointmentUncheckedCreateInput = {
@@ -5591,8 +6020,8 @@ export namespace Prisma {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: StringFieldUpdateOperationsInput | string
     content?: NullableStringFieldUpdateOperationsInput | string | null
-    author?: UserUpdateOneRequiredWithoutAppointmentsAsAuthorNestedInput
-    patient?: UserUpdateOneRequiredWithoutAppointmentsAsPatientNestedInput
+    author?: PulseUserUpdateOneRequiredWithoutAppointmentsAsAuthorNestedInput
+    patient?: PulseUserUpdateOneRequiredWithoutAppointmentsAsPatientNestedInput
   }
 
   export type AppointmentUncheckedUpdateInput = {
@@ -5640,7 +6069,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     calLink?: string
     calUserId?: number
-    user: UserCreateNestedOneWithoutDoctorInput
+    user: PulseUserCreateNestedOneWithoutDoctorInput
     specializationsIds?: DoctorCreatespecializationsIdsInput | Enumerable<string>
     specializations?: SpecializationCreateNestedManyWithoutDoctorInput
   }
@@ -5661,7 +6090,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     calLink?: StringFieldUpdateOperationsInput | string
     calUserId?: IntFieldUpdateOperationsInput | number
-    user?: UserUpdateOneRequiredWithoutDoctorNestedInput
+    user?: PulseUserUpdateOneRequiredWithoutDoctorNestedInput
     specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
     specializations?: SpecializationUpdateManyWithoutDoctorNestedInput
   }
@@ -5800,7 +6229,7 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type UserCountOrderByAggregateInput = {
+  export type PulseUserCountOrderByAggregateInput = {
     id?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -5813,7 +6242,7 @@ export namespace Prisma {
     role?: SortOrder
   }
 
-  export type UserMaxOrderByAggregateInput = {
+  export type PulseUserMaxOrderByAggregateInput = {
     id?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -5826,7 +6255,7 @@ export namespace Prisma {
     role?: SortOrder
   }
 
-  export type UserMinOrderByAggregateInput = {
+  export type PulseUserMinOrderByAggregateInput = {
     id?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -5897,9 +6326,9 @@ export namespace Prisma {
     isSet?: boolean
   }
 
-  export type UserRelationFilter = {
-    is?: UserWhereInput
-    isNot?: UserWhereInput
+  export type PulseUserRelationFilter = {
+    is?: PulseUserWhereInput
+    isNot?: PulseUserWhereInput
   }
 
   export type AppointmentCountOrderByAggregateInput = {
@@ -6192,16 +6621,16 @@ export namespace Prisma {
     update?: XOR<DoctorUpdateWithoutUserInput, DoctorUncheckedUpdateWithoutUserInput>
   }
 
-  export type UserCreateNestedOneWithoutAppointmentsAsAuthorInput = {
-    create?: XOR<UserCreateWithoutAppointmentsAsAuthorInput, UserUncheckedCreateWithoutAppointmentsAsAuthorInput>
-    connectOrCreate?: UserCreateOrConnectWithoutAppointmentsAsAuthorInput
-    connect?: UserWhereUniqueInput
+  export type PulseUserCreateNestedOneWithoutAppointmentsAsAuthorInput = {
+    create?: XOR<PulseUserCreateWithoutAppointmentsAsAuthorInput, PulseUserUncheckedCreateWithoutAppointmentsAsAuthorInput>
+    connectOrCreate?: PulseUserCreateOrConnectWithoutAppointmentsAsAuthorInput
+    connect?: PulseUserWhereUniqueInput
   }
 
-  export type UserCreateNestedOneWithoutAppointmentsAsPatientInput = {
-    create?: XOR<UserCreateWithoutAppointmentsAsPatientInput, UserUncheckedCreateWithoutAppointmentsAsPatientInput>
-    connectOrCreate?: UserCreateOrConnectWithoutAppointmentsAsPatientInput
-    connect?: UserWhereUniqueInput
+  export type PulseUserCreateNestedOneWithoutAppointmentsAsPatientInput = {
+    create?: XOR<PulseUserCreateWithoutAppointmentsAsPatientInput, PulseUserUncheckedCreateWithoutAppointmentsAsPatientInput>
+    connectOrCreate?: PulseUserCreateOrConnectWithoutAppointmentsAsPatientInput
+    connect?: PulseUserWhereUniqueInput
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
@@ -6209,26 +6638,26 @@ export namespace Prisma {
     unset?: boolean
   }
 
-  export type UserUpdateOneRequiredWithoutAppointmentsAsAuthorNestedInput = {
-    create?: XOR<UserCreateWithoutAppointmentsAsAuthorInput, UserUncheckedCreateWithoutAppointmentsAsAuthorInput>
-    connectOrCreate?: UserCreateOrConnectWithoutAppointmentsAsAuthorInput
-    upsert?: UserUpsertWithoutAppointmentsAsAuthorInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<UserUpdateWithoutAppointmentsAsAuthorInput, UserUncheckedUpdateWithoutAppointmentsAsAuthorInput>
+  export type PulseUserUpdateOneRequiredWithoutAppointmentsAsAuthorNestedInput = {
+    create?: XOR<PulseUserCreateWithoutAppointmentsAsAuthorInput, PulseUserUncheckedCreateWithoutAppointmentsAsAuthorInput>
+    connectOrCreate?: PulseUserCreateOrConnectWithoutAppointmentsAsAuthorInput
+    upsert?: PulseUserUpsertWithoutAppointmentsAsAuthorInput
+    connect?: PulseUserWhereUniqueInput
+    update?: XOR<PulseUserUpdateWithoutAppointmentsAsAuthorInput, PulseUserUncheckedUpdateWithoutAppointmentsAsAuthorInput>
   }
 
-  export type UserUpdateOneRequiredWithoutAppointmentsAsPatientNestedInput = {
-    create?: XOR<UserCreateWithoutAppointmentsAsPatientInput, UserUncheckedCreateWithoutAppointmentsAsPatientInput>
-    connectOrCreate?: UserCreateOrConnectWithoutAppointmentsAsPatientInput
-    upsert?: UserUpsertWithoutAppointmentsAsPatientInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<UserUpdateWithoutAppointmentsAsPatientInput, UserUncheckedUpdateWithoutAppointmentsAsPatientInput>
+  export type PulseUserUpdateOneRequiredWithoutAppointmentsAsPatientNestedInput = {
+    create?: XOR<PulseUserCreateWithoutAppointmentsAsPatientInput, PulseUserUncheckedCreateWithoutAppointmentsAsPatientInput>
+    connectOrCreate?: PulseUserCreateOrConnectWithoutAppointmentsAsPatientInput
+    upsert?: PulseUserUpsertWithoutAppointmentsAsPatientInput
+    connect?: PulseUserWhereUniqueInput
+    update?: XOR<PulseUserUpdateWithoutAppointmentsAsPatientInput, PulseUserUncheckedUpdateWithoutAppointmentsAsPatientInput>
   }
 
-  export type UserCreateNestedOneWithoutDoctorInput = {
-    create?: XOR<UserCreateWithoutDoctorInput, UserUncheckedCreateWithoutDoctorInput>
-    connectOrCreate?: UserCreateOrConnectWithoutDoctorInput
-    connect?: UserWhereUniqueInput
+  export type PulseUserCreateNestedOneWithoutDoctorInput = {
+    create?: XOR<PulseUserCreateWithoutDoctorInput, PulseUserUncheckedCreateWithoutDoctorInput>
+    connectOrCreate?: PulseUserCreateOrConnectWithoutDoctorInput
+    connect?: PulseUserWhereUniqueInput
   }
 
   export type DoctorCreatespecializationsIdsInput = {
@@ -6255,12 +6684,12 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type UserUpdateOneRequiredWithoutDoctorNestedInput = {
-    create?: XOR<UserCreateWithoutDoctorInput, UserUncheckedCreateWithoutDoctorInput>
-    connectOrCreate?: UserCreateOrConnectWithoutDoctorInput
-    upsert?: UserUpsertWithoutDoctorInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<UserUpdateWithoutDoctorInput, UserUncheckedUpdateWithoutDoctorInput>
+  export type PulseUserUpdateOneRequiredWithoutDoctorNestedInput = {
+    create?: XOR<PulseUserCreateWithoutDoctorInput, PulseUserUncheckedCreateWithoutDoctorInput>
+    connectOrCreate?: PulseUserCreateOrConnectWithoutDoctorInput
+    upsert?: PulseUserUpsertWithoutDoctorInput
+    connect?: PulseUserWhereUniqueInput
+    update?: XOR<PulseUserUpdateWithoutDoctorInput, PulseUserUncheckedUpdateWithoutDoctorInput>
   }
 
   export type DoctorUpdatespecializationsIdsInput = {
@@ -6504,7 +6933,7 @@ export namespace Prisma {
     date: Date | string
     title: string
     content?: string | null
-    patient: UserCreateNestedOneWithoutAppointmentsAsPatientInput
+    patient: PulseUserCreateNestedOneWithoutAppointmentsAsPatientInput
   }
 
   export type AppointmentUncheckedCreateWithoutAuthorInput = {
@@ -6533,7 +6962,7 @@ export namespace Prisma {
     date: Date | string
     title: string
     content?: string | null
-    author: UserCreateNestedOneWithoutAppointmentsAsAuthorInput
+    author: PulseUserCreateNestedOneWithoutAppointmentsAsAuthorInput
   }
 
   export type AppointmentUncheckedCreateWithoutPatientInput = {
@@ -6649,7 +7078,7 @@ export namespace Prisma {
     specializations?: SpecializationUncheckedUpdateManyWithoutDoctorNestedInput
   }
 
-  export type UserCreateWithoutAppointmentsAsAuthorInput = {
+  export type PulseUserCreateWithoutAppointmentsAsAuthorInput = {
     id?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -6664,7 +7093,7 @@ export namespace Prisma {
     doctor?: DoctorCreateNestedOneWithoutUserInput
   }
 
-  export type UserUncheckedCreateWithoutAppointmentsAsAuthorInput = {
+  export type PulseUserUncheckedCreateWithoutAppointmentsAsAuthorInput = {
     id?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -6679,12 +7108,12 @@ export namespace Prisma {
     doctor?: DoctorUncheckedCreateNestedOneWithoutUserInput
   }
 
-  export type UserCreateOrConnectWithoutAppointmentsAsAuthorInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutAppointmentsAsAuthorInput, UserUncheckedCreateWithoutAppointmentsAsAuthorInput>
+  export type PulseUserCreateOrConnectWithoutAppointmentsAsAuthorInput = {
+    where: PulseUserWhereUniqueInput
+    create: XOR<PulseUserCreateWithoutAppointmentsAsAuthorInput, PulseUserUncheckedCreateWithoutAppointmentsAsAuthorInput>
   }
 
-  export type UserCreateWithoutAppointmentsAsPatientInput = {
+  export type PulseUserCreateWithoutAppointmentsAsPatientInput = {
     id?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -6699,7 +7128,7 @@ export namespace Prisma {
     doctor?: DoctorCreateNestedOneWithoutUserInput
   }
 
-  export type UserUncheckedCreateWithoutAppointmentsAsPatientInput = {
+  export type PulseUserUncheckedCreateWithoutAppointmentsAsPatientInput = {
     id?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -6714,17 +7143,17 @@ export namespace Prisma {
     doctor?: DoctorUncheckedCreateNestedOneWithoutUserInput
   }
 
-  export type UserCreateOrConnectWithoutAppointmentsAsPatientInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutAppointmentsAsPatientInput, UserUncheckedCreateWithoutAppointmentsAsPatientInput>
+  export type PulseUserCreateOrConnectWithoutAppointmentsAsPatientInput = {
+    where: PulseUserWhereUniqueInput
+    create: XOR<PulseUserCreateWithoutAppointmentsAsPatientInput, PulseUserUncheckedCreateWithoutAppointmentsAsPatientInput>
   }
 
-  export type UserUpsertWithoutAppointmentsAsAuthorInput = {
-    update: XOR<UserUpdateWithoutAppointmentsAsAuthorInput, UserUncheckedUpdateWithoutAppointmentsAsAuthorInput>
-    create: XOR<UserCreateWithoutAppointmentsAsAuthorInput, UserUncheckedCreateWithoutAppointmentsAsAuthorInput>
+  export type PulseUserUpsertWithoutAppointmentsAsAuthorInput = {
+    update: XOR<PulseUserUpdateWithoutAppointmentsAsAuthorInput, PulseUserUncheckedUpdateWithoutAppointmentsAsAuthorInput>
+    create: XOR<PulseUserCreateWithoutAppointmentsAsAuthorInput, PulseUserUncheckedCreateWithoutAppointmentsAsAuthorInput>
   }
 
-  export type UserUpdateWithoutAppointmentsAsAuthorInput = {
+  export type PulseUserUpdateWithoutAppointmentsAsAuthorInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     email?: StringFieldUpdateOperationsInput | string
@@ -6738,7 +7167,7 @@ export namespace Prisma {
     doctor?: DoctorUpdateOneWithoutUserNestedInput
   }
 
-  export type UserUncheckedUpdateWithoutAppointmentsAsAuthorInput = {
+  export type PulseUserUncheckedUpdateWithoutAppointmentsAsAuthorInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     email?: StringFieldUpdateOperationsInput | string
@@ -6752,12 +7181,12 @@ export namespace Prisma {
     doctor?: DoctorUncheckedUpdateOneWithoutUserNestedInput
   }
 
-  export type UserUpsertWithoutAppointmentsAsPatientInput = {
-    update: XOR<UserUpdateWithoutAppointmentsAsPatientInput, UserUncheckedUpdateWithoutAppointmentsAsPatientInput>
-    create: XOR<UserCreateWithoutAppointmentsAsPatientInput, UserUncheckedCreateWithoutAppointmentsAsPatientInput>
+  export type PulseUserUpsertWithoutAppointmentsAsPatientInput = {
+    update: XOR<PulseUserUpdateWithoutAppointmentsAsPatientInput, PulseUserUncheckedUpdateWithoutAppointmentsAsPatientInput>
+    create: XOR<PulseUserCreateWithoutAppointmentsAsPatientInput, PulseUserUncheckedCreateWithoutAppointmentsAsPatientInput>
   }
 
-  export type UserUpdateWithoutAppointmentsAsPatientInput = {
+  export type PulseUserUpdateWithoutAppointmentsAsPatientInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     email?: StringFieldUpdateOperationsInput | string
@@ -6771,7 +7200,7 @@ export namespace Prisma {
     doctor?: DoctorUpdateOneWithoutUserNestedInput
   }
 
-  export type UserUncheckedUpdateWithoutAppointmentsAsPatientInput = {
+  export type PulseUserUncheckedUpdateWithoutAppointmentsAsPatientInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     email?: StringFieldUpdateOperationsInput | string
@@ -6785,7 +7214,7 @@ export namespace Prisma {
     doctor?: DoctorUncheckedUpdateOneWithoutUserNestedInput
   }
 
-  export type UserCreateWithoutDoctorInput = {
+  export type PulseUserCreateWithoutDoctorInput = {
     id?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -6800,7 +7229,7 @@ export namespace Prisma {
     appointmentsAsPatient?: AppointmentCreateNestedManyWithoutPatientInput
   }
 
-  export type UserUncheckedCreateWithoutDoctorInput = {
+  export type PulseUserUncheckedCreateWithoutDoctorInput = {
     id?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -6815,9 +7244,9 @@ export namespace Prisma {
     appointmentsAsPatient?: AppointmentUncheckedCreateNestedManyWithoutPatientInput
   }
 
-  export type UserCreateOrConnectWithoutDoctorInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutDoctorInput, UserUncheckedCreateWithoutDoctorInput>
+  export type PulseUserCreateOrConnectWithoutDoctorInput = {
+    where: PulseUserWhereUniqueInput
+    create: XOR<PulseUserCreateWithoutDoctorInput, PulseUserUncheckedCreateWithoutDoctorInput>
   }
 
   export type SpecializationCreateWithoutDoctorInput = {
@@ -6839,12 +7268,12 @@ export namespace Prisma {
     create: XOR<SpecializationCreateWithoutDoctorInput, SpecializationUncheckedCreateWithoutDoctorInput>
   }
 
-  export type UserUpsertWithoutDoctorInput = {
-    update: XOR<UserUpdateWithoutDoctorInput, UserUncheckedUpdateWithoutDoctorInput>
-    create: XOR<UserCreateWithoutDoctorInput, UserUncheckedCreateWithoutDoctorInput>
+  export type PulseUserUpsertWithoutDoctorInput = {
+    update: XOR<PulseUserUpdateWithoutDoctorInput, PulseUserUncheckedUpdateWithoutDoctorInput>
+    create: XOR<PulseUserCreateWithoutDoctorInput, PulseUserUncheckedCreateWithoutDoctorInput>
   }
 
-  export type UserUpdateWithoutDoctorInput = {
+  export type PulseUserUpdateWithoutDoctorInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     email?: StringFieldUpdateOperationsInput | string
@@ -6858,7 +7287,7 @@ export namespace Prisma {
     appointmentsAsPatient?: AppointmentUpdateManyWithoutPatientNestedInput
   }
 
-  export type UserUncheckedUpdateWithoutDoctorInput = {
+  export type PulseUserUncheckedUpdateWithoutDoctorInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     email?: StringFieldUpdateOperationsInput | string
@@ -6904,7 +7333,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     calLink?: string
     calUserId?: number
-    user: UserCreateNestedOneWithoutDoctorInput
+    user: PulseUserCreateNestedOneWithoutDoctorInput
     specializationsIds?: DoctorCreatespecializationsIdsInput | Enumerable<string>
   }
 
@@ -6978,7 +7407,7 @@ export namespace Prisma {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: StringFieldUpdateOperationsInput | string
     content?: NullableStringFieldUpdateOperationsInput | string | null
-    patient?: UserUpdateOneRequiredWithoutAppointmentsAsPatientNestedInput
+    patient?: PulseUserUpdateOneRequiredWithoutAppointmentsAsPatientNestedInput
   }
 
   export type AppointmentUncheckedUpdateWithoutAuthorInput = {
@@ -7005,7 +7434,7 @@ export namespace Prisma {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: StringFieldUpdateOperationsInput | string
     content?: NullableStringFieldUpdateOperationsInput | string | null
-    author?: UserUpdateOneRequiredWithoutAppointmentsAsAuthorNestedInput
+    author?: PulseUserUpdateOneRequiredWithoutAppointmentsAsAuthorNestedInput
   }
 
   export type AppointmentUncheckedUpdateWithoutPatientInput = {
@@ -7049,7 +7478,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     calLink?: StringFieldUpdateOperationsInput | string
     calUserId?: IntFieldUpdateOperationsInput | number
-    user?: UserUpdateOneRequiredWithoutDoctorNestedInput
+    user?: PulseUserUpdateOneRequiredWithoutDoctorNestedInput
     specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
   }
 
