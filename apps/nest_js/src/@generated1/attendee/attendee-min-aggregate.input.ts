@@ -17,9 +17,6 @@ export class AttendeeMinAggregateInput {
     timeZone?: true;
 
     @Field(() => Boolean, {nullable:true})
-    pulseUserId?: true;
-
-    @Field(() => Boolean, {nullable:true})
     locale?: true;
 
     @Field(() => Boolean, {nullable:true})

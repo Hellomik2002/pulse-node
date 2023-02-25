@@ -52,7 +52,6 @@ export class AuthService {
 			};
 		} catch (e) {
 			if (
-				e instanceof Prisma.PrismaClientKnownRequestError &&
 				e.code === 'P2002'
 			) {
 				throw new ConflictException(
@@ -100,7 +99,6 @@ export class AuthService {
 			};
 		} catch (e) {
 			if (
-				e instanceof Prisma.PrismaClientKnownRequestError &&
 				e.code === 'P2002'
 			) {
 				throw new ConflictException(

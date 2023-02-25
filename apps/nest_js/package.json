@@ -6,7 +6,7 @@
 	"private": true,
 	"license": "UNLICENSED",
 	"scripts": {
-    "dev": "nest start --watch",
+		"dev": "nest start --watch",
 		"build": "nest build",
 		"format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
 		"start": "nest start",
@@ -33,6 +33,7 @@
 	},
 	"dependencies": {
 		"@calcom/prisma_pulse": "*",
+		"@calcom/prisma": "*",
 		"@nestjs/apollo": "^10.2.0",
 		"@nestjs/axios": "^1.0.1",
 		"@nestjs/common": "^9.0.0",
@@ -43,7 +44,6 @@
 		"@nestjs/mongoose": "^9.2.1",
 		"@nestjs/passport": "^9.0.1",
 		"@nestjs/platform-express": "^9.0.0",
-		"@prisma/client": "4.8.1",
 		"@types/apollo-upload-client": "^17.0.2",
 		"@types/graphql-upload": "^15.0.2",
 		"apollo-server-core": "^3.11.1",

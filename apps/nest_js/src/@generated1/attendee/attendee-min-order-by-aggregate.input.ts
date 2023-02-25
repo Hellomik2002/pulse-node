@@ -18,9 +18,6 @@ export class AttendeeMinOrderByAggregateInput {
     timeZone?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})
-    pulseUserId?: keyof typeof SortOrder;
-
-    @Field(() => SortOrder, {nullable:true})
     locale?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})

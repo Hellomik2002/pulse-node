@@ -20,8 +20,5 @@ export class AttendeeUncheckedUpdateWithoutBookingInput {
     timeZone?: StringFieldUpdateOperationsInput;
 
     @Field(() => NullableStringFieldUpdateOperationsInput, {nullable:true})
-    pulseUserId?: NullableStringFieldUpdateOperationsInput;
-
-    @Field(() => NullableStringFieldUpdateOperationsInput, {nullable:true})
     locale?: NullableStringFieldUpdateOperationsInput;
 }
