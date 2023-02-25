@@ -13,7 +13,7 @@ export class CalComAccountManagerService {
   ) { }
 
   // create a function to get the API key
-  createCalAccount(dto: CalComAccountSignUpDto) {
+  createCalAccount(dto: CalComAccountSignUpDto): Promise<any> {
     const calcomAppUrl = this.configService.get('CAL_COM_APP_URL');
     const calComApi = calcomAppUrl + '/api/auth/signup';
     console.log(calComApi);

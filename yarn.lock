@@ -4447,7 +4447,7 @@
     webpack "5.75.0"
     webpack-node-externals "3.0.0"
 
-"@nestjs/common@^9.0.0", "@nestjs/common@^9.3.8":
+"@nestjs/common@^9.0.0":
   version "9.3.9"
   resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-9.3.9.tgz#170201ce1c2a8f73bd4babe74b64a2a0b37a95d0"
   integrity sha512-GshTD9Xz+wD2em6NyzU4NXw5IXMUmapgDgD+iuj6XL0258hvDwODmNk37mBBnZvTZlqER+krvIUKnS34etqF/A==
@@ -4466,7 +4466,7 @@
     lodash "4.17.21"
     uuid "9.0.0"
 
-"@nestjs/core@^9.0.0", "@nestjs/core@^9.3.8":
+"@nestjs/core@^9.0.0":
   version "9.3.9"
   resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-9.3.9.tgz#694caf785e0209175479637f11be79a930d0c0d6"
   integrity sha512-9g1A1G9eirLXEpH21rc6dKb08zHc2+adhCRz8NW39hbejcsxxD72FApJzt4QBQAKvu862ixt/tdpStnFT7lOSw==
@@ -9996,9 +9996,9 @@ await-event-emitter@^2.0.2:
     is-promise "^4.0.0"
 
 aws-sdk@^2.1322.0:
-  version "2.1322.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1322.0.tgz#9535f5bd66320cd06f24e734bc0db4c60e7efaf2"
-  integrity sha512-y1gSjcxKjL7VT5B8TA2/0etuG/GhrMbPC20zrqpI82LCilRTHkQ8UiXFdWSgoEuqtn16ZK/EbqCNXlgcv90xow==
+  version "2.1323.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1323.0.tgz#ee27583ae502ce37fa644657f3d90a02ce468f2c"
+  integrity sha512-GoLwk2SuG9A6eWgc1mGmm548dklheDmkeptHRw2RhCvq2GZqlc4AzStFUjUURy4O4NQmd2ZiQIoeseue4RwurA==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -12360,7 +12360,6 @@ dedent@^0.7.0:
   resolved "https://registry.yarnpkg.com/dedent/-/dedent-0.7.0.tgz#2495ddbaf6eb874abb0e1be9df22d2e5a544326c"
   integrity sha512-Q6fKUPqnAHAyhiUgFU7BUzLiv0kd8saH9al7tnu5Q/okj6dnupxyTgFIBjVzJATdfIAm9NAsvXNzjaKa+bxVyA==
 
-<<<<<<< HEAD
 deep-equal@^2.0.5:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/deep-equal/-/deep-equal-2.2.0.tgz#5caeace9c781028b9ff459f33b779346637c43e6"
@@ -12384,10 +12383,7 @@ deep-equal@^2.0.5:
     which-collection "^1.0.1"
     which-typed-array "^1.1.9"
 
-deep-extend@0.6.0:
-=======
 deep-extend@0.6.0, deep-extend@^0.6.0:
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/deep-extend/-/deep-extend-0.6.0.tgz#c4fa7c95404a17a9c3e8ca7e1537312b736330ac"
   integrity sha512-LOHxIOaPYdHlJRtCQfDIVZtfw/ufM8+rVj649RIHzcm/vGwQRXFt6OPqIFWsm2XEMrNIEtWR64sY1LEKD2vAOA==
@@ -19949,12 +19945,7 @@ minimist-options@4.1.0:
     is-plain-obj "^1.1.0"
     kind-of "^6.0.3"
 
-minimist@^1.1.1, minimist@^1.1.3, minimist@^1.2.0, minimist@^1.2.5, minimist@^1.2.6:
-  version "1.2.8"
-  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.8.tgz#c1a464e7693302e082a075cee0c057741ac4772c"
-  integrity sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==
-
-minimist@^1.2.3:
+minimist@^1.1.1, minimist@^1.1.3, minimist@^1.2.0, minimist@^1.2.3, minimist@^1.2.5, minimist@^1.2.6:
   version "1.2.8"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.8.tgz#c1a464e7693302e082a075cee0c057741ac4772c"
   integrity sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==
@@ -26681,19 +26672,11 @@ uuid-browser@^3.1.0:
   resolved "https://registry.yarnpkg.com/uuid-browser/-/uuid-browser-3.1.0.tgz#0f05a40aef74f9e5951e20efbf44b11871e56410"
   integrity sha512-dsNgbLaTrd6l3MMxTtouOCFw4CBFc/3a+GgYA2YyrJvyQ1u6q4pcu3ktLoUZ/VN/Aw9WsauazbgsgdfVWgAKQg==
 
-<<<<<<< HEAD
-=======
-uuid@3.3.2:
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
-  integrity sha512-yXJmeNaw3DnnKAOKJE51sL/ZaYfWJRl1pK9dr19YFCu0ObS231AB1/LbqTKRAQ5kw8A90rA6fr4riOUpTZvQZA==
-
 uuid@8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.0.0.tgz#bc6ccf91b5ff0ac07bbcdbf1c7c4e150db4dbb6c"
   integrity sha512-jOXGuXZAWdsTH7eZLtyXMqUb9EcWMGZNbL9YcGBJl4MH4nrxHmZJhEHvyLFrkxo+28uLb/NYRcStH48fnD0Vzw==
 
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
 uuid@8.3.2, uuid@^8.0.0, uuid@^8.3.0, uuid@^8.3.2:
   version "8.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"

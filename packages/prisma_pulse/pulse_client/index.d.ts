@@ -882,16 +882,9 @@ export namespace Prisma {
    */
   export type PulseUserCountOutputTypeArgs = {
     /**
-<<<<<<< HEAD
-     * Select specific fields to fetch from the UserCountOutputType
-     */
-    select?: UserCountOutputTypeSelect | null
-=======
      * Select specific fields to fetch from the PulseUserCountOutputType
-     * 
-    **/
+     */
     select?: PulseUserCountOutputTypeSelect | null
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
   }
 
 
@@ -1080,64 +1073,32 @@ export namespace Prisma {
 
   export type PulseUserAggregateArgs = {
     /**
-<<<<<<< HEAD
-     * Filter which User to aggregate.
-     */
-    where?: UserWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Users to fetch.
-     */
-    orderBy?: Enumerable<UserOrderByWithRelationInput>
-=======
      * Filter which PulseUser to aggregate.
-     * 
-    **/
+     */
     where?: PulseUserWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of PulseUsers to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<PulseUserOrderByWithRelationInput>
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
-<<<<<<< HEAD
      */
-    cursor?: UserWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Users from the position of the cursor.
-     */
-=======
-     * 
-    **/
     cursor?: PulseUserWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` PulseUsers from the position of the cursor.
-     * 
-    **/
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-<<<<<<< HEAD
-     * Skip the first `n` Users.
-     */
-=======
      * Skip the first `n` PulseUsers.
-     * 
-    **/
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
@@ -1170,19 +1131,11 @@ export namespace Prisma {
 
 
 
-<<<<<<< HEAD
-  export type UserGroupByArgs = {
-    where?: UserWhereInput
-    orderBy?: Enumerable<UserOrderByWithAggregationInput>
-    by: UserScalarFieldEnum[]
-    having?: UserScalarWhereWithAggregatesInput
-=======
   export type PulseUserGroupByArgs = {
     where?: PulseUserWhereInput
     orderBy?: Enumerable<PulseUserOrderByWithAggregationInput>
-    by: Array<PulseUserScalarFieldEnum>
+    by: PulseUserScalarFieldEnum[]
     having?: PulseUserScalarWhereWithAggregatesInput
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
     take?: number
     skip?: number
     _count?: PulseUserCountAggregateInputType | true
@@ -1207,11 +1160,7 @@ export namespace Prisma {
     _max: PulseUserMaxAggregateOutputType | null
   }
 
-<<<<<<< HEAD
-  type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
-=======
-  type GetPulseUserGroupByPayload<T extends PulseUserGroupByArgs> = PrismaPromise<
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
+  type GetPulseUserGroupByPayload<T extends PulseUserGroupByArgs> = Prisma.PrismaPromise<
     Array<
       PickArray<PulseUserGroupByOutputType, T['by']> &
         {
@@ -1247,13 +1196,8 @@ export namespace Prisma {
     appointmentsAsAuthor?: boolean | PulseUser$appointmentsAsAuthorArgs
     appointmentsAsPatient?: boolean | PulseUser$appointmentsAsPatientArgs
     doctor?: boolean | DoctorArgs
-<<<<<<< HEAD
-    _count?: boolean | UserCountOutputTypeArgs
-  }
-=======
     _count?: boolean | PulseUserCountOutputTypeArgs
-  } 
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
+  }
 
   export type PulseUserGetPayload<S extends boolean | null | undefined | PulseUserArgs> =
     S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
@@ -1278,23 +1222,13 @@ export namespace Prisma {
       : PulseUser
 
 
-<<<<<<< HEAD
-  type UserCountArgs = 
-    Omit<UserFindManyArgs, 'select' | 'include'> & {
-      select?: UserCountAggregateInputType | true
-=======
-  type PulseUserCountArgs = Merge<
+  type PulseUserCountArgs = 
     Omit<PulseUserFindManyArgs, 'select' | 'include'> & {
       select?: PulseUserCountAggregateInputType | true
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
     }
 
-<<<<<<< HEAD
-  export interface UserDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
-
-=======
   export interface PulseUserDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
+
     /**
      * Find zero or one PulseUser that matches the filter.
      * @param {PulseUserFindUniqueArgs} args - Arguments to find a PulseUser
@@ -1377,15 +1311,9 @@ export namespace Prisma {
      * const pulseUserWithIdOnly = await prisma.pulseUser.findMany({ select: { id: true } })
      * 
     **/
-<<<<<<< HEAD
-    findMany<T extends UserFindManyArgs>(
-      args?: SelectSubset<T, UserFindManyArgs>
-    ): Prisma.PrismaPromise<Array<UserGetPayload<T>>>
-=======
     findMany<T extends PulseUserFindManyArgs>(
       args?: SelectSubset<T, PulseUserFindManyArgs>
-    ): PrismaPromise<Array<PulseUserGetPayload<T>>>
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
+    ): Prisma.PrismaPromise<Array<PulseUserGetPayload<T>>>
 
     /**
      * Create a PulseUser.
@@ -1415,15 +1343,9 @@ export namespace Prisma {
      *     })
      *     
     **/
-<<<<<<< HEAD
-    createMany<T extends UserCreateManyArgs>(
-      args?: SelectSubset<T, UserCreateManyArgs>
-    ): Prisma.PrismaPromise<BatchPayload>
-=======
     createMany<T extends PulseUserCreateManyArgs>(
       args?: SelectSubset<T, PulseUserCreateManyArgs>
-    ): PrismaPromise<BatchPayload>
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Delete a PulseUser.
@@ -1472,15 +1394,9 @@ export namespace Prisma {
      * })
      * 
     **/
-<<<<<<< HEAD
-    deleteMany<T extends UserDeleteManyArgs>(
-      args?: SelectSubset<T, UserDeleteManyArgs>
-    ): Prisma.PrismaPromise<BatchPayload>
-=======
     deleteMany<T extends PulseUserDeleteManyArgs>(
       args?: SelectSubset<T, PulseUserDeleteManyArgs>
-    ): PrismaPromise<BatchPayload>
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more PulseUsers.
@@ -1499,15 +1415,9 @@ export namespace Prisma {
      * })
      * 
     **/
-<<<<<<< HEAD
-    updateMany<T extends UserUpdateManyArgs>(
-      args: SelectSubset<T, UserUpdateManyArgs>
-    ): Prisma.PrismaPromise<BatchPayload>
-=======
     updateMany<T extends PulseUserUpdateManyArgs>(
       args: SelectSubset<T, PulseUserUpdateManyArgs>
-    ): PrismaPromise<BatchPayload>
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create or update one PulseUser.
@@ -1539,13 +1449,8 @@ export namespace Prisma {
      * })
     **/
     findRaw(
-<<<<<<< HEAD
-      args?: UserFindRawArgs
-    ): Prisma.PrismaPromise<JsonObject>
-=======
       args?: PulseUserFindRawArgs
-    ): PrismaPromise<JsonObject>
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
+    ): Prisma.PrismaPromise<JsonObject>
 
     /**
      * Perform aggregation operations on a PulseUser.
@@ -1559,13 +1464,8 @@ export namespace Prisma {
      * })
     **/
     aggregateRaw(
-<<<<<<< HEAD
-      args?: UserAggregateRawArgs
-    ): Prisma.PrismaPromise<JsonObject>
-=======
       args?: PulseUserAggregateRawArgs
-    ): PrismaPromise<JsonObject>
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
+    ): Prisma.PrismaPromise<JsonObject>
 
     /**
      * Count the number of PulseUsers.
@@ -1580,15 +1480,9 @@ export namespace Prisma {
      *   }
      * })
     **/
-<<<<<<< HEAD
-    count<T extends UserCountArgs>(
-      args?: Subset<T, UserCountArgs>,
-    ): Prisma.PrismaPromise<
-=======
     count<T extends PulseUserCountArgs>(
       args?: Subset<T, PulseUserCountArgs>,
-    ): PrismaPromise<
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
+    ): Prisma.PrismaPromise<
       T extends _Record<'select', any>
         ? T['select'] extends true
           ? number
@@ -1620,11 +1514,7 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-<<<<<<< HEAD
-    aggregate<T extends UserAggregateArgs>(args: Subset<T, UserAggregateArgs>): Prisma.PrismaPromise<GetUserAggregateType<T>>
-=======
-    aggregate<T extends PulseUserAggregateArgs>(args: Subset<T, PulseUserAggregateArgs>): PrismaPromise<GetPulseUserAggregateType<T>>
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
+    aggregate<T extends PulseUserAggregateArgs>(args: Subset<T, PulseUserAggregateArgs>): Prisma.PrismaPromise<GetPulseUserAggregateType<T>>
 
     /**
      * Group by PulseUser.
@@ -1701,11 +1591,7 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-<<<<<<< HEAD
-    >(args: SubsetIntersection<T, UserGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-=======
-    >(args: SubsetIntersection<T, PulseUserGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPulseUserGroupByPayload<T> : PrismaPromise<InputErrors>
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
+    >(args: SubsetIntersection<T, PulseUserGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPulseUserGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 
   }
 
@@ -1715,12 +1601,7 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-<<<<<<< HEAD
-  export class Prisma__UserClient<T, Null = never> implements Prisma.PrismaPromise<T> {
-=======
-  export class Prisma__PulseUserClient<T, Null = never> implements PrismaPromise<T> {
-    [prisma]: true;
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
+  export class Prisma__PulseUserClient<T, Null = never> implements Prisma.PrismaPromise<T> {
     private readonly _dmmf;
     private readonly _queryType;
     private readonly _rootField;
@@ -1735,15 +1616,9 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: 'PrismaPromise';
     constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
-<<<<<<< HEAD
-    appointmentsAsAuthor<T extends User$appointmentsAsAuthorArgs= {}>(args?: Subset<T, User$appointmentsAsAuthorArgs>): Prisma.PrismaPromise<Array<AppointmentGetPayload<T>>| Null>;
+    appointmentsAsAuthor<T extends PulseUser$appointmentsAsAuthorArgs= {}>(args?: Subset<T, PulseUser$appointmentsAsAuthorArgs>): Prisma.PrismaPromise<Array<AppointmentGetPayload<T>>| Null>;
 
-    appointmentsAsPatient<T extends User$appointmentsAsPatientArgs= {}>(args?: Subset<T, User$appointmentsAsPatientArgs>): Prisma.PrismaPromise<Array<AppointmentGetPayload<T>>| Null>;
-=======
-    appointmentsAsAuthor<T extends PulseUser$appointmentsAsAuthorArgs= {}>(args?: Subset<T, PulseUser$appointmentsAsAuthorArgs>): PrismaPromise<Array<AppointmentGetPayload<T>>| Null>;
-
-    appointmentsAsPatient<T extends PulseUser$appointmentsAsPatientArgs= {}>(args?: Subset<T, PulseUser$appointmentsAsPatientArgs>): PrismaPromise<Array<AppointmentGetPayload<T>>| Null>;
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
+    appointmentsAsPatient<T extends PulseUser$appointmentsAsPatientArgs= {}>(args?: Subset<T, PulseUser$appointmentsAsPatientArgs>): Prisma.PrismaPromise<Array<AppointmentGetPayload<T>>| Null>;
 
     doctor<T extends DoctorArgs= {}>(args?: Subset<T, DoctorArgs>): Prisma__DoctorClient<DoctorGetPayload<T> | Null>;
 
@@ -1779,34 +1654,17 @@ export namespace Prisma {
    */
   export type PulseUserFindUniqueArgsBase = {
     /**
-<<<<<<< HEAD
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelect | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: UserInclude | null
-    /**
-     * Filter, which User to fetch.
-     */
-    where: UserWhereUniqueInput
-=======
      * Select specific fields to fetch from the PulseUser
-     * 
-    **/
+     */
     select?: PulseUserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: PulseUserInclude | null
     /**
      * Filter, which PulseUser to fetch.
-     * 
-    **/
+     */
     where: PulseUserWhereUniqueInput
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
   }
 
   /**
@@ -1826,34 +1684,17 @@ export namespace Prisma {
    */
   export type PulseUserFindUniqueOrThrowArgs = {
     /**
-<<<<<<< HEAD
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelect | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: UserInclude | null
-    /**
-     * Filter, which User to fetch.
-     */
-    where: UserWhereUniqueInput
-=======
      * Select specific fields to fetch from the PulseUser
-     * 
-    **/
+     */
     select?: PulseUserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: PulseUserInclude | null
     /**
      * Filter, which PulseUser to fetch.
-     * 
-    **/
+     */
     where: PulseUserWhereUniqueInput
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
   }
 
 
@@ -1862,97 +1703,47 @@ export namespace Prisma {
    */
   export type PulseUserFindFirstArgsBase = {
     /**
-<<<<<<< HEAD
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelect | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: UserInclude | null
-    /**
-     * Filter, which User to fetch.
-     */
-    where?: UserWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Users to fetch.
-     */
-    orderBy?: Enumerable<UserOrderByWithRelationInput>
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Users.
-     */
-    cursor?: UserWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Users from the position of the cursor.
-     */
-=======
      * Select specific fields to fetch from the PulseUser
-     * 
-    **/
+     */
     select?: PulseUserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: PulseUserInclude | null
     /**
      * Filter, which PulseUser to fetch.
-     * 
-    **/
+     */
     where?: PulseUserWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of PulseUsers to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<PulseUserOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for searching for PulseUsers.
-     * 
-    **/
+     */
     cursor?: PulseUserWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` PulseUsers from the position of the cursor.
-     * 
-    **/
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-<<<<<<< HEAD
-     * Skip the first `n` Users.
-     */
-=======
      * Skip the first `n` PulseUsers.
-     * 
-    **/
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-<<<<<<< HEAD
-     * Filter by unique combinations of Users.
-     */
-    distinct?: Enumerable<UserScalarFieldEnum>
-=======
      * Filter by unique combinations of PulseUsers.
-     * 
-    **/
+     */
     distinct?: Enumerable<PulseUserScalarFieldEnum>
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
   }
 
   /**
@@ -1972,97 +1763,47 @@ export namespace Prisma {
    */
   export type PulseUserFindFirstOrThrowArgs = {
     /**
-<<<<<<< HEAD
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelect | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: UserInclude | null
-    /**
-     * Filter, which User to fetch.
-     */
-    where?: UserWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Users to fetch.
-     */
-    orderBy?: Enumerable<UserOrderByWithRelationInput>
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Users.
-     */
-    cursor?: UserWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Users from the position of the cursor.
-     */
-=======
      * Select specific fields to fetch from the PulseUser
-     * 
-    **/
+     */
     select?: PulseUserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: PulseUserInclude | null
     /**
      * Filter, which PulseUser to fetch.
-     * 
-    **/
+     */
     where?: PulseUserWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of PulseUsers to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<PulseUserOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for searching for PulseUsers.
-     * 
-    **/
+     */
     cursor?: PulseUserWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` PulseUsers from the position of the cursor.
-     * 
-    **/
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-<<<<<<< HEAD
-     * Skip the first `n` Users.
-     */
-=======
      * Skip the first `n` PulseUsers.
-     * 
-    **/
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-<<<<<<< HEAD
-     * Filter by unique combinations of Users.
-     */
-    distinct?: Enumerable<UserScalarFieldEnum>
-=======
      * Filter by unique combinations of PulseUsers.
-     * 
-    **/
+     */
     distinct?: Enumerable<PulseUserScalarFieldEnum>
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
   }
 
 
@@ -2071,83 +1812,40 @@ export namespace Prisma {
    */
   export type PulseUserFindManyArgs = {
     /**
-<<<<<<< HEAD
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelect | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: UserInclude | null
-    /**
-     * Filter, which Users to fetch.
-     */
-    where?: UserWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Users to fetch.
-     */
-    orderBy?: Enumerable<UserOrderByWithRelationInput>
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Users.
-     */
-    cursor?: UserWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Users from the position of the cursor.
-     */
-=======
      * Select specific fields to fetch from the PulseUser
-     * 
-    **/
+     */
     select?: PulseUserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: PulseUserInclude | null
     /**
      * Filter, which PulseUsers to fetch.
-     * 
-    **/
+     */
     where?: PulseUserWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of PulseUsers to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<PulseUserOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for listing PulseUsers.
-     * 
-    **/
+     */
     cursor?: PulseUserWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` PulseUsers from the position of the cursor.
-     * 
-    **/
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-<<<<<<< HEAD
-     * Skip the first `n` Users.
-     */
-=======
      * Skip the first `n` PulseUsers.
-     * 
-    **/
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
+     */
     skip?: number
     distinct?: Enumerable<PulseUserScalarFieldEnum>
   }
@@ -2158,34 +1856,17 @@ export namespace Prisma {
    */
   export type PulseUserCreateArgs = {
     /**
-<<<<<<< HEAD
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelect | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: UserInclude | null
-    /**
-     * The data needed to create a User.
-     */
-    data: XOR<UserCreateInput, UserUncheckedCreateInput>
-=======
      * Select specific fields to fetch from the PulseUser
-     * 
-    **/
+     */
     select?: PulseUserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: PulseUserInclude | null
     /**
      * The data needed to create a PulseUser.
-     * 
-    **/
+     */
     data: XOR<PulseUserCreateInput, PulseUserUncheckedCreateInput>
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
   }
 
 
@@ -2194,16 +1875,9 @@ export namespace Prisma {
    */
   export type PulseUserCreateManyArgs = {
     /**
-<<<<<<< HEAD
-     * The data used to create many Users.
-     */
-    data: Enumerable<UserCreateManyInput>
-=======
      * The data used to create many PulseUsers.
-     * 
-    **/
+     */
     data: Enumerable<PulseUserCreateManyInput>
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
   }
 
 
@@ -2212,43 +1886,21 @@ export namespace Prisma {
    */
   export type PulseUserUpdateArgs = {
     /**
-<<<<<<< HEAD
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelect | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: UserInclude | null
-    /**
-     * The data needed to update a User.
-     */
-    data: XOR<UserUpdateInput, UserUncheckedUpdateInput>
-    /**
-     * Choose, which User to update.
-     */
-    where: UserWhereUniqueInput
-=======
      * Select specific fields to fetch from the PulseUser
-     * 
-    **/
+     */
     select?: PulseUserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: PulseUserInclude | null
     /**
      * The data needed to update a PulseUser.
-     * 
-    **/
+     */
     data: XOR<PulseUserUpdateInput, PulseUserUncheckedUpdateInput>
     /**
      * Choose, which PulseUser to update.
-     * 
-    **/
+     */
     where: PulseUserWhereUniqueInput
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
   }
 
 
@@ -2257,25 +1909,13 @@ export namespace Prisma {
    */
   export type PulseUserUpdateManyArgs = {
     /**
-<<<<<<< HEAD
-     * The data used to update Users.
-     */
-    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyInput>
-    /**
-     * Filter which Users to update
-     */
-    where?: UserWhereInput
-=======
      * The data used to update PulseUsers.
-     * 
-    **/
+     */
     data: XOR<PulseUserUpdateManyMutationInput, PulseUserUncheckedUpdateManyInput>
     /**
      * Filter which PulseUsers to update
-     * 
-    **/
+     */
     where?: PulseUserWhereInput
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
   }
 
 
@@ -2284,52 +1924,25 @@ export namespace Prisma {
    */
   export type PulseUserUpsertArgs = {
     /**
-<<<<<<< HEAD
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelect | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: UserInclude | null
-    /**
-     * The filter to search for the User to update in case it exists.
-     */
-    where: UserWhereUniqueInput
-    /**
-     * In case the User found by the `where` argument doesn't exist, create a new User with this data.
-     */
-    create: XOR<UserCreateInput, UserUncheckedCreateInput>
-    /**
-     * In case the User was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<UserUpdateInput, UserUncheckedUpdateInput>
-=======
      * Select specific fields to fetch from the PulseUser
-     * 
-    **/
+     */
     select?: PulseUserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: PulseUserInclude | null
     /**
      * The filter to search for the PulseUser to update in case it exists.
-     * 
-    **/
+     */
     where: PulseUserWhereUniqueInput
     /**
      * In case the PulseUser found by the `where` argument doesn't exist, create a new PulseUser with this data.
-     * 
-    **/
+     */
     create: XOR<PulseUserCreateInput, PulseUserUncheckedCreateInput>
     /**
      * In case the PulseUser was found with the provided `where` argument, update it with this data.
-     * 
-    **/
+     */
     update: XOR<PulseUserUpdateInput, PulseUserUncheckedUpdateInput>
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
   }
 
 
@@ -2338,34 +1951,17 @@ export namespace Prisma {
    */
   export type PulseUserDeleteArgs = {
     /**
-<<<<<<< HEAD
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelect | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: UserInclude | null
-    /**
-     * Filter which User to delete.
-     */
-    where: UserWhereUniqueInput
-=======
      * Select specific fields to fetch from the PulseUser
-     * 
-    **/
+     */
     select?: PulseUserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: PulseUserInclude | null
     /**
      * Filter which PulseUser to delete.
-     * 
-    **/
+     */
     where: PulseUserWhereUniqueInput
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
   }
 
 
@@ -2374,16 +1970,9 @@ export namespace Prisma {
    */
   export type PulseUserDeleteManyArgs = {
     /**
-<<<<<<< HEAD
-     * Filter which Users to delete
-     */
-    where?: UserWhereInput
-=======
      * Filter which PulseUsers to delete
-     * 
-    **/
+     */
     where?: PulseUserWhereInput
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
   }
 
 
@@ -2464,25 +2053,13 @@ export namespace Prisma {
    */
   export type PulseUserArgs = {
     /**
-<<<<<<< HEAD
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelect | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: UserInclude | null
-=======
      * Select specific fields to fetch from the PulseUser
-     * 
-    **/
+     */
     select?: PulseUserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: PulseUserInclude | null
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
   }
 
 
@@ -2683,15 +2260,9 @@ export namespace Prisma {
 
 
   export type AppointmentInclude = {
-<<<<<<< HEAD
-    author?: boolean | UserArgs
-    patient?: boolean | UserArgs
-  }
-=======
     author?: boolean | PulseUserArgs
     patient?: boolean | PulseUserArgs
-  } 
->>>>>>> a8dd21ce7aea76bc4065a428606c60571f3265e1
+  }
 
   export type AppointmentGetPayload<S extends boolean | null | undefined | AppointmentArgs> =
     S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :

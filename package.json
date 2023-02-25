@@ -80,9 +80,6 @@
   },
   "dependencies": {
     "@jmondi/prisma-generator-nestjs-graphql": "^1.4.1",
-    "@nestjs/apollo": "^10.2.0",
-    "@nestjs/common": "^9.3.8",
-    "@nestjs/core": "^9.3.8",
     "@calcom/prisma": "*",
     "turbo": "^1.4.3"
   },
