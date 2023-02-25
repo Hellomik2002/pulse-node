@@ -31,9 +31,6 @@ export class AttendeeWhereInput {
     timeZone?: StringFilter;
 
     @Field(() => StringNullableFilter, {nullable:true})
-    pulseUserId?: StringNullableFilter;
-
-    @Field(() => StringNullableFilter, {nullable:true})
     locale?: StringNullableFilter;
 
     @Field(() => BookingRelationFilter, {nullable:true})

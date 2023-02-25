@@ -80,3 +80,6 @@ apps/storybook/build-storybook.log
 # Snaplet
 .snaplet/snapshots
 .snaplet/structure.d.ts
+packages/prisma_pulse/pulse_client/index.js
+packages/prisma_pulse/pulse_client/libquery_engine-darwin.dylib.node
+packages/prisma_pulse/pulse_client/index.js

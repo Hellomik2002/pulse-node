@@ -14,7 +14,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import config from './common/configs/config';
 import { DoctorModule } from './modules/doctors/doctor.module';
 import { SpecializatonModule } from './modules/specialization/specialization.module';
-import { BookingResolver } from './booking/booking.resolver';
+import { BookingResolver } from './booking/resolvers/booking.resolver';
 import { BookingModule } from './modules/booking/booking.module';
 
 @Module({
@@ -47,6 +47,6 @@ import { BookingModule } from './modules/booking/booking.module';
 		BookingModule,
 	],
 	controllers: [AppController],
-	providers: [AppService, BookingResolver],
+	providers: [AppService],
 })
 export class AppModule {}

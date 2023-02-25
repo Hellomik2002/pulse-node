@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { BookingResolver } from './booking.resolver';
+import { BookingResolver } from './resolvers/booking.resolver';
 
 describe('BookingResolver', () => {
   let resolver: BookingResolver;

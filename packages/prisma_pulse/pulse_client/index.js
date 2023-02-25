@@ -173,7 +173,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/tokhtarahmetov/Developer/pulse/pulse-mono/packages/prisma_pulse/pulse_client",
+      "value": "/Users/ulanbatyrbekov/projects/clinic/pulse-node/packages/prisma_pulse/pulse_client",
       "fromEnvVar": null
     },
     "config": {
@@ -212,7 +212,7 @@ const PrismaClient = getPrismaClient(config)
 exports.PrismaClient = PrismaClient
 Object.assign(exports, Prisma)
 
-path.join(__dirname, "libquery_engine-darwin-arm64.dylib.node");
-path.join(process.cwd(), "pulse_client/libquery_engine-darwin-arm64.dylib.node")
+path.join(__dirname, "libquery_engine-darwin.dylib.node");
+path.join(process.cwd(), "pulse_client/libquery_engine-darwin.dylib.node")
 path.join(__dirname, "schema.prisma");
 path.join(process.cwd(), "pulse_client/schema.prisma")

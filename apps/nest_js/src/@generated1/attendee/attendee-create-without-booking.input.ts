@@ -14,8 +14,5 @@ export class AttendeeCreateWithoutBookingInput {
     timeZone!: string;
 
     @Field(() => String, {nullable:true})
-    pulseUserId?: string;
-
-    @Field(() => String, {nullable:true})
     locale?: string;
 }

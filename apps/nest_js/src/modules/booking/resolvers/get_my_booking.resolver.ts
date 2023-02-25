@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { Query, Resolver } from '@nestjs/graphql';
+import { Args, Query, Resolver } from '@nestjs/graphql';
 import { Booking } from 'src/@generated1/booking/booking.model';
 import { GqlAuthGuard } from 'src/modules/auth/tools/gql-auth.guard';
 import { UserEntity } from 'src/modules/auth/tools/user.decorator';
@@ -10,24 +10,38 @@ import { GetBookingType } from '../model/get_booking.type';
 
 @Resolver()
 export class GetMyBookingResolver {
+	@Query(() => [Booking])
+	async bookingsByUser(@Args('userId') userId: string) {
+		const bookings = calPrismaClient.booking.findMany({
+			where: {
+				metadata: {
+					path: ['pulseUserId'],
+					equals: userId,
+				},
+			},
+			include: {
+				user: true,
+				eventType: true,
+			},
+		});
+		return bookings;
+	}
+
 	@Query(() => GetBookingType)
 	@UseGuards(GqlAuthGuard)
 	async getMyBookings(@UserEntity() user: User): Promise<GetBookingType> {
 		const bookings = await calPrismaClient.booking.findMany({
 			where: {
-				attendees: {
-					some: {
-						pulseUserId: user.id,
-					},
-				},
-				endTime: {
-					gte: new Date(),
+				metadata: {
+					path: ['pulseUserId'],
+					equals: user.id,
 				},
 			},
 			orderBy: {
 				startTime: 'asc',
 			},
 			include: {
+				user: true,
 				eventType: true,
 			},
 		});

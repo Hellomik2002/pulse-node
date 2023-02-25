@@ -72,7 +72,6 @@ export class CreateBookingService {
 							email: user.email,
 							name: user.fullName,
 							timeZone: 'Asia/Almaty',
-							pulseUserId: user.id,
 						},
 					},
 				},
