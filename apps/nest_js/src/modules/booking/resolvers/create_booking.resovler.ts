@@ -65,6 +65,9 @@ export class CreateBookingResolver {
 					endTime: endTime1,
 					title: eventType.title,
 					uid: randomUUID(),
+					metadata: {
+						pulseUserId: user.id,
+					},
 					attendees: {
 						create: {
 							email: user.email,
