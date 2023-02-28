@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AWSPhotoUploadService } from './awsphoto-upload-service/awsphoto-upload-service.service';
+import { AWSUploadService } from './awsphoto-upload-service/awsphoto-upload-service.service';
+import { FilemanagerController } from './filemanager.controller';
 
 @Module({
-	providers: [ AWSPhotoUploadService],
+	providers: [ AWSUploadService],
+	controllers: [FilemanagerController],
 })
 export class FilemanagerModule {}

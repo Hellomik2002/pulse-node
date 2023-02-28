@@ -20,34 +20,35 @@ generator nestgraphql {
 }
 
 model PulseUser {
-  id                    String        @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt             DateTime      @default(now())
-  updatedAt             DateTime      @updatedAt
-  email                 String        @unique
+  id                    String            @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+  email                 String            @unique
   password              String
   fullName              String
-  uniqueName            String        @unique
-  phoneNumber           String        @unique
+  uniqueName            String            @unique
+  phoneNumber           String            @unique
   address               String
-  role                  Role          @default(USER)
-  appointmentsAsAuthor  Appointment[] @relation("Author")
-  appointmentsAsPatient Appointment[] @relation("Patient")
+  role                  Role              @default(USER)
+  appointmentsAsAuthor  ConsulationList[] @relation("Author")
+  appointmentsAsPatient ConsulationList[] @relation("Patient")
   doctor                Doctor?
+  authoredFiles         FileEntity[]
 
   @@map("User")
 }
 
-model Appointment {
+model ConsulationList {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  date      DateTime
-  title     String
-  content   String?
+  content   Json?
   author    PulseUser @relation("Author", fields: [authorId], references: [id])
   authorId  String    @db.ObjectId
   patient   PulseUser @relation("Patient", fields: [patientId], references: [id])
   patientId String    @db.ObjectId
+
+  @@map("Appointment")
 }
 
 enum Role {
@@ -76,6 +77,18 @@ model Specialization {
   description String
   doctorIds   String[] @db.ObjectId
   Doctor      Doctor[] @relation(fields: [doctorIds], references: [id])
+}
+
+model FileEntity {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  fileName  String
+  fileUrl   String
+  key       String
+  authorId  String    @unique @db.ObjectId
+  author    PulseUser @relation(fields: [authorId], references: [id])
+  metadata  Json      @default("{}")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 // _id: string;

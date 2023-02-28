@@ -3,12 +3,10 @@
  * Client
 **/
 
-import * as runtime from './runtime/index';
-declare const prisma: unique symbol
-export type PrismaPromise<A> = Promise<A> & {[prisma]: true}
+import * as runtime from './runtime/library';
 type UnwrapPromise<P extends any> = P extends Promise<infer R> ? R : P
 type UnwrapTuple<Tuple extends readonly unknown[]> = {
-  [K in keyof Tuple]: K extends `${number}` ? Tuple[K] extends PrismaPromise<infer X> ? X : UnwrapPromise<Tuple[K]> : UnwrapPromise<Tuple[K]>
+  [K in keyof Tuple]: K extends `${number}` ? Tuple[K] extends Prisma.PrismaPromise<infer X> ? X : UnwrapPromise<Tuple[K]> : UnwrapPromise<Tuple[K]>
 };
 
 
@@ -30,16 +28,14 @@ export type PulseUser = {
 }
 
 /**
- * Model Appointment
+ * Model ConsulationList
  * 
  */
-export type Appointment = {
+export type ConsulationList = {
   id: string
   createdAt: Date
   updatedAt: Date
-  date: Date
-  title: string
-  content: string | null
+  content: Prisma.JsonValue | null
   authorId: string
   patientId: string
 }
@@ -67,6 +63,21 @@ export type Specialization = {
   name: string
   description: string
   doctorIds: string[]
+}
+
+/**
+ * Model FileEntity
+ * 
+ */
+export type FileEntity = {
+  id: string
+  fileName: string
+  fileUrl: string
+  key: string
+  authorId: string
+  metadata: Prisma.JsonValue
+  createdAt: Date
+  updatedAt: Date
 }
 
 
@@ -155,9 +166,9 @@ export class PrismaClient<
    * 
    * Read more in our [docs](https://www.prisma.io/docs/concepts/components/prisma-client/transactions).
    */
-  $transaction<P extends PrismaPromise<any>[]>(arg: [...P]): Promise<UnwrapTuple<P>>;
+  $transaction<P extends Prisma.PrismaPromise<any>[]>(arg: [...P]): Promise<UnwrapTuple<P>>
 
-  $transaction<R>(fn: (prisma: Prisma.TransactionClient) => Promise<R>, options?: {maxWait?: number, timeout?: number}): Promise<R>;
+  $transaction<R>(fn: (prisma: Omit<this, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use">) => Promise<R>, options?: { maxWait?: number, timeout?: number }): Promise<R>
 
   /**
    * Executes a raw MongoDB command and returns the result of it.
@@ -172,7 +183,7 @@ export class PrismaClient<
    * 
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
    */
-  $runCommandRaw(command: Prisma.InputJsonObject): PrismaPromise<Prisma.JsonObject>;
+  $runCommandRaw(command: Prisma.InputJsonObject): Prisma.PrismaPromise<Prisma.JsonObject>
 
       /**
    * `prisma.pulseUser`: Exposes CRUD operations for the **PulseUser** model.
@@ -185,14 +196,14 @@ export class PrismaClient<
   get pulseUser(): Prisma.PulseUserDelegate<GlobalReject>;
 
   /**
-   * `prisma.appointment`: Exposes CRUD operations for the **Appointment** model.
+   * `prisma.consulationList`: Exposes CRUD operations for the **ConsulationList** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more Appointments
-    * const appointments = await prisma.appointment.findMany()
+    * // Fetch zero or more ConsulationLists
+    * const consulationLists = await prisma.consulationList.findMany()
     * ```
     */
-  get appointment(): Prisma.AppointmentDelegate<GlobalReject>;
+  get consulationList(): Prisma.ConsulationListDelegate<GlobalReject>;
 
   /**
    * `prisma.doctor`: Exposes CRUD operations for the **Doctor** model.
@@ -213,10 +224,22 @@ export class PrismaClient<
     * ```
     */
   get specialization(): Prisma.SpecializationDelegate<GlobalReject>;
+
+  /**
+   * `prisma.fileEntity`: Exposes CRUD operations for the **FileEntity** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FileEntities
+    * const fileEntities = await prisma.fileEntity.findMany()
+    * ```
+    */
+  get fileEntity(): Prisma.FileEntityDelegate<GlobalReject>;
 }
 
 export namespace Prisma {
   export import DMMF = runtime.DMMF
+
+  export type PrismaPromise<T> = runtime.Types.Public.PrismaPromise<T>
 
   /**
    * Prisma Errors
@@ -254,8 +277,8 @@ export namespace Prisma {
 
 
   /**
-   * Prisma Client JS version: 4.8.1
-   * Query Engine version: d6e67a83f971b175a593ccc12e15c4a757f93ffe
+   * Prisma Client JS version: 4.10.1
+   * Query Engine version: aead147aa326ccb985dcfed5b065b4fdabd44b19
    */
   export type PrismaVersion = {
     client: string
@@ -619,19 +642,11 @@ export namespace Prisma {
 
   export type Keys<U extends Union> = U extends unknown ? keyof U : never
 
-  type Exact<A, W = unknown> = 
-  W extends unknown ? A extends Narrowable ? Cast<A, W> : Cast<
-  {[K in keyof A]: K extends keyof W ? Exact<A[K], W[K]> : never},
-  {[K in keyof W]: K extends keyof A ? Exact<A[K], W[K]> : W[K]}>
-  : never;
-
-  type Narrowable = string | number | boolean | bigint;
-
   type Cast<A, B> = A extends B ? A : B;
 
   export const type: unique symbol;
 
-  export function validator<V>(): <S>(select: Exact<S, V>) => S;
+  export function validator<V>(): <S>(select: runtime.Types.Utils.LegacyExact<S, V>) => S;
 
   /**
    * Used by group by
@@ -686,21 +701,13 @@ export namespace Prisma {
 
   type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRef<Model, FieldType>
 
-  class PrismaClientFetcher {
-    private readonly prisma;
-    private readonly debug;
-    private readonly hooks?;
-    constructor(prisma: PrismaClient<any, any>, debug?: boolean, hooks?: Hooks | undefined);
-    request<T>(document: any, dataPath?: string[], rootField?: string, typeName?: string, isList?: boolean, callsite?: string): Promise<T>;
-    sanitizeMessage(message: string): string;
-    protected unpack(document: any, data: any, path: string[], rootField?: string, isList?: boolean): any;
-  }
 
   export const ModelName: {
     PulseUser: 'PulseUser',
-    Appointment: 'Appointment',
+    ConsulationList: 'ConsulationList',
     Doctor: 'Doctor',
-    Specialization: 'Specialization'
+    Specialization: 'Specialization',
+    FileEntity: 'FileEntity'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -777,10 +784,6 @@ export namespace Prisma {
      * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/logging#the-log-option).
      */
     log?: Array<LogLevel | LogDefinition>
-  }
-
-  export type Hooks = {
-    beforeRequest?: (options: { query: string, path: string[], rootField?: string, typeName?: string, document: any }) => any
   }
 
   /* Types for Logging */
@@ -873,11 +876,13 @@ export namespace Prisma {
   export type PulseUserCountOutputType = {
     appointmentsAsAuthor: number
     appointmentsAsPatient: number
+    authoredFiles: number
   }
 
   export type PulseUserCountOutputTypeSelect = {
     appointmentsAsAuthor?: boolean
     appointmentsAsPatient?: boolean
+    authoredFiles?: boolean
   }
 
   export type PulseUserCountOutputTypeGetPayload<S extends boolean | null | undefined | PulseUserCountOutputTypeArgs> =
@@ -904,8 +909,7 @@ export namespace Prisma {
   export type PulseUserCountOutputTypeArgs = {
     /**
      * Select specific fields to fetch from the PulseUserCountOutputType
-     * 
-    **/
+     */
     select?: PulseUserCountOutputTypeSelect | null
   }
 
@@ -948,8 +952,7 @@ export namespace Prisma {
   export type DoctorCountOutputTypeArgs = {
     /**
      * Select specific fields to fetch from the DoctorCountOutputType
-     * 
-    **/
+     */
     select?: DoctorCountOutputTypeSelect | null
   }
 
@@ -992,8 +995,7 @@ export namespace Prisma {
   export type SpecializationCountOutputTypeArgs = {
     /**
      * Select specific fields to fetch from the SpecializationCountOutputType
-     * 
-    **/
+     */
     select?: SpecializationCountOutputTypeSelect | null
   }
 
@@ -1098,36 +1100,31 @@ export namespace Prisma {
   export type PulseUserAggregateArgs = {
     /**
      * Filter which PulseUser to aggregate.
-     * 
-    **/
+     */
     where?: PulseUserWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of PulseUsers to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<PulseUserOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
-     * 
-    **/
+     */
     cursor?: PulseUserWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` PulseUsers from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` PulseUsers.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
@@ -1163,7 +1160,7 @@ export namespace Prisma {
   export type PulseUserGroupByArgs = {
     where?: PulseUserWhereInput
     orderBy?: Enumerable<PulseUserOrderByWithAggregationInput>
-    by: Array<PulseUserScalarFieldEnum>
+    by: PulseUserScalarFieldEnum[]
     having?: PulseUserScalarWhereWithAggregatesInput
     take?: number
     skip?: number
@@ -1189,7 +1186,7 @@ export namespace Prisma {
     _max: PulseUserMaxAggregateOutputType | null
   }
 
-  type GetPulseUserGroupByPayload<T extends PulseUserGroupByArgs> = PrismaPromise<
+  type GetPulseUserGroupByPayload<T extends PulseUserGroupByArgs> = Prisma.PrismaPromise<
     Array<
       PickArray<PulseUserGroupByOutputType, T['by']> &
         {
@@ -1217,6 +1214,7 @@ export namespace Prisma {
     appointmentsAsAuthor?: boolean | PulseUser$appointmentsAsAuthorArgs
     appointmentsAsPatient?: boolean | PulseUser$appointmentsAsPatientArgs
     doctor?: boolean | DoctorArgs
+    authoredFiles?: boolean | PulseUser$authoredFilesArgs
     _count?: boolean | PulseUserCountOutputTypeArgs
   }
 
@@ -1225,8 +1223,9 @@ export namespace Prisma {
     appointmentsAsAuthor?: boolean | PulseUser$appointmentsAsAuthorArgs
     appointmentsAsPatient?: boolean | PulseUser$appointmentsAsPatientArgs
     doctor?: boolean | DoctorArgs
+    authoredFiles?: boolean | PulseUser$authoredFilesArgs
     _count?: boolean | PulseUserCountOutputTypeArgs
-  } 
+  }
 
   export type PulseUserGetPayload<S extends boolean | null | undefined | PulseUserArgs> =
     S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
@@ -1235,29 +1234,31 @@ export namespace Prisma {
     S extends { include: any } & (PulseUserArgs | PulseUserFindManyArgs)
     ? PulseUser  & {
     [P in TruthyKeys<S['include']>]:
-        P extends 'appointmentsAsAuthor' ? Array < AppointmentGetPayload<S['include'][P]>>  :
-        P extends 'appointmentsAsPatient' ? Array < AppointmentGetPayload<S['include'][P]>>  :
+        P extends 'appointmentsAsAuthor' ? Array < ConsulationListGetPayload<S['include'][P]>>  :
+        P extends 'appointmentsAsPatient' ? Array < ConsulationListGetPayload<S['include'][P]>>  :
         P extends 'doctor' ? DoctorGetPayload<S['include'][P]> | null :
+        P extends 'authoredFiles' ? Array < FileEntityGetPayload<S['include'][P]>>  :
         P extends '_count' ? PulseUserCountOutputTypeGetPayload<S['include'][P]> :  never
   } 
     : S extends { select: any } & (PulseUserArgs | PulseUserFindManyArgs)
       ? {
     [P in TruthyKeys<S['select']>]:
-        P extends 'appointmentsAsAuthor' ? Array < AppointmentGetPayload<S['select'][P]>>  :
-        P extends 'appointmentsAsPatient' ? Array < AppointmentGetPayload<S['select'][P]>>  :
+        P extends 'appointmentsAsAuthor' ? Array < ConsulationListGetPayload<S['select'][P]>>  :
+        P extends 'appointmentsAsPatient' ? Array < ConsulationListGetPayload<S['select'][P]>>  :
         P extends 'doctor' ? DoctorGetPayload<S['select'][P]> | null :
+        P extends 'authoredFiles' ? Array < FileEntityGetPayload<S['select'][P]>>  :
         P extends '_count' ? PulseUserCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof PulseUser ? PulseUser[P] : never
   } 
       : PulseUser
 
 
-  type PulseUserCountArgs = Merge<
+  type PulseUserCountArgs = 
     Omit<PulseUserFindManyArgs, 'select' | 'include'> & {
       select?: PulseUserCountAggregateInputType | true
     }
-  >
 
   export interface PulseUserDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+
     /**
      * Find zero or one PulseUser that matches the filter.
      * @param {PulseUserFindUniqueArgs} args - Arguments to find a PulseUser
@@ -1342,7 +1343,7 @@ export namespace Prisma {
     **/
     findMany<T extends PulseUserFindManyArgs>(
       args?: SelectSubset<T, PulseUserFindManyArgs>
-    ): PrismaPromise<Array<PulseUserGetPayload<T>>>
+    ): Prisma.PrismaPromise<Array<PulseUserGetPayload<T>>>
 
     /**
      * Create a PulseUser.
@@ -1374,7 +1375,7 @@ export namespace Prisma {
     **/
     createMany<T extends PulseUserCreateManyArgs>(
       args?: SelectSubset<T, PulseUserCreateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Delete a PulseUser.
@@ -1425,7 +1426,7 @@ export namespace Prisma {
     **/
     deleteMany<T extends PulseUserDeleteManyArgs>(
       args?: SelectSubset<T, PulseUserDeleteManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more PulseUsers.
@@ -1446,7 +1447,7 @@ export namespace Prisma {
     **/
     updateMany<T extends PulseUserUpdateManyArgs>(
       args: SelectSubset<T, PulseUserUpdateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create or update one PulseUser.
@@ -1479,7 +1480,7 @@ export namespace Prisma {
     **/
     findRaw(
       args?: PulseUserFindRawArgs
-    ): PrismaPromise<JsonObject>
+    ): Prisma.PrismaPromise<JsonObject>
 
     /**
      * Perform aggregation operations on a PulseUser.
@@ -1494,7 +1495,7 @@ export namespace Prisma {
     **/
     aggregateRaw(
       args?: PulseUserAggregateRawArgs
-    ): PrismaPromise<JsonObject>
+    ): Prisma.PrismaPromise<JsonObject>
 
     /**
      * Count the number of PulseUsers.
@@ -1511,7 +1512,7 @@ export namespace Prisma {
     **/
     count<T extends PulseUserCountArgs>(
       args?: Subset<T, PulseUserCountArgs>,
-    ): PrismaPromise<
+    ): Prisma.PrismaPromise<
       T extends _Record<'select', any>
         ? T['select'] extends true
           ? number
@@ -1543,7 +1544,7 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends PulseUserAggregateArgs>(args: Subset<T, PulseUserAggregateArgs>): PrismaPromise<GetPulseUserAggregateType<T>>
+    aggregate<T extends PulseUserAggregateArgs>(args: Subset<T, PulseUserAggregateArgs>): Prisma.PrismaPromise<GetPulseUserAggregateType<T>>
 
     /**
      * Group by PulseUser.
@@ -1620,7 +1621,7 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, PulseUserGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPulseUserGroupByPayload<T> : PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, PulseUserGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPulseUserGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 
   }
 
@@ -1630,10 +1631,8 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__PulseUserClient<T, Null = never> implements PrismaPromise<T> {
-    [prisma]: true;
+  export class Prisma__PulseUserClient<T, Null = never> implements Prisma.PrismaPromise<T> {
     private readonly _dmmf;
-    private readonly _fetcher;
     private readonly _queryType;
     private readonly _rootField;
     private readonly _clientMethod;
@@ -1644,14 +1643,16 @@ export namespace Prisma {
     private _isList;
     private _callsite;
     private _requestPromise?;
-    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
-    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
-    appointmentsAsAuthor<T extends PulseUser$appointmentsAsAuthorArgs= {}>(args?: Subset<T, PulseUser$appointmentsAsAuthorArgs>): PrismaPromise<Array<AppointmentGetPayload<T>>| Null>;
+    appointmentsAsAuthor<T extends PulseUser$appointmentsAsAuthorArgs= {}>(args?: Subset<T, PulseUser$appointmentsAsAuthorArgs>): Prisma.PrismaPromise<Array<ConsulationListGetPayload<T>>| Null>;
 
-    appointmentsAsPatient<T extends PulseUser$appointmentsAsPatientArgs= {}>(args?: Subset<T, PulseUser$appointmentsAsPatientArgs>): PrismaPromise<Array<AppointmentGetPayload<T>>| Null>;
+    appointmentsAsPatient<T extends PulseUser$appointmentsAsPatientArgs= {}>(args?: Subset<T, PulseUser$appointmentsAsPatientArgs>): Prisma.PrismaPromise<Array<ConsulationListGetPayload<T>>| Null>;
 
     doctor<T extends DoctorArgs= {}>(args?: Subset<T, DoctorArgs>): Prisma__DoctorClient<DoctorGetPayload<T> | Null>;
+
+    authoredFiles<T extends PulseUser$authoredFilesArgs= {}>(args?: Subset<T, PulseUser$authoredFilesArgs>): Prisma.PrismaPromise<Array<FileEntityGetPayload<T>>| Null>;
 
     private get _document();
     /**
@@ -1686,18 +1687,15 @@ export namespace Prisma {
   export type PulseUserFindUniqueArgsBase = {
     /**
      * Select specific fields to fetch from the PulseUser
-     * 
-    **/
+     */
     select?: PulseUserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: PulseUserInclude | null
     /**
      * Filter, which PulseUser to fetch.
-     * 
-    **/
+     */
     where: PulseUserWhereUniqueInput
   }
 
@@ -1719,18 +1717,15 @@ export namespace Prisma {
   export type PulseUserFindUniqueOrThrowArgs = {
     /**
      * Select specific fields to fetch from the PulseUser
-     * 
-    **/
+     */
     select?: PulseUserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: PulseUserInclude | null
     /**
      * Filter, which PulseUser to fetch.
-     * 
-    **/
+     */
     where: PulseUserWhereUniqueInput
   }
 
@@ -1741,53 +1736,45 @@ export namespace Prisma {
   export type PulseUserFindFirstArgsBase = {
     /**
      * Select specific fields to fetch from the PulseUser
-     * 
-    **/
+     */
     select?: PulseUserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: PulseUserInclude | null
     /**
      * Filter, which PulseUser to fetch.
-     * 
-    **/
+     */
     where?: PulseUserWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of PulseUsers to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<PulseUserOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for searching for PulseUsers.
-     * 
-    **/
+     */
     cursor?: PulseUserWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` PulseUsers from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` PulseUsers.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
      * Filter by unique combinations of PulseUsers.
-     * 
-    **/
+     */
     distinct?: Enumerable<PulseUserScalarFieldEnum>
   }
 
@@ -1809,53 +1796,45 @@ export namespace Prisma {
   export type PulseUserFindFirstOrThrowArgs = {
     /**
      * Select specific fields to fetch from the PulseUser
-     * 
-    **/
+     */
     select?: PulseUserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: PulseUserInclude | null
     /**
      * Filter, which PulseUser to fetch.
-     * 
-    **/
+     */
     where?: PulseUserWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of PulseUsers to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<PulseUserOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for searching for PulseUsers.
-     * 
-    **/
+     */
     cursor?: PulseUserWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` PulseUsers from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` PulseUsers.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
      * Filter by unique combinations of PulseUsers.
-     * 
-    **/
+     */
     distinct?: Enumerable<PulseUserScalarFieldEnum>
   }
 
@@ -1866,46 +1845,39 @@ export namespace Prisma {
   export type PulseUserFindManyArgs = {
     /**
      * Select specific fields to fetch from the PulseUser
-     * 
-    **/
+     */
     select?: PulseUserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: PulseUserInclude | null
     /**
      * Filter, which PulseUsers to fetch.
-     * 
-    **/
+     */
     where?: PulseUserWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of PulseUsers to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<PulseUserOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for listing PulseUsers.
-     * 
-    **/
+     */
     cursor?: PulseUserWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` PulseUsers from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` PulseUsers.
-     * 
-    **/
+     */
     skip?: number
     distinct?: Enumerable<PulseUserScalarFieldEnum>
   }
@@ -1917,18 +1889,15 @@ export namespace Prisma {
   export type PulseUserCreateArgs = {
     /**
      * Select specific fields to fetch from the PulseUser
-     * 
-    **/
+     */
     select?: PulseUserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: PulseUserInclude | null
     /**
      * The data needed to create a PulseUser.
-     * 
-    **/
+     */
     data: XOR<PulseUserCreateInput, PulseUserUncheckedCreateInput>
   }
 
@@ -1939,8 +1908,7 @@ export namespace Prisma {
   export type PulseUserCreateManyArgs = {
     /**
      * The data used to create many PulseUsers.
-     * 
-    **/
+     */
     data: Enumerable<PulseUserCreateManyInput>
   }
 
@@ -1951,23 +1919,19 @@ export namespace Prisma {
   export type PulseUserUpdateArgs = {
     /**
      * Select specific fields to fetch from the PulseUser
-     * 
-    **/
+     */
     select?: PulseUserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: PulseUserInclude | null
     /**
      * The data needed to update a PulseUser.
-     * 
-    **/
+     */
     data: XOR<PulseUserUpdateInput, PulseUserUncheckedUpdateInput>
     /**
      * Choose, which PulseUser to update.
-     * 
-    **/
+     */
     where: PulseUserWhereUniqueInput
   }
 
@@ -1978,13 +1942,11 @@ export namespace Prisma {
   export type PulseUserUpdateManyArgs = {
     /**
      * The data used to update PulseUsers.
-     * 
-    **/
+     */
     data: XOR<PulseUserUpdateManyMutationInput, PulseUserUncheckedUpdateManyInput>
     /**
      * Filter which PulseUsers to update
-     * 
-    **/
+     */
     where?: PulseUserWhereInput
   }
 
@@ -1995,28 +1957,23 @@ export namespace Prisma {
   export type PulseUserUpsertArgs = {
     /**
      * Select specific fields to fetch from the PulseUser
-     * 
-    **/
+     */
     select?: PulseUserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: PulseUserInclude | null
     /**
      * The filter to search for the PulseUser to update in case it exists.
-     * 
-    **/
+     */
     where: PulseUserWhereUniqueInput
     /**
      * In case the PulseUser found by the `where` argument doesn't exist, create a new PulseUser with this data.
-     * 
-    **/
+     */
     create: XOR<PulseUserCreateInput, PulseUserUncheckedCreateInput>
     /**
      * In case the PulseUser was found with the provided `where` argument, update it with this data.
-     * 
-    **/
+     */
     update: XOR<PulseUserUpdateInput, PulseUserUncheckedUpdateInput>
   }
 
@@ -2027,18 +1984,15 @@ export namespace Prisma {
   export type PulseUserDeleteArgs = {
     /**
      * Select specific fields to fetch from the PulseUser
-     * 
-    **/
+     */
     select?: PulseUserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: PulseUserInclude | null
     /**
      * Filter which PulseUser to delete.
-     * 
-    **/
+     */
     where: PulseUserWhereUniqueInput
   }
 
@@ -2049,8 +2003,7 @@ export namespace Prisma {
   export type PulseUserDeleteManyArgs = {
     /**
      * Filter which PulseUsers to delete
-     * 
-    **/
+     */
     where?: PulseUserWhereInput
   }
 
@@ -2061,13 +2014,11 @@ export namespace Prisma {
   export type PulseUserFindRawArgs = {
     /**
      * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
-     * 
-    **/
+     */
     filter?: InputJsonValue
     /**
      * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
-     * 
-    **/
+     */
     options?: InputJsonValue
   }
 
@@ -2078,13 +2029,11 @@ export namespace Prisma {
   export type PulseUserAggregateRawArgs = {
     /**
      * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
-     * 
-    **/
-    pipeline?: Array<InputJsonValue>
+     */
+    pipeline?: InputJsonValue[]
     /**
      * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
-     * 
-    **/
+     */
     options?: InputJsonValue
   }
 
@@ -2094,21 +2043,19 @@ export namespace Prisma {
    */
   export type PulseUser$appointmentsAsAuthorArgs = {
     /**
-     * Select specific fields to fetch from the Appointment
-     * 
-    **/
-    select?: AppointmentSelect | null
+     * Select specific fields to fetch from the ConsulationList
+     */
+    select?: ConsulationListSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: AppointmentInclude | null
-    where?: AppointmentWhereInput
-    orderBy?: Enumerable<AppointmentOrderByWithRelationInput>
-    cursor?: AppointmentWhereUniqueInput
+     */
+    include?: ConsulationListInclude | null
+    where?: ConsulationListWhereInput
+    orderBy?: Enumerable<ConsulationListOrderByWithRelationInput>
+    cursor?: ConsulationListWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: Enumerable<AppointmentScalarFieldEnum>
+    distinct?: Enumerable<ConsulationListScalarFieldEnum>
   }
 
 
@@ -2117,21 +2064,40 @@ export namespace Prisma {
    */
   export type PulseUser$appointmentsAsPatientArgs = {
     /**
-     * Select specific fields to fetch from the Appointment
-     * 
-    **/
-    select?: AppointmentSelect | null
+     * Select specific fields to fetch from the ConsulationList
+     */
+    select?: ConsulationListSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: AppointmentInclude | null
-    where?: AppointmentWhereInput
-    orderBy?: Enumerable<AppointmentOrderByWithRelationInput>
-    cursor?: AppointmentWhereUniqueInput
+     */
+    include?: ConsulationListInclude | null
+    where?: ConsulationListWhereInput
+    orderBy?: Enumerable<ConsulationListOrderByWithRelationInput>
+    cursor?: ConsulationListWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: Enumerable<AppointmentScalarFieldEnum>
+    distinct?: Enumerable<ConsulationListScalarFieldEnum>
+  }
+
+
+  /**
+   * PulseUser.authoredFiles
+   */
+  export type PulseUser$authoredFilesArgs = {
+    /**
+     * Select specific fields to fetch from the FileEntity
+     */
+    select?: FileEntitySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: FileEntityInclude | null
+    where?: FileEntityWhereInput
+    orderBy?: Enumerable<FileEntityOrderByWithRelationInput>
+    cursor?: FileEntityWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<FileEntityScalarFieldEnum>
   }
 
 
@@ -2141,57 +2107,47 @@ export namespace Prisma {
   export type PulseUserArgs = {
     /**
      * Select specific fields to fetch from the PulseUser
-     * 
-    **/
+     */
     select?: PulseUserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: PulseUserInclude | null
   }
 
 
 
   /**
-   * Model Appointment
+   * Model ConsulationList
    */
 
 
-  export type AggregateAppointment = {
-    _count: AppointmentCountAggregateOutputType | null
-    _min: AppointmentMinAggregateOutputType | null
-    _max: AppointmentMaxAggregateOutputType | null
+  export type AggregateConsulationList = {
+    _count: ConsulationListCountAggregateOutputType | null
+    _min: ConsulationListMinAggregateOutputType | null
+    _max: ConsulationListMaxAggregateOutputType | null
   }
 
-  export type AppointmentMinAggregateOutputType = {
+  export type ConsulationListMinAggregateOutputType = {
     id: string | null
     createdAt: Date | null
     updatedAt: Date | null
-    date: Date | null
-    title: string | null
-    content: string | null
     authorId: string | null
     patientId: string | null
   }
 
-  export type AppointmentMaxAggregateOutputType = {
+  export type ConsulationListMaxAggregateOutputType = {
     id: string | null
     createdAt: Date | null
     updatedAt: Date | null
-    date: Date | null
-    title: string | null
-    content: string | null
     authorId: string | null
     patientId: string | null
   }
 
-  export type AppointmentCountAggregateOutputType = {
+  export type ConsulationListCountAggregateOutputType = {
     id: number
     createdAt: number
     updatedAt: number
-    date: number
-    title: number
     content: number
     authorId: number
     patientId: number
@@ -2199,152 +2155,135 @@ export namespace Prisma {
   }
 
 
-  export type AppointmentMinAggregateInputType = {
+  export type ConsulationListMinAggregateInputType = {
     id?: true
     createdAt?: true
     updatedAt?: true
-    date?: true
-    title?: true
-    content?: true
     authorId?: true
     patientId?: true
   }
 
-  export type AppointmentMaxAggregateInputType = {
+  export type ConsulationListMaxAggregateInputType = {
     id?: true
     createdAt?: true
     updatedAt?: true
-    date?: true
-    title?: true
-    content?: true
     authorId?: true
     patientId?: true
   }
 
-  export type AppointmentCountAggregateInputType = {
+  export type ConsulationListCountAggregateInputType = {
     id?: true
     createdAt?: true
     updatedAt?: true
-    date?: true
-    title?: true
     content?: true
     authorId?: true
     patientId?: true
     _all?: true
   }
 
-  export type AppointmentAggregateArgs = {
+  export type ConsulationListAggregateArgs = {
     /**
-     * Filter which Appointment to aggregate.
-     * 
-    **/
-    where?: AppointmentWhereInput
+     * Filter which ConsulationList to aggregate.
+     */
+    where?: ConsulationListWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Appointments to fetch.
-     * 
-    **/
-    orderBy?: Enumerable<AppointmentOrderByWithRelationInput>
+     * Determine the order of ConsulationLists to fetch.
+     */
+    orderBy?: Enumerable<ConsulationListOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
-     * 
-    **/
-    cursor?: AppointmentWhereUniqueInput
+     */
+    cursor?: ConsulationListWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Appointments from the position of the cursor.
-     * 
-    **/
+     * Take `±n` ConsulationLists from the position of the cursor.
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Appointments.
-     * 
-    **/
+     * Skip the first `n` ConsulationLists.
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned Appointments
+     * Count returned ConsulationLists
     **/
-    _count?: true | AppointmentCountAggregateInputType
+    _count?: true | ConsulationListCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: AppointmentMinAggregateInputType
+    _min?: ConsulationListMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: AppointmentMaxAggregateInputType
+    _max?: ConsulationListMaxAggregateInputType
   }
 
-  export type GetAppointmentAggregateType<T extends AppointmentAggregateArgs> = {
-        [P in keyof T & keyof AggregateAppointment]: P extends '_count' | 'count'
+  export type GetConsulationListAggregateType<T extends ConsulationListAggregateArgs> = {
+        [P in keyof T & keyof AggregateConsulationList]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregateAppointment[P]>
-      : GetScalarType<T[P], AggregateAppointment[P]>
+        : GetScalarType<T[P], AggregateConsulationList[P]>
+      : GetScalarType<T[P], AggregateConsulationList[P]>
   }
 
 
 
 
-  export type AppointmentGroupByArgs = {
-    where?: AppointmentWhereInput
-    orderBy?: Enumerable<AppointmentOrderByWithAggregationInput>
-    by: Array<AppointmentScalarFieldEnum>
-    having?: AppointmentScalarWhereWithAggregatesInput
+  export type ConsulationListGroupByArgs = {
+    where?: ConsulationListWhereInput
+    orderBy?: Enumerable<ConsulationListOrderByWithAggregationInput>
+    by: ConsulationListScalarFieldEnum[]
+    having?: ConsulationListScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: AppointmentCountAggregateInputType | true
-    _min?: AppointmentMinAggregateInputType
-    _max?: AppointmentMaxAggregateInputType
+    _count?: ConsulationListCountAggregateInputType | true
+    _min?: ConsulationListMinAggregateInputType
+    _max?: ConsulationListMaxAggregateInputType
   }
 
 
-  export type AppointmentGroupByOutputType = {
+  export type ConsulationListGroupByOutputType = {
     id: string
     createdAt: Date
     updatedAt: Date
-    date: Date
-    title: string
-    content: string | null
+    content: JsonValue | null
     authorId: string
     patientId: string
-    _count: AppointmentCountAggregateOutputType | null
-    _min: AppointmentMinAggregateOutputType | null
-    _max: AppointmentMaxAggregateOutputType | null
+    _count: ConsulationListCountAggregateOutputType | null
+    _min: ConsulationListMinAggregateOutputType | null
+    _max: ConsulationListMaxAggregateOutputType | null
   }
 
-  type GetAppointmentGroupByPayload<T extends AppointmentGroupByArgs> = PrismaPromise<
+  type GetConsulationListGroupByPayload<T extends ConsulationListGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickArray<AppointmentGroupByOutputType, T['by']> &
+      PickArray<ConsulationListGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof AppointmentGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof ConsulationListGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], AppointmentGroupByOutputType[P]>
-            : GetScalarType<T[P], AppointmentGroupByOutputType[P]>
+              : GetScalarType<T[P], ConsulationListGroupByOutputType[P]>
+            : GetScalarType<T[P], ConsulationListGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type AppointmentSelect = {
+  export type ConsulationListSelect = {
     id?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    date?: boolean
-    title?: boolean
     content?: boolean
     author?: boolean | PulseUserArgs
     authorId?: boolean
@@ -2353,177 +2292,177 @@ export namespace Prisma {
   }
 
 
-  export type AppointmentInclude = {
+  export type ConsulationListInclude = {
     author?: boolean | PulseUserArgs
     patient?: boolean | PulseUserArgs
-  } 
+  }
 
-  export type AppointmentGetPayload<S extends boolean | null | undefined | AppointmentArgs> =
+  export type ConsulationListGetPayload<S extends boolean | null | undefined | ConsulationListArgs> =
     S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
-    S extends true ? Appointment :
+    S extends true ? ConsulationList :
     S extends undefined ? never :
-    S extends { include: any } & (AppointmentArgs | AppointmentFindManyArgs)
-    ? Appointment  & {
+    S extends { include: any } & (ConsulationListArgs | ConsulationListFindManyArgs)
+    ? ConsulationList  & {
     [P in TruthyKeys<S['include']>]:
         P extends 'author' ? PulseUserGetPayload<S['include'][P]> :
         P extends 'patient' ? PulseUserGetPayload<S['include'][P]> :  never
   } 
-    : S extends { select: any } & (AppointmentArgs | AppointmentFindManyArgs)
+    : S extends { select: any } & (ConsulationListArgs | ConsulationListFindManyArgs)
       ? {
     [P in TruthyKeys<S['select']>]:
         P extends 'author' ? PulseUserGetPayload<S['select'][P]> :
-        P extends 'patient' ? PulseUserGetPayload<S['select'][P]> :  P extends keyof Appointment ? Appointment[P] : never
+        P extends 'patient' ? PulseUserGetPayload<S['select'][P]> :  P extends keyof ConsulationList ? ConsulationList[P] : never
   } 
-      : Appointment
+      : ConsulationList
 
 
-  type AppointmentCountArgs = Merge<
-    Omit<AppointmentFindManyArgs, 'select' | 'include'> & {
-      select?: AppointmentCountAggregateInputType | true
+  type ConsulationListCountArgs = 
+    Omit<ConsulationListFindManyArgs, 'select' | 'include'> & {
+      select?: ConsulationListCountAggregateInputType | true
     }
-  >
 
-  export interface AppointmentDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+  export interface ConsulationListDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+
     /**
-     * Find zero or one Appointment that matches the filter.
-     * @param {AppointmentFindUniqueArgs} args - Arguments to find a Appointment
+     * Find zero or one ConsulationList that matches the filter.
+     * @param {ConsulationListFindUniqueArgs} args - Arguments to find a ConsulationList
      * @example
-     * // Get one Appointment
-     * const appointment = await prisma.appointment.findUnique({
+     * // Get one ConsulationList
+     * const consulationList = await prisma.consulationList.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
     **/
-    findUnique<T extends AppointmentFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
-      args: SelectSubset<T, AppointmentFindUniqueArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Appointment'> extends True ? Prisma__AppointmentClient<AppointmentGetPayload<T>> : Prisma__AppointmentClient<AppointmentGetPayload<T> | null, null>
+    findUnique<T extends ConsulationListFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, ConsulationListFindUniqueArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'ConsulationList'> extends True ? Prisma__ConsulationListClient<ConsulationListGetPayload<T>> : Prisma__ConsulationListClient<ConsulationListGetPayload<T> | null, null>
 
     /**
-     * Find one Appointment that matches the filter or throw an error  with `error.code='P2025'` 
+     * Find one ConsulationList that matches the filter or throw an error  with `error.code='P2025'` 
      *     if no matches were found.
-     * @param {AppointmentFindUniqueOrThrowArgs} args - Arguments to find a Appointment
+     * @param {ConsulationListFindUniqueOrThrowArgs} args - Arguments to find a ConsulationList
      * @example
-     * // Get one Appointment
-     * const appointment = await prisma.appointment.findUniqueOrThrow({
+     * // Get one ConsulationList
+     * const consulationList = await prisma.consulationList.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
     **/
-    findUniqueOrThrow<T extends AppointmentFindUniqueOrThrowArgs>(
-      args?: SelectSubset<T, AppointmentFindUniqueOrThrowArgs>
-    ): Prisma__AppointmentClient<AppointmentGetPayload<T>>
+    findUniqueOrThrow<T extends ConsulationListFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, ConsulationListFindUniqueOrThrowArgs>
+    ): Prisma__ConsulationListClient<ConsulationListGetPayload<T>>
 
     /**
-     * Find the first Appointment that matches the filter.
+     * Find the first ConsulationList that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {AppointmentFindFirstArgs} args - Arguments to find a Appointment
+     * @param {ConsulationListFindFirstArgs} args - Arguments to find a ConsulationList
      * @example
-     * // Get one Appointment
-     * const appointment = await prisma.appointment.findFirst({
+     * // Get one ConsulationList
+     * const consulationList = await prisma.consulationList.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
     **/
-    findFirst<T extends AppointmentFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
-      args?: SelectSubset<T, AppointmentFindFirstArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Appointment'> extends True ? Prisma__AppointmentClient<AppointmentGetPayload<T>> : Prisma__AppointmentClient<AppointmentGetPayload<T> | null, null>
+    findFirst<T extends ConsulationListFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, ConsulationListFindFirstArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'ConsulationList'> extends True ? Prisma__ConsulationListClient<ConsulationListGetPayload<T>> : Prisma__ConsulationListClient<ConsulationListGetPayload<T> | null, null>
 
     /**
-     * Find the first Appointment that matches the filter or
+     * Find the first ConsulationList that matches the filter or
      * throw `NotFoundError` if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {AppointmentFindFirstOrThrowArgs} args - Arguments to find a Appointment
+     * @param {ConsulationListFindFirstOrThrowArgs} args - Arguments to find a ConsulationList
      * @example
-     * // Get one Appointment
-     * const appointment = await prisma.appointment.findFirstOrThrow({
+     * // Get one ConsulationList
+     * const consulationList = await prisma.consulationList.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
     **/
-    findFirstOrThrow<T extends AppointmentFindFirstOrThrowArgs>(
-      args?: SelectSubset<T, AppointmentFindFirstOrThrowArgs>
-    ): Prisma__AppointmentClient<AppointmentGetPayload<T>>
+    findFirstOrThrow<T extends ConsulationListFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, ConsulationListFindFirstOrThrowArgs>
+    ): Prisma__ConsulationListClient<ConsulationListGetPayload<T>>
 
     /**
-     * Find zero or more Appointments that matches the filter.
+     * Find zero or more ConsulationLists that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {AppointmentFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @param {ConsulationListFindManyArgs=} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all Appointments
-     * const appointments = await prisma.appointment.findMany()
+     * // Get all ConsulationLists
+     * const consulationLists = await prisma.consulationList.findMany()
      * 
-     * // Get first 10 Appointments
-     * const appointments = await prisma.appointment.findMany({ take: 10 })
+     * // Get first 10 ConsulationLists
+     * const consulationLists = await prisma.consulationList.findMany({ take: 10 })
      * 
      * // Only select the `id`
-     * const appointmentWithIdOnly = await prisma.appointment.findMany({ select: { id: true } })
+     * const consulationListWithIdOnly = await prisma.consulationList.findMany({ select: { id: true } })
      * 
     **/
-    findMany<T extends AppointmentFindManyArgs>(
-      args?: SelectSubset<T, AppointmentFindManyArgs>
-    ): PrismaPromise<Array<AppointmentGetPayload<T>>>
+    findMany<T extends ConsulationListFindManyArgs>(
+      args?: SelectSubset<T, ConsulationListFindManyArgs>
+    ): Prisma.PrismaPromise<Array<ConsulationListGetPayload<T>>>
 
     /**
-     * Create a Appointment.
-     * @param {AppointmentCreateArgs} args - Arguments to create a Appointment.
+     * Create a ConsulationList.
+     * @param {ConsulationListCreateArgs} args - Arguments to create a ConsulationList.
      * @example
-     * // Create one Appointment
-     * const Appointment = await prisma.appointment.create({
+     * // Create one ConsulationList
+     * const ConsulationList = await prisma.consulationList.create({
      *   data: {
-     *     // ... data to create a Appointment
+     *     // ... data to create a ConsulationList
      *   }
      * })
      * 
     **/
-    create<T extends AppointmentCreateArgs>(
-      args: SelectSubset<T, AppointmentCreateArgs>
-    ): Prisma__AppointmentClient<AppointmentGetPayload<T>>
+    create<T extends ConsulationListCreateArgs>(
+      args: SelectSubset<T, ConsulationListCreateArgs>
+    ): Prisma__ConsulationListClient<ConsulationListGetPayload<T>>
 
     /**
-     * Create many Appointments.
-     *     @param {AppointmentCreateManyArgs} args - Arguments to create many Appointments.
+     * Create many ConsulationLists.
+     *     @param {ConsulationListCreateManyArgs} args - Arguments to create many ConsulationLists.
      *     @example
-     *     // Create many Appointments
-     *     const appointment = await prisma.appointment.createMany({
+     *     // Create many ConsulationLists
+     *     const consulationList = await prisma.consulationList.createMany({
      *       data: {
      *         // ... provide data here
      *       }
      *     })
      *     
     **/
-    createMany<T extends AppointmentCreateManyArgs>(
-      args?: SelectSubset<T, AppointmentCreateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    createMany<T extends ConsulationListCreateManyArgs>(
+      args?: SelectSubset<T, ConsulationListCreateManyArgs>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Delete a Appointment.
-     * @param {AppointmentDeleteArgs} args - Arguments to delete one Appointment.
+     * Delete a ConsulationList.
+     * @param {ConsulationListDeleteArgs} args - Arguments to delete one ConsulationList.
      * @example
-     * // Delete one Appointment
-     * const Appointment = await prisma.appointment.delete({
+     * // Delete one ConsulationList
+     * const ConsulationList = await prisma.consulationList.delete({
      *   where: {
-     *     // ... filter to delete one Appointment
+     *     // ... filter to delete one ConsulationList
      *   }
      * })
      * 
     **/
-    delete<T extends AppointmentDeleteArgs>(
-      args: SelectSubset<T, AppointmentDeleteArgs>
-    ): Prisma__AppointmentClient<AppointmentGetPayload<T>>
+    delete<T extends ConsulationListDeleteArgs>(
+      args: SelectSubset<T, ConsulationListDeleteArgs>
+    ): Prisma__ConsulationListClient<ConsulationListGetPayload<T>>
 
     /**
-     * Update one Appointment.
-     * @param {AppointmentUpdateArgs} args - Arguments to update one Appointment.
+     * Update one ConsulationList.
+     * @param {ConsulationListUpdateArgs} args - Arguments to update one ConsulationList.
      * @example
-     * // Update one Appointment
-     * const appointment = await prisma.appointment.update({
+     * // Update one ConsulationList
+     * const consulationList = await prisma.consulationList.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -2533,34 +2472,34 @@ export namespace Prisma {
      * })
      * 
     **/
-    update<T extends AppointmentUpdateArgs>(
-      args: SelectSubset<T, AppointmentUpdateArgs>
-    ): Prisma__AppointmentClient<AppointmentGetPayload<T>>
+    update<T extends ConsulationListUpdateArgs>(
+      args: SelectSubset<T, ConsulationListUpdateArgs>
+    ): Prisma__ConsulationListClient<ConsulationListGetPayload<T>>
 
     /**
-     * Delete zero or more Appointments.
-     * @param {AppointmentDeleteManyArgs} args - Arguments to filter Appointments to delete.
+     * Delete zero or more ConsulationLists.
+     * @param {ConsulationListDeleteManyArgs} args - Arguments to filter ConsulationLists to delete.
      * @example
-     * // Delete a few Appointments
-     * const { count } = await prisma.appointment.deleteMany({
+     * // Delete a few ConsulationLists
+     * const { count } = await prisma.consulationList.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
     **/
-    deleteMany<T extends AppointmentDeleteManyArgs>(
-      args?: SelectSubset<T, AppointmentDeleteManyArgs>
-    ): PrismaPromise<BatchPayload>
+    deleteMany<T extends ConsulationListDeleteManyArgs>(
+      args?: SelectSubset<T, ConsulationListDeleteManyArgs>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more Appointments.
+     * Update zero or more ConsulationLists.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {AppointmentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {ConsulationListUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many Appointments
-     * const appointment = await prisma.appointment.updateMany({
+     * // Update many ConsulationLists
+     * const consulationList = await prisma.consulationList.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -2570,48 +2509,48 @@ export namespace Prisma {
      * })
      * 
     **/
-    updateMany<T extends AppointmentUpdateManyArgs>(
-      args: SelectSubset<T, AppointmentUpdateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    updateMany<T extends ConsulationListUpdateManyArgs>(
+      args: SelectSubset<T, ConsulationListUpdateManyArgs>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create or update one Appointment.
-     * @param {AppointmentUpsertArgs} args - Arguments to update or create a Appointment.
+     * Create or update one ConsulationList.
+     * @param {ConsulationListUpsertArgs} args - Arguments to update or create a ConsulationList.
      * @example
-     * // Update or create a Appointment
-     * const appointment = await prisma.appointment.upsert({
+     * // Update or create a ConsulationList
+     * const consulationList = await prisma.consulationList.upsert({
      *   create: {
-     *     // ... data to create a Appointment
+     *     // ... data to create a ConsulationList
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the Appointment we want to update
+     *     // ... the filter for the ConsulationList we want to update
      *   }
      * })
     **/
-    upsert<T extends AppointmentUpsertArgs>(
-      args: SelectSubset<T, AppointmentUpsertArgs>
-    ): Prisma__AppointmentClient<AppointmentGetPayload<T>>
+    upsert<T extends ConsulationListUpsertArgs>(
+      args: SelectSubset<T, ConsulationListUpsertArgs>
+    ): Prisma__ConsulationListClient<ConsulationListGetPayload<T>>
 
     /**
-     * Find zero or more Appointments that matches the filter.
-     * @param {AppointmentFindRawArgs} args - Select which filters you would like to apply.
+     * Find zero or more ConsulationLists that matches the filter.
+     * @param {ConsulationListFindRawArgs} args - Select which filters you would like to apply.
      * @example
-     * const appointment = await prisma.appointment.findRaw({
+     * const consulationList = await prisma.consulationList.findRaw({
      *   filter: { age: { $gt: 25 } } 
      * })
     **/
     findRaw(
-      args?: AppointmentFindRawArgs
-    ): PrismaPromise<JsonObject>
+      args?: ConsulationListFindRawArgs
+    ): Prisma.PrismaPromise<JsonObject>
 
     /**
-     * Perform aggregation operations on a Appointment.
-     * @param {AppointmentAggregateRawArgs} args - Select which aggregations you would like to apply.
+     * Perform aggregation operations on a ConsulationList.
+     * @param {ConsulationListAggregateRawArgs} args - Select which aggregations you would like to apply.
      * @example
-     * const appointment = await prisma.appointment.aggregateRaw({
+     * const consulationList = await prisma.consulationList.aggregateRaw({
      *   pipeline: [
      *     { $match: { status: "registered" } },
      *     { $group: { _id: "$country", total: { $sum: 1 } } }
@@ -2619,37 +2558,37 @@ export namespace Prisma {
      * })
     **/
     aggregateRaw(
-      args?: AppointmentAggregateRawArgs
-    ): PrismaPromise<JsonObject>
+      args?: ConsulationListAggregateRawArgs
+    ): Prisma.PrismaPromise<JsonObject>
 
     /**
-     * Count the number of Appointments.
+     * Count the number of ConsulationLists.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {AppointmentCountArgs} args - Arguments to filter Appointments to count.
+     * @param {ConsulationListCountArgs} args - Arguments to filter ConsulationLists to count.
      * @example
-     * // Count the number of Appointments
-     * const count = await prisma.appointment.count({
+     * // Count the number of ConsulationLists
+     * const count = await prisma.consulationList.count({
      *   where: {
-     *     // ... the filter for the Appointments we want to count
+     *     // ... the filter for the ConsulationLists we want to count
      *   }
      * })
     **/
-    count<T extends AppointmentCountArgs>(
-      args?: Subset<T, AppointmentCountArgs>,
-    ): PrismaPromise<
+    count<T extends ConsulationListCountArgs>(
+      args?: Subset<T, ConsulationListCountArgs>,
+    ): Prisma.PrismaPromise<
       T extends _Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], AppointmentCountAggregateOutputType>
+          : GetScalarType<T['select'], ConsulationListCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a Appointment.
+     * Allows you to perform aggregations operations on a ConsulationList.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {AppointmentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {ConsulationListAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -2669,13 +2608,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends AppointmentAggregateArgs>(args: Subset<T, AppointmentAggregateArgs>): PrismaPromise<GetAppointmentAggregateType<T>>
+    aggregate<T extends ConsulationListAggregateArgs>(args: Subset<T, ConsulationListAggregateArgs>): Prisma.PrismaPromise<GetConsulationListAggregateType<T>>
 
     /**
-     * Group by Appointment.
+     * Group by ConsulationList.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {AppointmentGroupByArgs} args - Group by arguments.
+     * @param {ConsulationListGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -2690,14 +2629,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends AppointmentGroupByArgs,
+      T extends ConsulationListGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: AppointmentGroupByArgs['orderBy'] }
-        : { orderBy?: AppointmentGroupByArgs['orderBy'] },
+        ? { orderBy: ConsulationListGroupByArgs['orderBy'] }
+        : { orderBy?: ConsulationListGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends TupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -2746,20 +2685,18 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, AppointmentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAppointmentGroupByPayload<T> : PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, ConsulationListGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetConsulationListGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for Appointment.
+   * The delegate class that acts as a "Promise-like" for ConsulationList.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__AppointmentClient<T, Null = never> implements PrismaPromise<T> {
-    [prisma]: true;
+  export class Prisma__ConsulationListClient<T, Null = never> implements Prisma.PrismaPromise<T> {
     private readonly _dmmf;
-    private readonly _fetcher;
     private readonly _queryType;
     private readonly _rootField;
     private readonly _clientMethod;
@@ -2770,8 +2707,8 @@ export namespace Prisma {
     private _isList;
     private _callsite;
     private _requestPromise?;
-    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
-    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
     author<T extends PulseUserArgs= {}>(args?: Subset<T, PulseUserArgs>): Prisma__PulseUserClient<PulseUserGetPayload<T> | Null>;
 
@@ -2805,30 +2742,27 @@ export namespace Prisma {
   // Custom InputTypes
 
   /**
-   * Appointment base type for findUnique actions
+   * ConsulationList base type for findUnique actions
    */
-  export type AppointmentFindUniqueArgsBase = {
+  export type ConsulationListFindUniqueArgsBase = {
     /**
-     * Select specific fields to fetch from the Appointment
-     * 
-    **/
-    select?: AppointmentSelect | null
+     * Select specific fields to fetch from the ConsulationList
+     */
+    select?: ConsulationListSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: AppointmentInclude | null
+     */
+    include?: ConsulationListInclude | null
     /**
-     * Filter, which Appointment to fetch.
-     * 
-    **/
-    where: AppointmentWhereUniqueInput
+     * Filter, which ConsulationList to fetch.
+     */
+    where: ConsulationListWhereUniqueInput
   }
 
   /**
-   * Appointment findUnique
+   * ConsulationList findUnique
    */
-  export interface AppointmentFindUniqueArgs extends AppointmentFindUniqueArgsBase {
+  export interface ConsulationListFindUniqueArgs extends ConsulationListFindUniqueArgsBase {
    /**
     * Throw an Error if query returns no results
     * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
@@ -2838,87 +2772,76 @@ export namespace Prisma {
       
 
   /**
-   * Appointment findUniqueOrThrow
+   * ConsulationList findUniqueOrThrow
    */
-  export type AppointmentFindUniqueOrThrowArgs = {
+  export type ConsulationListFindUniqueOrThrowArgs = {
     /**
-     * Select specific fields to fetch from the Appointment
-     * 
-    **/
-    select?: AppointmentSelect | null
+     * Select specific fields to fetch from the ConsulationList
+     */
+    select?: ConsulationListSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: AppointmentInclude | null
+     */
+    include?: ConsulationListInclude | null
     /**
-     * Filter, which Appointment to fetch.
-     * 
-    **/
-    where: AppointmentWhereUniqueInput
+     * Filter, which ConsulationList to fetch.
+     */
+    where: ConsulationListWhereUniqueInput
   }
 
 
   /**
-   * Appointment base type for findFirst actions
+   * ConsulationList base type for findFirst actions
    */
-  export type AppointmentFindFirstArgsBase = {
+  export type ConsulationListFindFirstArgsBase = {
     /**
-     * Select specific fields to fetch from the Appointment
-     * 
-    **/
-    select?: AppointmentSelect | null
+     * Select specific fields to fetch from the ConsulationList
+     */
+    select?: ConsulationListSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: AppointmentInclude | null
+     */
+    include?: ConsulationListInclude | null
     /**
-     * Filter, which Appointment to fetch.
-     * 
-    **/
-    where?: AppointmentWhereInput
+     * Filter, which ConsulationList to fetch.
+     */
+    where?: ConsulationListWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Appointments to fetch.
-     * 
-    **/
-    orderBy?: Enumerable<AppointmentOrderByWithRelationInput>
+     * Determine the order of ConsulationLists to fetch.
+     */
+    orderBy?: Enumerable<ConsulationListOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for Appointments.
-     * 
-    **/
-    cursor?: AppointmentWhereUniqueInput
+     * Sets the position for searching for ConsulationLists.
+     */
+    cursor?: ConsulationListWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Appointments from the position of the cursor.
-     * 
-    **/
+     * Take `±n` ConsulationLists from the position of the cursor.
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Appointments.
-     * 
-    **/
+     * Skip the first `n` ConsulationLists.
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of Appointments.
-     * 
-    **/
-    distinct?: Enumerable<AppointmentScalarFieldEnum>
+     * Filter by unique combinations of ConsulationLists.
+     */
+    distinct?: Enumerable<ConsulationListScalarFieldEnum>
   }
 
   /**
-   * Appointment findFirst
+   * ConsulationList findFirst
    */
-  export interface AppointmentFindFirstArgs extends AppointmentFindFirstArgsBase {
+  export interface ConsulationListFindFirstArgs extends ConsulationListFindFirstArgsBase {
    /**
     * Throw an Error if query returns no results
     * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
@@ -2928,305 +2851,265 @@ export namespace Prisma {
       
 
   /**
-   * Appointment findFirstOrThrow
+   * ConsulationList findFirstOrThrow
    */
-  export type AppointmentFindFirstOrThrowArgs = {
+  export type ConsulationListFindFirstOrThrowArgs = {
     /**
-     * Select specific fields to fetch from the Appointment
-     * 
-    **/
-    select?: AppointmentSelect | null
+     * Select specific fields to fetch from the ConsulationList
+     */
+    select?: ConsulationListSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: AppointmentInclude | null
+     */
+    include?: ConsulationListInclude | null
     /**
-     * Filter, which Appointment to fetch.
-     * 
-    **/
-    where?: AppointmentWhereInput
+     * Filter, which ConsulationList to fetch.
+     */
+    where?: ConsulationListWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Appointments to fetch.
-     * 
-    **/
-    orderBy?: Enumerable<AppointmentOrderByWithRelationInput>
+     * Determine the order of ConsulationLists to fetch.
+     */
+    orderBy?: Enumerable<ConsulationListOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for Appointments.
-     * 
-    **/
-    cursor?: AppointmentWhereUniqueInput
+     * Sets the position for searching for ConsulationLists.
+     */
+    cursor?: ConsulationListWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Appointments from the position of the cursor.
-     * 
-    **/
+     * Take `±n` ConsulationLists from the position of the cursor.
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Appointments.
-     * 
-    **/
+     * Skip the first `n` ConsulationLists.
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of Appointments.
-     * 
-    **/
-    distinct?: Enumerable<AppointmentScalarFieldEnum>
+     * Filter by unique combinations of ConsulationLists.
+     */
+    distinct?: Enumerable<ConsulationListScalarFieldEnum>
   }
 
 
   /**
-   * Appointment findMany
+   * ConsulationList findMany
    */
-  export type AppointmentFindManyArgs = {
+  export type ConsulationListFindManyArgs = {
     /**
-     * Select specific fields to fetch from the Appointment
-     * 
-    **/
-    select?: AppointmentSelect | null
+     * Select specific fields to fetch from the ConsulationList
+     */
+    select?: ConsulationListSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: AppointmentInclude | null
+     */
+    include?: ConsulationListInclude | null
     /**
-     * Filter, which Appointments to fetch.
-     * 
-    **/
-    where?: AppointmentWhereInput
+     * Filter, which ConsulationLists to fetch.
+     */
+    where?: ConsulationListWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Appointments to fetch.
-     * 
-    **/
-    orderBy?: Enumerable<AppointmentOrderByWithRelationInput>
+     * Determine the order of ConsulationLists to fetch.
+     */
+    orderBy?: Enumerable<ConsulationListOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing Appointments.
-     * 
-    **/
-    cursor?: AppointmentWhereUniqueInput
+     * Sets the position for listing ConsulationLists.
+     */
+    cursor?: ConsulationListWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Appointments from the position of the cursor.
-     * 
-    **/
+     * Take `±n` ConsulationLists from the position of the cursor.
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Appointments.
-     * 
-    **/
+     * Skip the first `n` ConsulationLists.
+     */
     skip?: number
-    distinct?: Enumerable<AppointmentScalarFieldEnum>
+    distinct?: Enumerable<ConsulationListScalarFieldEnum>
   }
 
 
   /**
-   * Appointment create
+   * ConsulationList create
    */
-  export type AppointmentCreateArgs = {
+  export type ConsulationListCreateArgs = {
     /**
-     * Select specific fields to fetch from the Appointment
-     * 
-    **/
-    select?: AppointmentSelect | null
+     * Select specific fields to fetch from the ConsulationList
+     */
+    select?: ConsulationListSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: AppointmentInclude | null
+     */
+    include?: ConsulationListInclude | null
     /**
-     * The data needed to create a Appointment.
-     * 
-    **/
-    data: XOR<AppointmentCreateInput, AppointmentUncheckedCreateInput>
+     * The data needed to create a ConsulationList.
+     */
+    data: XOR<ConsulationListCreateInput, ConsulationListUncheckedCreateInput>
   }
 
 
   /**
-   * Appointment createMany
+   * ConsulationList createMany
    */
-  export type AppointmentCreateManyArgs = {
+  export type ConsulationListCreateManyArgs = {
     /**
-     * The data used to create many Appointments.
-     * 
-    **/
-    data: Enumerable<AppointmentCreateManyInput>
+     * The data used to create many ConsulationLists.
+     */
+    data: Enumerable<ConsulationListCreateManyInput>
   }
 
 
   /**
-   * Appointment update
+   * ConsulationList update
    */
-  export type AppointmentUpdateArgs = {
+  export type ConsulationListUpdateArgs = {
     /**
-     * Select specific fields to fetch from the Appointment
-     * 
-    **/
-    select?: AppointmentSelect | null
+     * Select specific fields to fetch from the ConsulationList
+     */
+    select?: ConsulationListSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: AppointmentInclude | null
+     */
+    include?: ConsulationListInclude | null
     /**
-     * The data needed to update a Appointment.
-     * 
-    **/
-    data: XOR<AppointmentUpdateInput, AppointmentUncheckedUpdateInput>
+     * The data needed to update a ConsulationList.
+     */
+    data: XOR<ConsulationListUpdateInput, ConsulationListUncheckedUpdateInput>
     /**
-     * Choose, which Appointment to update.
-     * 
-    **/
-    where: AppointmentWhereUniqueInput
+     * Choose, which ConsulationList to update.
+     */
+    where: ConsulationListWhereUniqueInput
   }
 
 
   /**
-   * Appointment updateMany
+   * ConsulationList updateMany
    */
-  export type AppointmentUpdateManyArgs = {
+  export type ConsulationListUpdateManyArgs = {
     /**
-     * The data used to update Appointments.
-     * 
-    **/
-    data: XOR<AppointmentUpdateManyMutationInput, AppointmentUncheckedUpdateManyInput>
+     * The data used to update ConsulationLists.
+     */
+    data: XOR<ConsulationListUpdateManyMutationInput, ConsulationListUncheckedUpdateManyInput>
     /**
-     * Filter which Appointments to update
-     * 
-    **/
-    where?: AppointmentWhereInput
+     * Filter which ConsulationLists to update
+     */
+    where?: ConsulationListWhereInput
   }
 
 
   /**
-   * Appointment upsert
+   * ConsulationList upsert
    */
-  export type AppointmentUpsertArgs = {
+  export type ConsulationListUpsertArgs = {
     /**
-     * Select specific fields to fetch from the Appointment
-     * 
-    **/
-    select?: AppointmentSelect | null
+     * Select specific fields to fetch from the ConsulationList
+     */
+    select?: ConsulationListSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: AppointmentInclude | null
+     */
+    include?: ConsulationListInclude | null
     /**
-     * The filter to search for the Appointment to update in case it exists.
-     * 
-    **/
-    where: AppointmentWhereUniqueInput
+     * The filter to search for the ConsulationList to update in case it exists.
+     */
+    where: ConsulationListWhereUniqueInput
     /**
-     * In case the Appointment found by the `where` argument doesn't exist, create a new Appointment with this data.
-     * 
-    **/
-    create: XOR<AppointmentCreateInput, AppointmentUncheckedCreateInput>
+     * In case the ConsulationList found by the `where` argument doesn't exist, create a new ConsulationList with this data.
+     */
+    create: XOR<ConsulationListCreateInput, ConsulationListUncheckedCreateInput>
     /**
-     * In case the Appointment was found with the provided `where` argument, update it with this data.
-     * 
-    **/
-    update: XOR<AppointmentUpdateInput, AppointmentUncheckedUpdateInput>
+     * In case the ConsulationList was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ConsulationListUpdateInput, ConsulationListUncheckedUpdateInput>
   }
 
 
   /**
-   * Appointment delete
+   * ConsulationList delete
    */
-  export type AppointmentDeleteArgs = {
+  export type ConsulationListDeleteArgs = {
     /**
-     * Select specific fields to fetch from the Appointment
-     * 
-    **/
-    select?: AppointmentSelect | null
+     * Select specific fields to fetch from the ConsulationList
+     */
+    select?: ConsulationListSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: AppointmentInclude | null
+     */
+    include?: ConsulationListInclude | null
     /**
-     * Filter which Appointment to delete.
-     * 
-    **/
-    where: AppointmentWhereUniqueInput
+     * Filter which ConsulationList to delete.
+     */
+    where: ConsulationListWhereUniqueInput
   }
 
 
   /**
-   * Appointment deleteMany
+   * ConsulationList deleteMany
    */
-  export type AppointmentDeleteManyArgs = {
+  export type ConsulationListDeleteManyArgs = {
     /**
-     * Filter which Appointments to delete
-     * 
-    **/
-    where?: AppointmentWhereInput
+     * Filter which ConsulationLists to delete
+     */
+    where?: ConsulationListWhereInput
   }
 
 
   /**
-   * Appointment findRaw
+   * ConsulationList findRaw
    */
-  export type AppointmentFindRawArgs = {
+  export type ConsulationListFindRawArgs = {
     /**
      * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
-     * 
-    **/
+     */
     filter?: InputJsonValue
     /**
      * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
-     * 
-    **/
+     */
     options?: InputJsonValue
   }
 
 
   /**
-   * Appointment aggregateRaw
+   * ConsulationList aggregateRaw
    */
-  export type AppointmentAggregateRawArgs = {
+  export type ConsulationListAggregateRawArgs = {
     /**
      * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
-     * 
-    **/
-    pipeline?: Array<InputJsonValue>
+     */
+    pipeline?: InputJsonValue[]
     /**
      * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
-     * 
-    **/
+     */
     options?: InputJsonValue
   }
 
 
   /**
-   * Appointment without action
+   * ConsulationList without action
    */
-  export type AppointmentArgs = {
+  export type ConsulationListArgs = {
     /**
-     * Select specific fields to fetch from the Appointment
-     * 
-    **/
-    select?: AppointmentSelect | null
+     * Select specific fields to fetch from the ConsulationList
+     */
+    select?: ConsulationListSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: AppointmentInclude | null
+     */
+    include?: ConsulationListInclude | null
   }
 
 
@@ -3322,36 +3205,31 @@ export namespace Prisma {
   export type DoctorAggregateArgs = {
     /**
      * Filter which Doctor to aggregate.
-     * 
-    **/
+     */
     where?: DoctorWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Doctors to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<DoctorOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
-     * 
-    **/
+     */
     cursor?: DoctorWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Doctors from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Doctors.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
@@ -3399,7 +3277,7 @@ export namespace Prisma {
   export type DoctorGroupByArgs = {
     where?: DoctorWhereInput
     orderBy?: Enumerable<DoctorOrderByWithAggregationInput>
-    by: Array<DoctorScalarFieldEnum>
+    by: DoctorScalarFieldEnum[]
     having?: DoctorScalarWhereWithAggregatesInput
     take?: number
     skip?: number
@@ -3426,7 +3304,7 @@ export namespace Prisma {
     _max: DoctorMaxAggregateOutputType | null
   }
 
-  type GetDoctorGroupByPayload<T extends DoctorGroupByArgs> = PrismaPromise<
+  type GetDoctorGroupByPayload<T extends DoctorGroupByArgs> = Prisma.PrismaPromise<
     Array<
       PickArray<DoctorGroupByOutputType, T['by']> &
         {
@@ -3458,7 +3336,7 @@ export namespace Prisma {
     user?: boolean | PulseUserArgs
     specializations?: boolean | Doctor$specializationsArgs
     _count?: boolean | DoctorCountOutputTypeArgs
-  } 
+  }
 
   export type DoctorGetPayload<S extends boolean | null | undefined | DoctorArgs> =
     S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
@@ -3481,13 +3359,13 @@ export namespace Prisma {
       : Doctor
 
 
-  type DoctorCountArgs = Merge<
+  type DoctorCountArgs = 
     Omit<DoctorFindManyArgs, 'select' | 'include'> & {
       select?: DoctorCountAggregateInputType | true
     }
-  >
 
   export interface DoctorDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+
     /**
      * Find zero or one Doctor that matches the filter.
      * @param {DoctorFindUniqueArgs} args - Arguments to find a Doctor
@@ -3572,7 +3450,7 @@ export namespace Prisma {
     **/
     findMany<T extends DoctorFindManyArgs>(
       args?: SelectSubset<T, DoctorFindManyArgs>
-    ): PrismaPromise<Array<DoctorGetPayload<T>>>
+    ): Prisma.PrismaPromise<Array<DoctorGetPayload<T>>>
 
     /**
      * Create a Doctor.
@@ -3604,7 +3482,7 @@ export namespace Prisma {
     **/
     createMany<T extends DoctorCreateManyArgs>(
       args?: SelectSubset<T, DoctorCreateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Delete a Doctor.
@@ -3655,7 +3533,7 @@ export namespace Prisma {
     **/
     deleteMany<T extends DoctorDeleteManyArgs>(
       args?: SelectSubset<T, DoctorDeleteManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more Doctors.
@@ -3676,7 +3554,7 @@ export namespace Prisma {
     **/
     updateMany<T extends DoctorUpdateManyArgs>(
       args: SelectSubset<T, DoctorUpdateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create or update one Doctor.
@@ -3709,7 +3587,7 @@ export namespace Prisma {
     **/
     findRaw(
       args?: DoctorFindRawArgs
-    ): PrismaPromise<JsonObject>
+    ): Prisma.PrismaPromise<JsonObject>
 
     /**
      * Perform aggregation operations on a Doctor.
@@ -3724,7 +3602,7 @@ export namespace Prisma {
     **/
     aggregateRaw(
       args?: DoctorAggregateRawArgs
-    ): PrismaPromise<JsonObject>
+    ): Prisma.PrismaPromise<JsonObject>
 
     /**
      * Count the number of Doctors.
@@ -3741,7 +3619,7 @@ export namespace Prisma {
     **/
     count<T extends DoctorCountArgs>(
       args?: Subset<T, DoctorCountArgs>,
-    ): PrismaPromise<
+    ): Prisma.PrismaPromise<
       T extends _Record<'select', any>
         ? T['select'] extends true
           ? number
@@ -3773,7 +3651,7 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends DoctorAggregateArgs>(args: Subset<T, DoctorAggregateArgs>): PrismaPromise<GetDoctorAggregateType<T>>
+    aggregate<T extends DoctorAggregateArgs>(args: Subset<T, DoctorAggregateArgs>): Prisma.PrismaPromise<GetDoctorAggregateType<T>>
 
     /**
      * Group by Doctor.
@@ -3850,7 +3728,7 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, DoctorGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDoctorGroupByPayload<T> : PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, DoctorGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDoctorGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 
   }
 
@@ -3860,10 +3738,8 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__DoctorClient<T, Null = never> implements PrismaPromise<T> {
-    [prisma]: true;
+  export class Prisma__DoctorClient<T, Null = never> implements Prisma.PrismaPromise<T> {
     private readonly _dmmf;
-    private readonly _fetcher;
     private readonly _queryType;
     private readonly _rootField;
     private readonly _clientMethod;
@@ -3874,12 +3750,12 @@ export namespace Prisma {
     private _isList;
     private _callsite;
     private _requestPromise?;
-    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
-    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
     user<T extends PulseUserArgs= {}>(args?: Subset<T, PulseUserArgs>): Prisma__PulseUserClient<PulseUserGetPayload<T> | Null>;
 
-    specializations<T extends Doctor$specializationsArgs= {}>(args?: Subset<T, Doctor$specializationsArgs>): PrismaPromise<Array<SpecializationGetPayload<T>>| Null>;
+    specializations<T extends Doctor$specializationsArgs= {}>(args?: Subset<T, Doctor$specializationsArgs>): Prisma.PrismaPromise<Array<SpecializationGetPayload<T>>| Null>;
 
     private get _document();
     /**
@@ -3914,18 +3790,15 @@ export namespace Prisma {
   export type DoctorFindUniqueArgsBase = {
     /**
      * Select specific fields to fetch from the Doctor
-     * 
-    **/
+     */
     select?: DoctorSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DoctorInclude | null
     /**
      * Filter, which Doctor to fetch.
-     * 
-    **/
+     */
     where: DoctorWhereUniqueInput
   }
 
@@ -3947,18 +3820,15 @@ export namespace Prisma {
   export type DoctorFindUniqueOrThrowArgs = {
     /**
      * Select specific fields to fetch from the Doctor
-     * 
-    **/
+     */
     select?: DoctorSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DoctorInclude | null
     /**
      * Filter, which Doctor to fetch.
-     * 
-    **/
+     */
     where: DoctorWhereUniqueInput
   }
 
@@ -3969,53 +3839,45 @@ export namespace Prisma {
   export type DoctorFindFirstArgsBase = {
     /**
      * Select specific fields to fetch from the Doctor
-     * 
-    **/
+     */
     select?: DoctorSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DoctorInclude | null
     /**
      * Filter, which Doctor to fetch.
-     * 
-    **/
+     */
     where?: DoctorWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Doctors to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<DoctorOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for searching for Doctors.
-     * 
-    **/
+     */
     cursor?: DoctorWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Doctors from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Doctors.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
      * Filter by unique combinations of Doctors.
-     * 
-    **/
+     */
     distinct?: Enumerable<DoctorScalarFieldEnum>
   }
 
@@ -4037,53 +3899,45 @@ export namespace Prisma {
   export type DoctorFindFirstOrThrowArgs = {
     /**
      * Select specific fields to fetch from the Doctor
-     * 
-    **/
+     */
     select?: DoctorSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DoctorInclude | null
     /**
      * Filter, which Doctor to fetch.
-     * 
-    **/
+     */
     where?: DoctorWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Doctors to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<DoctorOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for searching for Doctors.
-     * 
-    **/
+     */
     cursor?: DoctorWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Doctors from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Doctors.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
      * Filter by unique combinations of Doctors.
-     * 
-    **/
+     */
     distinct?: Enumerable<DoctorScalarFieldEnum>
   }
 
@@ -4094,46 +3948,39 @@ export namespace Prisma {
   export type DoctorFindManyArgs = {
     /**
      * Select specific fields to fetch from the Doctor
-     * 
-    **/
+     */
     select?: DoctorSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DoctorInclude | null
     /**
      * Filter, which Doctors to fetch.
-     * 
-    **/
+     */
     where?: DoctorWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Doctors to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<DoctorOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for listing Doctors.
-     * 
-    **/
+     */
     cursor?: DoctorWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Doctors from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Doctors.
-     * 
-    **/
+     */
     skip?: number
     distinct?: Enumerable<DoctorScalarFieldEnum>
   }
@@ -4145,18 +3992,15 @@ export namespace Prisma {
   export type DoctorCreateArgs = {
     /**
      * Select specific fields to fetch from the Doctor
-     * 
-    **/
+     */
     select?: DoctorSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DoctorInclude | null
     /**
      * The data needed to create a Doctor.
-     * 
-    **/
+     */
     data: XOR<DoctorCreateInput, DoctorUncheckedCreateInput>
   }
 
@@ -4167,8 +4011,7 @@ export namespace Prisma {
   export type DoctorCreateManyArgs = {
     /**
      * The data used to create many Doctors.
-     * 
-    **/
+     */
     data: Enumerable<DoctorCreateManyInput>
   }
 
@@ -4179,23 +4022,19 @@ export namespace Prisma {
   export type DoctorUpdateArgs = {
     /**
      * Select specific fields to fetch from the Doctor
-     * 
-    **/
+     */
     select?: DoctorSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DoctorInclude | null
     /**
      * The data needed to update a Doctor.
-     * 
-    **/
+     */
     data: XOR<DoctorUpdateInput, DoctorUncheckedUpdateInput>
     /**
      * Choose, which Doctor to update.
-     * 
-    **/
+     */
     where: DoctorWhereUniqueInput
   }
 
@@ -4206,13 +4045,11 @@ export namespace Prisma {
   export type DoctorUpdateManyArgs = {
     /**
      * The data used to update Doctors.
-     * 
-    **/
+     */
     data: XOR<DoctorUpdateManyMutationInput, DoctorUncheckedUpdateManyInput>
     /**
      * Filter which Doctors to update
-     * 
-    **/
+     */
     where?: DoctorWhereInput
   }
 
@@ -4223,28 +4060,23 @@ export namespace Prisma {
   export type DoctorUpsertArgs = {
     /**
      * Select specific fields to fetch from the Doctor
-     * 
-    **/
+     */
     select?: DoctorSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DoctorInclude | null
     /**
      * The filter to search for the Doctor to update in case it exists.
-     * 
-    **/
+     */
     where: DoctorWhereUniqueInput
     /**
      * In case the Doctor found by the `where` argument doesn't exist, create a new Doctor with this data.
-     * 
-    **/
+     */
     create: XOR<DoctorCreateInput, DoctorUncheckedCreateInput>
     /**
      * In case the Doctor was found with the provided `where` argument, update it with this data.
-     * 
-    **/
+     */
     update: XOR<DoctorUpdateInput, DoctorUncheckedUpdateInput>
   }
 
@@ -4255,18 +4087,15 @@ export namespace Prisma {
   export type DoctorDeleteArgs = {
     /**
      * Select specific fields to fetch from the Doctor
-     * 
-    **/
+     */
     select?: DoctorSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DoctorInclude | null
     /**
      * Filter which Doctor to delete.
-     * 
-    **/
+     */
     where: DoctorWhereUniqueInput
   }
 
@@ -4277,8 +4106,7 @@ export namespace Prisma {
   export type DoctorDeleteManyArgs = {
     /**
      * Filter which Doctors to delete
-     * 
-    **/
+     */
     where?: DoctorWhereInput
   }
 
@@ -4289,13 +4117,11 @@ export namespace Prisma {
   export type DoctorFindRawArgs = {
     /**
      * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
-     * 
-    **/
+     */
     filter?: InputJsonValue
     /**
      * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
-     * 
-    **/
+     */
     options?: InputJsonValue
   }
 
@@ -4306,13 +4132,11 @@ export namespace Prisma {
   export type DoctorAggregateRawArgs = {
     /**
      * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
-     * 
-    **/
-    pipeline?: Array<InputJsonValue>
+     */
+    pipeline?: InputJsonValue[]
     /**
      * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
-     * 
-    **/
+     */
     options?: InputJsonValue
   }
 
@@ -4323,13 +4147,11 @@ export namespace Prisma {
   export type Doctor$specializationsArgs = {
     /**
      * Select specific fields to fetch from the Specialization
-     * 
-    **/
+     */
     select?: SpecializationSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: SpecializationInclude | null
     where?: SpecializationWhereInput
     orderBy?: Enumerable<SpecializationOrderByWithRelationInput>
@@ -4346,13 +4168,11 @@ export namespace Prisma {
   export type DoctorArgs = {
     /**
      * Select specific fields to fetch from the Doctor
-     * 
-    **/
+     */
     select?: DoctorSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DoctorInclude | null
   }
 
@@ -4413,36 +4233,31 @@ export namespace Prisma {
   export type SpecializationAggregateArgs = {
     /**
      * Filter which Specialization to aggregate.
-     * 
-    **/
+     */
     where?: SpecializationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Specializations to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<SpecializationOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
-     * 
-    **/
+     */
     cursor?: SpecializationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Specializations from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Specializations.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
@@ -4478,7 +4293,7 @@ export namespace Prisma {
   export type SpecializationGroupByArgs = {
     where?: SpecializationWhereInput
     orderBy?: Enumerable<SpecializationOrderByWithAggregationInput>
-    by: Array<SpecializationScalarFieldEnum>
+    by: SpecializationScalarFieldEnum[]
     having?: SpecializationScalarWhereWithAggregatesInput
     take?: number
     skip?: number
@@ -4498,7 +4313,7 @@ export namespace Prisma {
     _max: SpecializationMaxAggregateOutputType | null
   }
 
-  type GetSpecializationGroupByPayload<T extends SpecializationGroupByArgs> = PrismaPromise<
+  type GetSpecializationGroupByPayload<T extends SpecializationGroupByArgs> = Prisma.PrismaPromise<
     Array<
       PickArray<SpecializationGroupByOutputType, T['by']> &
         {
@@ -4525,7 +4340,7 @@ export namespace Prisma {
   export type SpecializationInclude = {
     Doctor?: boolean | Specialization$DoctorArgs
     _count?: boolean | SpecializationCountOutputTypeArgs
-  } 
+  }
 
   export type SpecializationGetPayload<S extends boolean | null | undefined | SpecializationArgs> =
     S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
@@ -4546,13 +4361,13 @@ export namespace Prisma {
       : Specialization
 
 
-  type SpecializationCountArgs = Merge<
+  type SpecializationCountArgs = 
     Omit<SpecializationFindManyArgs, 'select' | 'include'> & {
       select?: SpecializationCountAggregateInputType | true
     }
-  >
 
   export interface SpecializationDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+
     /**
      * Find zero or one Specialization that matches the filter.
      * @param {SpecializationFindUniqueArgs} args - Arguments to find a Specialization
@@ -4637,7 +4452,7 @@ export namespace Prisma {
     **/
     findMany<T extends SpecializationFindManyArgs>(
       args?: SelectSubset<T, SpecializationFindManyArgs>
-    ): PrismaPromise<Array<SpecializationGetPayload<T>>>
+    ): Prisma.PrismaPromise<Array<SpecializationGetPayload<T>>>
 
     /**
      * Create a Specialization.
@@ -4669,7 +4484,7 @@ export namespace Prisma {
     **/
     createMany<T extends SpecializationCreateManyArgs>(
       args?: SelectSubset<T, SpecializationCreateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Delete a Specialization.
@@ -4720,7 +4535,7 @@ export namespace Prisma {
     **/
     deleteMany<T extends SpecializationDeleteManyArgs>(
       args?: SelectSubset<T, SpecializationDeleteManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more Specializations.
@@ -4741,7 +4556,7 @@ export namespace Prisma {
     **/
     updateMany<T extends SpecializationUpdateManyArgs>(
       args: SelectSubset<T, SpecializationUpdateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create or update one Specialization.
@@ -4774,7 +4589,7 @@ export namespace Prisma {
     **/
     findRaw(
       args?: SpecializationFindRawArgs
-    ): PrismaPromise<JsonObject>
+    ): Prisma.PrismaPromise<JsonObject>
 
     /**
      * Perform aggregation operations on a Specialization.
@@ -4789,7 +4604,7 @@ export namespace Prisma {
     **/
     aggregateRaw(
       args?: SpecializationAggregateRawArgs
-    ): PrismaPromise<JsonObject>
+    ): Prisma.PrismaPromise<JsonObject>
 
     /**
      * Count the number of Specializations.
@@ -4806,7 +4621,7 @@ export namespace Prisma {
     **/
     count<T extends SpecializationCountArgs>(
       args?: Subset<T, SpecializationCountArgs>,
-    ): PrismaPromise<
+    ): Prisma.PrismaPromise<
       T extends _Record<'select', any>
         ? T['select'] extends true
           ? number
@@ -4838,7 +4653,7 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends SpecializationAggregateArgs>(args: Subset<T, SpecializationAggregateArgs>): PrismaPromise<GetSpecializationAggregateType<T>>
+    aggregate<T extends SpecializationAggregateArgs>(args: Subset<T, SpecializationAggregateArgs>): Prisma.PrismaPromise<GetSpecializationAggregateType<T>>
 
     /**
      * Group by Specialization.
@@ -4915,7 +4730,7 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, SpecializationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSpecializationGroupByPayload<T> : PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, SpecializationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSpecializationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 
   }
 
@@ -4925,10 +4740,8 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__SpecializationClient<T, Null = never> implements PrismaPromise<T> {
-    [prisma]: true;
+  export class Prisma__SpecializationClient<T, Null = never> implements Prisma.PrismaPromise<T> {
     private readonly _dmmf;
-    private readonly _fetcher;
     private readonly _queryType;
     private readonly _rootField;
     private readonly _clientMethod;
@@ -4939,10 +4752,10 @@ export namespace Prisma {
     private _isList;
     private _callsite;
     private _requestPromise?;
-    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
-    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
-    Doctor<T extends Specialization$DoctorArgs= {}>(args?: Subset<T, Specialization$DoctorArgs>): PrismaPromise<Array<DoctorGetPayload<T>>| Null>;
+    Doctor<T extends Specialization$DoctorArgs= {}>(args?: Subset<T, Specialization$DoctorArgs>): Prisma.PrismaPromise<Array<DoctorGetPayload<T>>| Null>;
 
     private get _document();
     /**
@@ -4977,18 +4790,15 @@ export namespace Prisma {
   export type SpecializationFindUniqueArgsBase = {
     /**
      * Select specific fields to fetch from the Specialization
-     * 
-    **/
+     */
     select?: SpecializationSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: SpecializationInclude | null
     /**
      * Filter, which Specialization to fetch.
-     * 
-    **/
+     */
     where: SpecializationWhereUniqueInput
   }
 
@@ -5010,18 +4820,15 @@ export namespace Prisma {
   export type SpecializationFindUniqueOrThrowArgs = {
     /**
      * Select specific fields to fetch from the Specialization
-     * 
-    **/
+     */
     select?: SpecializationSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: SpecializationInclude | null
     /**
      * Filter, which Specialization to fetch.
-     * 
-    **/
+     */
     where: SpecializationWhereUniqueInput
   }
 
@@ -5032,53 +4839,45 @@ export namespace Prisma {
   export type SpecializationFindFirstArgsBase = {
     /**
      * Select specific fields to fetch from the Specialization
-     * 
-    **/
+     */
     select?: SpecializationSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: SpecializationInclude | null
     /**
      * Filter, which Specialization to fetch.
-     * 
-    **/
+     */
     where?: SpecializationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Specializations to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<SpecializationOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for searching for Specializations.
-     * 
-    **/
+     */
     cursor?: SpecializationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Specializations from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Specializations.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
      * Filter by unique combinations of Specializations.
-     * 
-    **/
+     */
     distinct?: Enumerable<SpecializationScalarFieldEnum>
   }
 
@@ -5100,53 +4899,45 @@ export namespace Prisma {
   export type SpecializationFindFirstOrThrowArgs = {
     /**
      * Select specific fields to fetch from the Specialization
-     * 
-    **/
+     */
     select?: SpecializationSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: SpecializationInclude | null
     /**
      * Filter, which Specialization to fetch.
-     * 
-    **/
+     */
     where?: SpecializationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Specializations to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<SpecializationOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for searching for Specializations.
-     * 
-    **/
+     */
     cursor?: SpecializationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Specializations from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Specializations.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
      * Filter by unique combinations of Specializations.
-     * 
-    **/
+     */
     distinct?: Enumerable<SpecializationScalarFieldEnum>
   }
 
@@ -5157,46 +4948,39 @@ export namespace Prisma {
   export type SpecializationFindManyArgs = {
     /**
      * Select specific fields to fetch from the Specialization
-     * 
-    **/
+     */
     select?: SpecializationSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: SpecializationInclude | null
     /**
      * Filter, which Specializations to fetch.
-     * 
-    **/
+     */
     where?: SpecializationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Specializations to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<SpecializationOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for listing Specializations.
-     * 
-    **/
+     */
     cursor?: SpecializationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Specializations from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Specializations.
-     * 
-    **/
+     */
     skip?: number
     distinct?: Enumerable<SpecializationScalarFieldEnum>
   }
@@ -5208,18 +4992,15 @@ export namespace Prisma {
   export type SpecializationCreateArgs = {
     /**
      * Select specific fields to fetch from the Specialization
-     * 
-    **/
+     */
     select?: SpecializationSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: SpecializationInclude | null
     /**
      * The data needed to create a Specialization.
-     * 
-    **/
+     */
     data: XOR<SpecializationCreateInput, SpecializationUncheckedCreateInput>
   }
 
@@ -5230,8 +5011,7 @@ export namespace Prisma {
   export type SpecializationCreateManyArgs = {
     /**
      * The data used to create many Specializations.
-     * 
-    **/
+     */
     data: Enumerable<SpecializationCreateManyInput>
   }
 
@@ -5242,23 +5022,19 @@ export namespace Prisma {
   export type SpecializationUpdateArgs = {
     /**
      * Select specific fields to fetch from the Specialization
-     * 
-    **/
+     */
     select?: SpecializationSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: SpecializationInclude | null
     /**
      * The data needed to update a Specialization.
-     * 
-    **/
+     */
     data: XOR<SpecializationUpdateInput, SpecializationUncheckedUpdateInput>
     /**
      * Choose, which Specialization to update.
-     * 
-    **/
+     */
     where: SpecializationWhereUniqueInput
   }
 
@@ -5269,13 +5045,11 @@ export namespace Prisma {
   export type SpecializationUpdateManyArgs = {
     /**
      * The data used to update Specializations.
-     * 
-    **/
+     */
     data: XOR<SpecializationUpdateManyMutationInput, SpecializationUncheckedUpdateManyInput>
     /**
      * Filter which Specializations to update
-     * 
-    **/
+     */
     where?: SpecializationWhereInput
   }
 
@@ -5286,28 +5060,23 @@ export namespace Prisma {
   export type SpecializationUpsertArgs = {
     /**
      * Select specific fields to fetch from the Specialization
-     * 
-    **/
+     */
     select?: SpecializationSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: SpecializationInclude | null
     /**
      * The filter to search for the Specialization to update in case it exists.
-     * 
-    **/
+     */
     where: SpecializationWhereUniqueInput
     /**
      * In case the Specialization found by the `where` argument doesn't exist, create a new Specialization with this data.
-     * 
-    **/
+     */
     create: XOR<SpecializationCreateInput, SpecializationUncheckedCreateInput>
     /**
      * In case the Specialization was found with the provided `where` argument, update it with this data.
-     * 
-    **/
+     */
     update: XOR<SpecializationUpdateInput, SpecializationUncheckedUpdateInput>
   }
 
@@ -5318,18 +5087,15 @@ export namespace Prisma {
   export type SpecializationDeleteArgs = {
     /**
      * Select specific fields to fetch from the Specialization
-     * 
-    **/
+     */
     select?: SpecializationSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: SpecializationInclude | null
     /**
      * Filter which Specialization to delete.
-     * 
-    **/
+     */
     where: SpecializationWhereUniqueInput
   }
 
@@ -5340,8 +5106,7 @@ export namespace Prisma {
   export type SpecializationDeleteManyArgs = {
     /**
      * Filter which Specializations to delete
-     * 
-    **/
+     */
     where?: SpecializationWhereInput
   }
 
@@ -5352,13 +5117,11 @@ export namespace Prisma {
   export type SpecializationFindRawArgs = {
     /**
      * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
-     * 
-    **/
+     */
     filter?: InputJsonValue
     /**
      * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
-     * 
-    **/
+     */
     options?: InputJsonValue
   }
 
@@ -5369,13 +5132,11 @@ export namespace Prisma {
   export type SpecializationAggregateRawArgs = {
     /**
      * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
-     * 
-    **/
-    pipeline?: Array<InputJsonValue>
+     */
+    pipeline?: InputJsonValue[]
     /**
      * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
-     * 
-    **/
+     */
     options?: InputJsonValue
   }
 
@@ -5386,13 +5147,11 @@ export namespace Prisma {
   export type Specialization$DoctorArgs = {
     /**
      * Select specific fields to fetch from the Doctor
-     * 
-    **/
+     */
     select?: DoctorSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DoctorInclude | null
     where?: DoctorWhereInput
     orderBy?: Enumerable<DoctorOrderByWithRelationInput>
@@ -5409,14 +5168,1019 @@ export namespace Prisma {
   export type SpecializationArgs = {
     /**
      * Select specific fields to fetch from the Specialization
-     * 
-    **/
+     */
     select?: SpecializationSelect | null
     /**
      * Choose, which related nodes to fetch as well.
+     */
+    include?: SpecializationInclude | null
+  }
+
+
+
+  /**
+   * Model FileEntity
+   */
+
+
+  export type AggregateFileEntity = {
+    _count: FileEntityCountAggregateOutputType | null
+    _min: FileEntityMinAggregateOutputType | null
+    _max: FileEntityMaxAggregateOutputType | null
+  }
+
+  export type FileEntityMinAggregateOutputType = {
+    id: string | null
+    fileName: string | null
+    fileUrl: string | null
+    key: string | null
+    authorId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FileEntityMaxAggregateOutputType = {
+    id: string | null
+    fileName: string | null
+    fileUrl: string | null
+    key: string | null
+    authorId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FileEntityCountAggregateOutputType = {
+    id: number
+    fileName: number
+    fileUrl: number
+    key: number
+    authorId: number
+    metadata: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type FileEntityMinAggregateInputType = {
+    id?: true
+    fileName?: true
+    fileUrl?: true
+    key?: true
+    authorId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FileEntityMaxAggregateInputType = {
+    id?: true
+    fileName?: true
+    fileUrl?: true
+    key?: true
+    authorId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FileEntityCountAggregateInputType = {
+    id?: true
+    fileName?: true
+    fileUrl?: true
+    key?: true
+    authorId?: true
+    metadata?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type FileEntityAggregateArgs = {
+    /**
+     * Filter which FileEntity to aggregate.
+     */
+    where?: FileEntityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FileEntities to fetch.
+     */
+    orderBy?: Enumerable<FileEntityOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FileEntityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FileEntities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FileEntities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FileEntities
+    **/
+    _count?: true | FileEntityCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FileEntityMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FileEntityMaxAggregateInputType
+  }
+
+  export type GetFileEntityAggregateType<T extends FileEntityAggregateArgs> = {
+        [P in keyof T & keyof AggregateFileEntity]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFileEntity[P]>
+      : GetScalarType<T[P], AggregateFileEntity[P]>
+  }
+
+
+
+
+  export type FileEntityGroupByArgs = {
+    where?: FileEntityWhereInput
+    orderBy?: Enumerable<FileEntityOrderByWithAggregationInput>
+    by: FileEntityScalarFieldEnum[]
+    having?: FileEntityScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FileEntityCountAggregateInputType | true
+    _min?: FileEntityMinAggregateInputType
+    _max?: FileEntityMaxAggregateInputType
+  }
+
+
+  export type FileEntityGroupByOutputType = {
+    id: string
+    fileName: string
+    fileUrl: string
+    key: string
+    authorId: string
+    metadata: JsonValue
+    createdAt: Date
+    updatedAt: Date
+    _count: FileEntityCountAggregateOutputType | null
+    _min: FileEntityMinAggregateOutputType | null
+    _max: FileEntityMaxAggregateOutputType | null
+  }
+
+  type GetFileEntityGroupByPayload<T extends FileEntityGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickArray<FileEntityGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FileEntityGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FileEntityGroupByOutputType[P]>
+            : GetScalarType<T[P], FileEntityGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FileEntitySelect = {
+    id?: boolean
+    fileName?: boolean
+    fileUrl?: boolean
+    key?: boolean
+    authorId?: boolean
+    author?: boolean | PulseUserArgs
+    metadata?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+
+  export type FileEntityInclude = {
+    author?: boolean | PulseUserArgs
+  }
+
+  export type FileEntityGetPayload<S extends boolean | null | undefined | FileEntityArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? FileEntity :
+    S extends undefined ? never :
+    S extends { include: any } & (FileEntityArgs | FileEntityFindManyArgs)
+    ? FileEntity  & {
+    [P in TruthyKeys<S['include']>]:
+        P extends 'author' ? PulseUserGetPayload<S['include'][P]> :  never
+  } 
+    : S extends { select: any } & (FileEntityArgs | FileEntityFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+        P extends 'author' ? PulseUserGetPayload<S['select'][P]> :  P extends keyof FileEntity ? FileEntity[P] : never
+  } 
+      : FileEntity
+
+
+  type FileEntityCountArgs = 
+    Omit<FileEntityFindManyArgs, 'select' | 'include'> & {
+      select?: FileEntityCountAggregateInputType | true
+    }
+
+  export interface FileEntityDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+
+    /**
+     * Find zero or one FileEntity that matches the filter.
+     * @param {FileEntityFindUniqueArgs} args - Arguments to find a FileEntity
+     * @example
+     * // Get one FileEntity
+     * const fileEntity = await prisma.fileEntity.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends FileEntityFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, FileEntityFindUniqueArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'FileEntity'> extends True ? Prisma__FileEntityClient<FileEntityGetPayload<T>> : Prisma__FileEntityClient<FileEntityGetPayload<T> | null, null>
+
+    /**
+     * Find one FileEntity that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {FileEntityFindUniqueOrThrowArgs} args - Arguments to find a FileEntity
+     * @example
+     * // Get one FileEntity
+     * const fileEntity = await prisma.fileEntity.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends FileEntityFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, FileEntityFindUniqueOrThrowArgs>
+    ): Prisma__FileEntityClient<FileEntityGetPayload<T>>
+
+    /**
+     * Find the first FileEntity that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FileEntityFindFirstArgs} args - Arguments to find a FileEntity
+     * @example
+     * // Get one FileEntity
+     * const fileEntity = await prisma.fileEntity.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends FileEntityFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, FileEntityFindFirstArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'FileEntity'> extends True ? Prisma__FileEntityClient<FileEntityGetPayload<T>> : Prisma__FileEntityClient<FileEntityGetPayload<T> | null, null>
+
+    /**
+     * Find the first FileEntity that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FileEntityFindFirstOrThrowArgs} args - Arguments to find a FileEntity
+     * @example
+     * // Get one FileEntity
+     * const fileEntity = await prisma.fileEntity.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends FileEntityFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, FileEntityFindFirstOrThrowArgs>
+    ): Prisma__FileEntityClient<FileEntityGetPayload<T>>
+
+    /**
+     * Find zero or more FileEntities that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FileEntityFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FileEntities
+     * const fileEntities = await prisma.fileEntity.findMany()
+     * 
+     * // Get first 10 FileEntities
+     * const fileEntities = await prisma.fileEntity.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const fileEntityWithIdOnly = await prisma.fileEntity.findMany({ select: { id: true } })
      * 
     **/
-    include?: SpecializationInclude | null
+    findMany<T extends FileEntityFindManyArgs>(
+      args?: SelectSubset<T, FileEntityFindManyArgs>
+    ): Prisma.PrismaPromise<Array<FileEntityGetPayload<T>>>
+
+    /**
+     * Create a FileEntity.
+     * @param {FileEntityCreateArgs} args - Arguments to create a FileEntity.
+     * @example
+     * // Create one FileEntity
+     * const FileEntity = await prisma.fileEntity.create({
+     *   data: {
+     *     // ... data to create a FileEntity
+     *   }
+     * })
+     * 
+    **/
+    create<T extends FileEntityCreateArgs>(
+      args: SelectSubset<T, FileEntityCreateArgs>
+    ): Prisma__FileEntityClient<FileEntityGetPayload<T>>
+
+    /**
+     * Create many FileEntities.
+     *     @param {FileEntityCreateManyArgs} args - Arguments to create many FileEntities.
+     *     @example
+     *     // Create many FileEntities
+     *     const fileEntity = await prisma.fileEntity.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends FileEntityCreateManyArgs>(
+      args?: SelectSubset<T, FileEntityCreateManyArgs>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a FileEntity.
+     * @param {FileEntityDeleteArgs} args - Arguments to delete one FileEntity.
+     * @example
+     * // Delete one FileEntity
+     * const FileEntity = await prisma.fileEntity.delete({
+     *   where: {
+     *     // ... filter to delete one FileEntity
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends FileEntityDeleteArgs>(
+      args: SelectSubset<T, FileEntityDeleteArgs>
+    ): Prisma__FileEntityClient<FileEntityGetPayload<T>>
+
+    /**
+     * Update one FileEntity.
+     * @param {FileEntityUpdateArgs} args - Arguments to update one FileEntity.
+     * @example
+     * // Update one FileEntity
+     * const fileEntity = await prisma.fileEntity.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends FileEntityUpdateArgs>(
+      args: SelectSubset<T, FileEntityUpdateArgs>
+    ): Prisma__FileEntityClient<FileEntityGetPayload<T>>
+
+    /**
+     * Delete zero or more FileEntities.
+     * @param {FileEntityDeleteManyArgs} args - Arguments to filter FileEntities to delete.
+     * @example
+     * // Delete a few FileEntities
+     * const { count } = await prisma.fileEntity.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends FileEntityDeleteManyArgs>(
+      args?: SelectSubset<T, FileEntityDeleteManyArgs>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FileEntities.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FileEntityUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FileEntities
+     * const fileEntity = await prisma.fileEntity.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends FileEntityUpdateManyArgs>(
+      args: SelectSubset<T, FileEntityUpdateManyArgs>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one FileEntity.
+     * @param {FileEntityUpsertArgs} args - Arguments to update or create a FileEntity.
+     * @example
+     * // Update or create a FileEntity
+     * const fileEntity = await prisma.fileEntity.upsert({
+     *   create: {
+     *     // ... data to create a FileEntity
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FileEntity we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends FileEntityUpsertArgs>(
+      args: SelectSubset<T, FileEntityUpsertArgs>
+    ): Prisma__FileEntityClient<FileEntityGetPayload<T>>
+
+    /**
+     * Find zero or more FileEntities that matches the filter.
+     * @param {FileEntityFindRawArgs} args - Select which filters you would like to apply.
+     * @example
+     * const fileEntity = await prisma.fileEntity.findRaw({
+     *   filter: { age: { $gt: 25 } } 
+     * })
+    **/
+    findRaw(
+      args?: FileEntityFindRawArgs
+    ): Prisma.PrismaPromise<JsonObject>
+
+    /**
+     * Perform aggregation operations on a FileEntity.
+     * @param {FileEntityAggregateRawArgs} args - Select which aggregations you would like to apply.
+     * @example
+     * const fileEntity = await prisma.fileEntity.aggregateRaw({
+     *   pipeline: [
+     *     { $match: { status: "registered" } },
+     *     { $group: { _id: "$country", total: { $sum: 1 } } }
+     *   ]
+     * })
+    **/
+    aggregateRaw(
+      args?: FileEntityAggregateRawArgs
+    ): Prisma.PrismaPromise<JsonObject>
+
+    /**
+     * Count the number of FileEntities.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FileEntityCountArgs} args - Arguments to filter FileEntities to count.
+     * @example
+     * // Count the number of FileEntities
+     * const count = await prisma.fileEntity.count({
+     *   where: {
+     *     // ... the filter for the FileEntities we want to count
+     *   }
+     * })
+    **/
+    count<T extends FileEntityCountArgs>(
+      args?: Subset<T, FileEntityCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends _Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FileEntityCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FileEntity.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FileEntityAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FileEntityAggregateArgs>(args: Subset<T, FileEntityAggregateArgs>): Prisma.PrismaPromise<GetFileEntityAggregateType<T>>
+
+    /**
+     * Group by FileEntity.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FileEntityGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FileEntityGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FileEntityGroupByArgs['orderBy'] }
+        : { orderBy?: FileEntityGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FileEntityGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFileEntityGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FileEntity.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__FileEntityClient<T, Null = never> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+    author<T extends PulseUserArgs= {}>(args?: Subset<T, PulseUserArgs>): Prisma__PulseUserClient<PulseUserGetPayload<T> | Null>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * FileEntity base type for findUnique actions
+   */
+  export type FileEntityFindUniqueArgsBase = {
+    /**
+     * Select specific fields to fetch from the FileEntity
+     */
+    select?: FileEntitySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: FileEntityInclude | null
+    /**
+     * Filter, which FileEntity to fetch.
+     */
+    where: FileEntityWhereUniqueInput
+  }
+
+  /**
+   * FileEntity findUnique
+   */
+  export interface FileEntityFindUniqueArgs extends FileEntityFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * FileEntity findUniqueOrThrow
+   */
+  export type FileEntityFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the FileEntity
+     */
+    select?: FileEntitySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: FileEntityInclude | null
+    /**
+     * Filter, which FileEntity to fetch.
+     */
+    where: FileEntityWhereUniqueInput
+  }
+
+
+  /**
+   * FileEntity base type for findFirst actions
+   */
+  export type FileEntityFindFirstArgsBase = {
+    /**
+     * Select specific fields to fetch from the FileEntity
+     */
+    select?: FileEntitySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: FileEntityInclude | null
+    /**
+     * Filter, which FileEntity to fetch.
+     */
+    where?: FileEntityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FileEntities to fetch.
+     */
+    orderBy?: Enumerable<FileEntityOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FileEntities.
+     */
+    cursor?: FileEntityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FileEntities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FileEntities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FileEntities.
+     */
+    distinct?: Enumerable<FileEntityScalarFieldEnum>
+  }
+
+  /**
+   * FileEntity findFirst
+   */
+  export interface FileEntityFindFirstArgs extends FileEntityFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * FileEntity findFirstOrThrow
+   */
+  export type FileEntityFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the FileEntity
+     */
+    select?: FileEntitySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: FileEntityInclude | null
+    /**
+     * Filter, which FileEntity to fetch.
+     */
+    where?: FileEntityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FileEntities to fetch.
+     */
+    orderBy?: Enumerable<FileEntityOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FileEntities.
+     */
+    cursor?: FileEntityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FileEntities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FileEntities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FileEntities.
+     */
+    distinct?: Enumerable<FileEntityScalarFieldEnum>
+  }
+
+
+  /**
+   * FileEntity findMany
+   */
+  export type FileEntityFindManyArgs = {
+    /**
+     * Select specific fields to fetch from the FileEntity
+     */
+    select?: FileEntitySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: FileEntityInclude | null
+    /**
+     * Filter, which FileEntities to fetch.
+     */
+    where?: FileEntityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FileEntities to fetch.
+     */
+    orderBy?: Enumerable<FileEntityOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FileEntities.
+     */
+    cursor?: FileEntityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FileEntities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FileEntities.
+     */
+    skip?: number
+    distinct?: Enumerable<FileEntityScalarFieldEnum>
+  }
+
+
+  /**
+   * FileEntity create
+   */
+  export type FileEntityCreateArgs = {
+    /**
+     * Select specific fields to fetch from the FileEntity
+     */
+    select?: FileEntitySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: FileEntityInclude | null
+    /**
+     * The data needed to create a FileEntity.
+     */
+    data: XOR<FileEntityCreateInput, FileEntityUncheckedCreateInput>
+  }
+
+
+  /**
+   * FileEntity createMany
+   */
+  export type FileEntityCreateManyArgs = {
+    /**
+     * The data used to create many FileEntities.
+     */
+    data: Enumerable<FileEntityCreateManyInput>
+  }
+
+
+  /**
+   * FileEntity update
+   */
+  export type FileEntityUpdateArgs = {
+    /**
+     * Select specific fields to fetch from the FileEntity
+     */
+    select?: FileEntitySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: FileEntityInclude | null
+    /**
+     * The data needed to update a FileEntity.
+     */
+    data: XOR<FileEntityUpdateInput, FileEntityUncheckedUpdateInput>
+    /**
+     * Choose, which FileEntity to update.
+     */
+    where: FileEntityWhereUniqueInput
+  }
+
+
+  /**
+   * FileEntity updateMany
+   */
+  export type FileEntityUpdateManyArgs = {
+    /**
+     * The data used to update FileEntities.
+     */
+    data: XOR<FileEntityUpdateManyMutationInput, FileEntityUncheckedUpdateManyInput>
+    /**
+     * Filter which FileEntities to update
+     */
+    where?: FileEntityWhereInput
+  }
+
+
+  /**
+   * FileEntity upsert
+   */
+  export type FileEntityUpsertArgs = {
+    /**
+     * Select specific fields to fetch from the FileEntity
+     */
+    select?: FileEntitySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: FileEntityInclude | null
+    /**
+     * The filter to search for the FileEntity to update in case it exists.
+     */
+    where: FileEntityWhereUniqueInput
+    /**
+     * In case the FileEntity found by the `where` argument doesn't exist, create a new FileEntity with this data.
+     */
+    create: XOR<FileEntityCreateInput, FileEntityUncheckedCreateInput>
+    /**
+     * In case the FileEntity was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FileEntityUpdateInput, FileEntityUncheckedUpdateInput>
+  }
+
+
+  /**
+   * FileEntity delete
+   */
+  export type FileEntityDeleteArgs = {
+    /**
+     * Select specific fields to fetch from the FileEntity
+     */
+    select?: FileEntitySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: FileEntityInclude | null
+    /**
+     * Filter which FileEntity to delete.
+     */
+    where: FileEntityWhereUniqueInput
+  }
+
+
+  /**
+   * FileEntity deleteMany
+   */
+  export type FileEntityDeleteManyArgs = {
+    /**
+     * Filter which FileEntities to delete
+     */
+    where?: FileEntityWhereInput
+  }
+
+
+  /**
+   * FileEntity findRaw
+   */
+  export type FileEntityFindRawArgs = {
+    /**
+     * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
+     */
+    filter?: InputJsonValue
+    /**
+     * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
+     */
+    options?: InputJsonValue
+  }
+
+
+  /**
+   * FileEntity aggregateRaw
+   */
+  export type FileEntityAggregateRawArgs = {
+    /**
+     * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
+     */
+    pipeline?: InputJsonValue[]
+    /**
+     * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
+     */
+    options?: InputJsonValue
+  }
+
+
+  /**
+   * FileEntity without action
+   */
+  export type FileEntityArgs = {
+    /**
+     * Select specific fields to fetch from the FileEntity
+     */
+    select?: FileEntitySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: FileEntityInclude | null
   }
 
 
@@ -5428,18 +6192,16 @@ export namespace Prisma {
   // Based on
   // https://github.com/microsoft/TypeScript/issues/3192#issuecomment-261720275
 
-  export const AppointmentScalarFieldEnum: {
+  export const ConsulationListScalarFieldEnum: {
     id: 'id',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
-    date: 'date',
-    title: 'title',
     content: 'content',
     authorId: 'authorId',
     patientId: 'patientId'
   };
 
-  export type AppointmentScalarFieldEnum = (typeof AppointmentScalarFieldEnum)[keyof typeof AppointmentScalarFieldEnum]
+  export type ConsulationListScalarFieldEnum = (typeof ConsulationListScalarFieldEnum)[keyof typeof ConsulationListScalarFieldEnum]
 
 
   export const DoctorScalarFieldEnum: {
@@ -5453,6 +6215,20 @@ export namespace Prisma {
   };
 
   export type DoctorScalarFieldEnum = (typeof DoctorScalarFieldEnum)[keyof typeof DoctorScalarFieldEnum]
+
+
+  export const FileEntityScalarFieldEnum: {
+    id: 'id',
+    fileName: 'fileName',
+    fileUrl: 'fileUrl',
+    key: 'key',
+    authorId: 'authorId',
+    metadata: 'metadata',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type FileEntityScalarFieldEnum = (typeof FileEntityScalarFieldEnum)[keyof typeof FileEntityScalarFieldEnum]
 
 
   export const PulseUserScalarFieldEnum: {
@@ -5516,9 +6292,10 @@ export namespace Prisma {
     phoneNumber?: StringFilter | string
     address?: StringFilter | string
     role?: EnumRoleFilter | Role
-    appointmentsAsAuthor?: AppointmentListRelationFilter
-    appointmentsAsPatient?: AppointmentListRelationFilter
+    appointmentsAsAuthor?: ConsulationListListRelationFilter
+    appointmentsAsPatient?: ConsulationListListRelationFilter
     doctor?: XOR<DoctorRelationFilter, DoctorWhereInput> | null
+    authoredFiles?: FileEntityListRelationFilter
   }
 
   export type PulseUserOrderByWithRelationInput = {
@@ -5532,9 +6309,10 @@ export namespace Prisma {
     phoneNumber?: SortOrder
     address?: SortOrder
     role?: SortOrder
-    appointmentsAsAuthor?: AppointmentOrderByRelationAggregateInput
-    appointmentsAsPatient?: AppointmentOrderByRelationAggregateInput
+    appointmentsAsAuthor?: ConsulationListOrderByRelationAggregateInput
+    appointmentsAsPatient?: ConsulationListOrderByRelationAggregateInput
     doctor?: DoctorOrderByWithRelationInput
+    authoredFiles?: FileEntityOrderByRelationAggregateInput
   }
 
   export type PulseUserWhereUniqueInput = {
@@ -5576,28 +6354,24 @@ export namespace Prisma {
     role?: EnumRoleWithAggregatesFilter | Role
   }
 
-  export type AppointmentWhereInput = {
-    AND?: Enumerable<AppointmentWhereInput>
-    OR?: Enumerable<AppointmentWhereInput>
-    NOT?: Enumerable<AppointmentWhereInput>
+  export type ConsulationListWhereInput = {
+    AND?: Enumerable<ConsulationListWhereInput>
+    OR?: Enumerable<ConsulationListWhereInput>
+    NOT?: Enumerable<ConsulationListWhereInput>
     id?: StringFilter | string
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
-    date?: DateTimeFilter | Date | string
-    title?: StringFilter | string
-    content?: StringNullableFilter | string | null
+    content?: JsonNullableFilter
     author?: XOR<PulseUserRelationFilter, PulseUserWhereInput>
     authorId?: StringFilter | string
     patient?: XOR<PulseUserRelationFilter, PulseUserWhereInput>
     patientId?: StringFilter | string
   }
 
-  export type AppointmentOrderByWithRelationInput = {
+  export type ConsulationListOrderByWithRelationInput = {
     id?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    date?: SortOrder
-    title?: SortOrder
     content?: SortOrder
     author?: PulseUserOrderByWithRelationInput
     authorId?: SortOrder
@@ -5605,34 +6379,30 @@ export namespace Prisma {
     patientId?: SortOrder
   }
 
-  export type AppointmentWhereUniqueInput = {
+  export type ConsulationListWhereUniqueInput = {
     id?: string
   }
 
-  export type AppointmentOrderByWithAggregationInput = {
+  export type ConsulationListOrderByWithAggregationInput = {
     id?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    date?: SortOrder
-    title?: SortOrder
     content?: SortOrder
     authorId?: SortOrder
     patientId?: SortOrder
-    _count?: AppointmentCountOrderByAggregateInput
-    _max?: AppointmentMaxOrderByAggregateInput
-    _min?: AppointmentMinOrderByAggregateInput
+    _count?: ConsulationListCountOrderByAggregateInput
+    _max?: ConsulationListMaxOrderByAggregateInput
+    _min?: ConsulationListMinOrderByAggregateInput
   }
 
-  export type AppointmentScalarWhereWithAggregatesInput = {
-    AND?: Enumerable<AppointmentScalarWhereWithAggregatesInput>
-    OR?: Enumerable<AppointmentScalarWhereWithAggregatesInput>
-    NOT?: Enumerable<AppointmentScalarWhereWithAggregatesInput>
+  export type ConsulationListScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<ConsulationListScalarWhereWithAggregatesInput>
+    OR?: Enumerable<ConsulationListScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<ConsulationListScalarWhereWithAggregatesInput>
     id?: StringWithAggregatesFilter | string
     createdAt?: DateTimeWithAggregatesFilter | Date | string
     updatedAt?: DateTimeWithAggregatesFilter | Date | string
-    date?: DateTimeWithAggregatesFilter | Date | string
-    title?: StringWithAggregatesFilter | string
-    content?: StringNullableWithAggregatesFilter | string | null
+    content?: JsonNullableWithAggregatesFilter
     authorId?: StringWithAggregatesFilter | string
     patientId?: StringWithAggregatesFilter | string
   }
@@ -5740,6 +6510,66 @@ export namespace Prisma {
     doctorIds?: StringNullableListFilter
   }
 
+  export type FileEntityWhereInput = {
+    AND?: Enumerable<FileEntityWhereInput>
+    OR?: Enumerable<FileEntityWhereInput>
+    NOT?: Enumerable<FileEntityWhereInput>
+    id?: StringFilter | string
+    fileName?: StringFilter | string
+    fileUrl?: StringFilter | string
+    key?: StringFilter | string
+    authorId?: StringFilter | string
+    author?: XOR<PulseUserRelationFilter, PulseUserWhereInput>
+    metadata?: JsonFilter
+    createdAt?: DateTimeFilter | Date | string
+    updatedAt?: DateTimeFilter | Date | string
+  }
+
+  export type FileEntityOrderByWithRelationInput = {
+    id?: SortOrder
+    fileName?: SortOrder
+    fileUrl?: SortOrder
+    key?: SortOrder
+    authorId?: SortOrder
+    author?: PulseUserOrderByWithRelationInput
+    metadata?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FileEntityWhereUniqueInput = {
+    id?: string
+    authorId?: string
+  }
+
+  export type FileEntityOrderByWithAggregationInput = {
+    id?: SortOrder
+    fileName?: SortOrder
+    fileUrl?: SortOrder
+    key?: SortOrder
+    authorId?: SortOrder
+    metadata?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: FileEntityCountOrderByAggregateInput
+    _max?: FileEntityMaxOrderByAggregateInput
+    _min?: FileEntityMinOrderByAggregateInput
+  }
+
+  export type FileEntityScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<FileEntityScalarWhereWithAggregatesInput>
+    OR?: Enumerable<FileEntityScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<FileEntityScalarWhereWithAggregatesInput>
+    id?: StringWithAggregatesFilter | string
+    fileName?: StringWithAggregatesFilter | string
+    fileUrl?: StringWithAggregatesFilter | string
+    key?: StringWithAggregatesFilter | string
+    authorId?: StringWithAggregatesFilter | string
+    metadata?: JsonWithAggregatesFilter
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter | Date | string
+  }
+
   export type PulseUserCreateInput = {
     id?: string
     createdAt?: Date | string
@@ -5751,9 +6581,10 @@ export namespace Prisma {
     phoneNumber: string
     address: string
     role?: Role
-    appointmentsAsAuthor?: AppointmentCreateNestedManyWithoutAuthorInput
-    appointmentsAsPatient?: AppointmentCreateNestedManyWithoutPatientInput
+    appointmentsAsAuthor?: ConsulationListCreateNestedManyWithoutAuthorInput
+    appointmentsAsPatient?: ConsulationListCreateNestedManyWithoutPatientInput
     doctor?: DoctorCreateNestedOneWithoutUserInput
+    authoredFiles?: FileEntityCreateNestedManyWithoutAuthorInput
   }
 
   export type PulseUserUncheckedCreateInput = {
@@ -5767,9 +6598,10 @@ export namespace Prisma {
     phoneNumber: string
     address: string
     role?: Role
-    appointmentsAsAuthor?: AppointmentUncheckedCreateNestedManyWithoutAuthorInput
-    appointmentsAsPatient?: AppointmentUncheckedCreateNestedManyWithoutPatientInput
+    appointmentsAsAuthor?: ConsulationListUncheckedCreateNestedManyWithoutAuthorInput
+    appointmentsAsPatient?: ConsulationListUncheckedCreateNestedManyWithoutPatientInput
     doctor?: DoctorUncheckedCreateNestedOneWithoutUserInput
+    authoredFiles?: FileEntityUncheckedCreateNestedManyWithoutAuthorInput
   }
 
   export type PulseUserUpdateInput = {
@@ -5782,9 +6614,10 @@ export namespace Prisma {
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | Role
-    appointmentsAsAuthor?: AppointmentUpdateManyWithoutAuthorNestedInput
-    appointmentsAsPatient?: AppointmentUpdateManyWithoutPatientNestedInput
+    appointmentsAsAuthor?: ConsulationListUpdateManyWithoutAuthorNestedInput
+    appointmentsAsPatient?: ConsulationListUpdateManyWithoutPatientNestedInput
     doctor?: DoctorUpdateOneWithoutUserNestedInput
+    authoredFiles?: FileEntityUpdateManyWithoutAuthorNestedInput
   }
 
   export type PulseUserUncheckedUpdateInput = {
@@ -5797,9 +6630,10 @@ export namespace Prisma {
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | Role
-    appointmentsAsAuthor?: AppointmentUncheckedUpdateManyWithoutAuthorNestedInput
-    appointmentsAsPatient?: AppointmentUncheckedUpdateManyWithoutPatientNestedInput
+    appointmentsAsAuthor?: ConsulationListUncheckedUpdateManyWithoutAuthorNestedInput
+    appointmentsAsPatient?: ConsulationListUncheckedUpdateManyWithoutPatientNestedInput
     doctor?: DoctorUncheckedUpdateOneWithoutUserNestedInput
+    authoredFiles?: FileEntityUncheckedUpdateManyWithoutAuthorNestedInput
   }
 
   export type PulseUserCreateManyInput = {
@@ -5839,73 +6673,59 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | Role
   }
 
-  export type AppointmentCreateInput = {
+  export type ConsulationListCreateInput = {
     id?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    date: Date | string
-    title: string
-    content?: string | null
+    content?: InputJsonValue | null
     author: PulseUserCreateNestedOneWithoutAppointmentsAsAuthorInput
     patient: PulseUserCreateNestedOneWithoutAppointmentsAsPatientInput
   }
 
-  export type AppointmentUncheckedCreateInput = {
+  export type ConsulationListUncheckedCreateInput = {
     id?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    date: Date | string
-    title: string
-    content?: string | null
+    content?: InputJsonValue | null
     authorId: string
     patientId: string
   }
 
-  export type AppointmentUpdateInput = {
+  export type ConsulationListUpdateInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    title?: StringFieldUpdateOperationsInput | string
-    content?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: InputJsonValue | InputJsonValue | null
     author?: PulseUserUpdateOneRequiredWithoutAppointmentsAsAuthorNestedInput
     patient?: PulseUserUpdateOneRequiredWithoutAppointmentsAsPatientNestedInput
   }
 
-  export type AppointmentUncheckedUpdateInput = {
+  export type ConsulationListUncheckedUpdateInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    title?: StringFieldUpdateOperationsInput | string
-    content?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: InputJsonValue | InputJsonValue | null
     authorId?: StringFieldUpdateOperationsInput | string
     patientId?: StringFieldUpdateOperationsInput | string
   }
 
-  export type AppointmentCreateManyInput = {
+  export type ConsulationListCreateManyInput = {
     id?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    date: Date | string
-    title: string
-    content?: string | null
+    content?: InputJsonValue | null
     authorId: string
     patientId: string
   }
 
-  export type AppointmentUpdateManyMutationInput = {
+  export type ConsulationListUpdateManyMutationInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    title?: StringFieldUpdateOperationsInput | string
-    content?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: InputJsonValue | InputJsonValue | null
   }
 
-  export type AppointmentUncheckedUpdateManyInput = {
+  export type ConsulationListUncheckedUpdateManyInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    title?: StringFieldUpdateOperationsInput | string
-    content?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: InputJsonValue | InputJsonValue | null
     authorId?: StringFieldUpdateOperationsInput | string
     patientId?: StringFieldUpdateOperationsInput | string
   }
@@ -6028,6 +6848,78 @@ export namespace Prisma {
     doctorIds?: SpecializationUpdatedoctorIdsInput | Enumerable<string>
   }
 
+  export type FileEntityCreateInput = {
+    id?: string
+    fileName: string
+    fileUrl: string
+    key: string
+    author: PulseUserCreateNestedOneWithoutAuthoredFilesInput
+    metadata?: InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FileEntityUncheckedCreateInput = {
+    id?: string
+    fileName: string
+    fileUrl: string
+    key: string
+    authorId: string
+    metadata?: InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FileEntityUpdateInput = {
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    author?: PulseUserUpdateOneRequiredWithoutAuthoredFilesNestedInput
+    metadata?: InputJsonValue | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FileEntityUncheckedUpdateInput = {
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    authorId?: StringFieldUpdateOperationsInput | string
+    metadata?: InputJsonValue | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FileEntityCreateManyInput = {
+    id?: string
+    fileName: string
+    fileUrl: string
+    key: string
+    authorId: string
+    metadata?: InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FileEntityUpdateManyMutationInput = {
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    metadata?: InputJsonValue | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FileEntityUncheckedUpdateManyInput = {
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    authorId?: StringFieldUpdateOperationsInput | string
+    metadata?: InputJsonValue | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter = {
     equals?: string
     in?: Enumerable<string>
@@ -6061,10 +6953,10 @@ export namespace Prisma {
     not?: NestedEnumRoleFilter | Role
   }
 
-  export type AppointmentListRelationFilter = {
-    every?: AppointmentWhereInput
-    some?: AppointmentWhereInput
-    none?: AppointmentWhereInput
+  export type ConsulationListListRelationFilter = {
+    every?: ConsulationListWhereInput
+    some?: ConsulationListWhereInput
+    none?: ConsulationListWhereInput
   }
 
   export type DoctorRelationFilter = {
@@ -6072,7 +6964,17 @@ export namespace Prisma {
     isNot?: DoctorWhereInput | null
   }
 
-  export type AppointmentOrderByRelationAggregateInput = {
+  export type FileEntityListRelationFilter = {
+    every?: FileEntityWhereInput
+    some?: FileEntityWhereInput
+    none?: FileEntityWhereInput
+  }
+
+  export type ConsulationListOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FileEntityOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -6156,20 +7058,16 @@ export namespace Prisma {
     _min?: NestedEnumRoleFilter
     _max?: NestedEnumRoleFilter
   }
+  export type JsonNullableFilter = 
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase>, Exclude<keyof Required<JsonNullableFilterBase>, 'path'>>,
+        Required<JsonNullableFilterBase>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase>, 'path'>>
 
-  export type StringNullableFilter = {
-    equals?: string | null
-    in?: Enumerable<string> | null
-    notIn?: Enumerable<string> | null
-    lt?: string
-    lte?: string
-    gt?: string
-    gte?: string
-    contains?: string
-    startsWith?: string
-    endsWith?: string
-    mode?: QueryMode
-    not?: NestedStringNullableFilter | string | null
+  export type JsonNullableFilterBase = {
+    equals?: InputJsonValue | null
+    not?: InputJsonValue | null
     isSet?: boolean
   }
 
@@ -6178,55 +7076,43 @@ export namespace Prisma {
     isNot?: PulseUserWhereInput
   }
 
-  export type AppointmentCountOrderByAggregateInput = {
+  export type ConsulationListCountOrderByAggregateInput = {
     id?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    date?: SortOrder
-    title?: SortOrder
     content?: SortOrder
     authorId?: SortOrder
     patientId?: SortOrder
   }
 
-  export type AppointmentMaxOrderByAggregateInput = {
+  export type ConsulationListMaxOrderByAggregateInput = {
     id?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    date?: SortOrder
-    title?: SortOrder
-    content?: SortOrder
     authorId?: SortOrder
     patientId?: SortOrder
   }
 
-  export type AppointmentMinOrderByAggregateInput = {
+  export type ConsulationListMinOrderByAggregateInput = {
     id?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    date?: SortOrder
-    title?: SortOrder
-    content?: SortOrder
     authorId?: SortOrder
     patientId?: SortOrder
   }
+  export type JsonNullableWithAggregatesFilter = 
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase>, 'path'>>
 
-  export type StringNullableWithAggregatesFilter = {
-    equals?: string | null
-    in?: Enumerable<string> | null
-    notIn?: Enumerable<string> | null
-    lt?: string
-    lte?: string
-    gt?: string
-    gte?: string
-    contains?: string
-    startsWith?: string
-    endsWith?: string
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter | string | null
+  export type JsonNullableWithAggregatesFilterBase = {
+    equals?: InputJsonValue | null
+    not?: InputJsonValue | null
     _count?: NestedIntNullableFilter
-    _min?: NestedStringNullableFilter
-    _max?: NestedStringNullableFilter
+    _min?: NestedJsonNullableFilter
+    _max?: NestedJsonNullableFilter
     isSet?: boolean
   }
 
@@ -6339,19 +7225,75 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
   }
+  export type JsonFilter = 
+    | PatchUndefined<
+        Either<Required<JsonFilterBase>, Exclude<keyof Required<JsonFilterBase>, 'path'>>,
+        Required<JsonFilterBase>
+      >
+    | OptionalFlat<Omit<Required<JsonFilterBase>, 'path'>>
 
-  export type AppointmentCreateNestedManyWithoutAuthorInput = {
-    create?: XOR<Enumerable<AppointmentCreateWithoutAuthorInput>, Enumerable<AppointmentUncheckedCreateWithoutAuthorInput>>
-    connectOrCreate?: Enumerable<AppointmentCreateOrConnectWithoutAuthorInput>
-    createMany?: AppointmentCreateManyAuthorInputEnvelope
-    connect?: Enumerable<AppointmentWhereUniqueInput>
+  export type JsonFilterBase = {
+    equals?: InputJsonValue
+    not?: InputJsonValue
   }
 
-  export type AppointmentCreateNestedManyWithoutPatientInput = {
-    create?: XOR<Enumerable<AppointmentCreateWithoutPatientInput>, Enumerable<AppointmentUncheckedCreateWithoutPatientInput>>
-    connectOrCreate?: Enumerable<AppointmentCreateOrConnectWithoutPatientInput>
-    createMany?: AppointmentCreateManyPatientInputEnvelope
-    connect?: Enumerable<AppointmentWhereUniqueInput>
+  export type FileEntityCountOrderByAggregateInput = {
+    id?: SortOrder
+    fileName?: SortOrder
+    fileUrl?: SortOrder
+    key?: SortOrder
+    authorId?: SortOrder
+    metadata?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FileEntityMaxOrderByAggregateInput = {
+    id?: SortOrder
+    fileName?: SortOrder
+    fileUrl?: SortOrder
+    key?: SortOrder
+    authorId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FileEntityMinOrderByAggregateInput = {
+    id?: SortOrder
+    fileName?: SortOrder
+    fileUrl?: SortOrder
+    key?: SortOrder
+    authorId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+  export type JsonWithAggregatesFilter = 
+    | PatchUndefined<
+        Either<Required<JsonWithAggregatesFilterBase>, Exclude<keyof Required<JsonWithAggregatesFilterBase>, 'path'>>,
+        Required<JsonWithAggregatesFilterBase>
+      >
+    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase>, 'path'>>
+
+  export type JsonWithAggregatesFilterBase = {
+    equals?: InputJsonValue
+    not?: InputJsonValue
+    _count?: NestedIntFilter
+    _min?: NestedJsonFilter
+    _max?: NestedJsonFilter
+  }
+
+  export type ConsulationListCreateNestedManyWithoutAuthorInput = {
+    create?: XOR<Enumerable<ConsulationListCreateWithoutAuthorInput>, Enumerable<ConsulationListUncheckedCreateWithoutAuthorInput>>
+    connectOrCreate?: Enumerable<ConsulationListCreateOrConnectWithoutAuthorInput>
+    createMany?: ConsulationListCreateManyAuthorInputEnvelope
+    connect?: Enumerable<ConsulationListWhereUniqueInput>
+  }
+
+  export type ConsulationListCreateNestedManyWithoutPatientInput = {
+    create?: XOR<Enumerable<ConsulationListCreateWithoutPatientInput>, Enumerable<ConsulationListUncheckedCreateWithoutPatientInput>>
+    connectOrCreate?: Enumerable<ConsulationListCreateOrConnectWithoutPatientInput>
+    createMany?: ConsulationListCreateManyPatientInputEnvelope
+    connect?: Enumerable<ConsulationListWhereUniqueInput>
   }
 
   export type DoctorCreateNestedOneWithoutUserInput = {
@@ -6360,24 +7302,38 @@ export namespace Prisma {
     connect?: DoctorWhereUniqueInput
   }
 
-  export type AppointmentUncheckedCreateNestedManyWithoutAuthorInput = {
-    create?: XOR<Enumerable<AppointmentCreateWithoutAuthorInput>, Enumerable<AppointmentUncheckedCreateWithoutAuthorInput>>
-    connectOrCreate?: Enumerable<AppointmentCreateOrConnectWithoutAuthorInput>
-    createMany?: AppointmentCreateManyAuthorInputEnvelope
-    connect?: Enumerable<AppointmentWhereUniqueInput>
+  export type FileEntityCreateNestedManyWithoutAuthorInput = {
+    create?: XOR<Enumerable<FileEntityCreateWithoutAuthorInput>, Enumerable<FileEntityUncheckedCreateWithoutAuthorInput>>
+    connectOrCreate?: Enumerable<FileEntityCreateOrConnectWithoutAuthorInput>
+    createMany?: FileEntityCreateManyAuthorInputEnvelope
+    connect?: Enumerable<FileEntityWhereUniqueInput>
   }
 
-  export type AppointmentUncheckedCreateNestedManyWithoutPatientInput = {
-    create?: XOR<Enumerable<AppointmentCreateWithoutPatientInput>, Enumerable<AppointmentUncheckedCreateWithoutPatientInput>>
-    connectOrCreate?: Enumerable<AppointmentCreateOrConnectWithoutPatientInput>
-    createMany?: AppointmentCreateManyPatientInputEnvelope
-    connect?: Enumerable<AppointmentWhereUniqueInput>
+  export type ConsulationListUncheckedCreateNestedManyWithoutAuthorInput = {
+    create?: XOR<Enumerable<ConsulationListCreateWithoutAuthorInput>, Enumerable<ConsulationListUncheckedCreateWithoutAuthorInput>>
+    connectOrCreate?: Enumerable<ConsulationListCreateOrConnectWithoutAuthorInput>
+    createMany?: ConsulationListCreateManyAuthorInputEnvelope
+    connect?: Enumerable<ConsulationListWhereUniqueInput>
+  }
+
+  export type ConsulationListUncheckedCreateNestedManyWithoutPatientInput = {
+    create?: XOR<Enumerable<ConsulationListCreateWithoutPatientInput>, Enumerable<ConsulationListUncheckedCreateWithoutPatientInput>>
+    connectOrCreate?: Enumerable<ConsulationListCreateOrConnectWithoutPatientInput>
+    createMany?: ConsulationListCreateManyPatientInputEnvelope
+    connect?: Enumerable<ConsulationListWhereUniqueInput>
   }
 
   export type DoctorUncheckedCreateNestedOneWithoutUserInput = {
     create?: XOR<DoctorCreateWithoutUserInput, DoctorUncheckedCreateWithoutUserInput>
     connectOrCreate?: DoctorCreateOrConnectWithoutUserInput
     connect?: DoctorWhereUniqueInput
+  }
+
+  export type FileEntityUncheckedCreateNestedManyWithoutAuthorInput = {
+    create?: XOR<Enumerable<FileEntityCreateWithoutAuthorInput>, Enumerable<FileEntityUncheckedCreateWithoutAuthorInput>>
+    connectOrCreate?: Enumerable<FileEntityCreateOrConnectWithoutAuthorInput>
+    createMany?: FileEntityCreateManyAuthorInputEnvelope
+    connect?: Enumerable<FileEntityWhereUniqueInput>
   }
 
   export type DateTimeFieldUpdateOperationsInput = {
@@ -6392,32 +7348,32 @@ export namespace Prisma {
     set?: Role
   }
 
-  export type AppointmentUpdateManyWithoutAuthorNestedInput = {
-    create?: XOR<Enumerable<AppointmentCreateWithoutAuthorInput>, Enumerable<AppointmentUncheckedCreateWithoutAuthorInput>>
-    connectOrCreate?: Enumerable<AppointmentCreateOrConnectWithoutAuthorInput>
-    upsert?: Enumerable<AppointmentUpsertWithWhereUniqueWithoutAuthorInput>
-    createMany?: AppointmentCreateManyAuthorInputEnvelope
-    set?: Enumerable<AppointmentWhereUniqueInput>
-    disconnect?: Enumerable<AppointmentWhereUniqueInput>
-    delete?: Enumerable<AppointmentWhereUniqueInput>
-    connect?: Enumerable<AppointmentWhereUniqueInput>
-    update?: Enumerable<AppointmentUpdateWithWhereUniqueWithoutAuthorInput>
-    updateMany?: Enumerable<AppointmentUpdateManyWithWhereWithoutAuthorInput>
-    deleteMany?: Enumerable<AppointmentScalarWhereInput>
+  export type ConsulationListUpdateManyWithoutAuthorNestedInput = {
+    create?: XOR<Enumerable<ConsulationListCreateWithoutAuthorInput>, Enumerable<ConsulationListUncheckedCreateWithoutAuthorInput>>
+    connectOrCreate?: Enumerable<ConsulationListCreateOrConnectWithoutAuthorInput>
+    upsert?: Enumerable<ConsulationListUpsertWithWhereUniqueWithoutAuthorInput>
+    createMany?: ConsulationListCreateManyAuthorInputEnvelope
+    set?: Enumerable<ConsulationListWhereUniqueInput>
+    disconnect?: Enumerable<ConsulationListWhereUniqueInput>
+    delete?: Enumerable<ConsulationListWhereUniqueInput>
+    connect?: Enumerable<ConsulationListWhereUniqueInput>
+    update?: Enumerable<ConsulationListUpdateWithWhereUniqueWithoutAuthorInput>
+    updateMany?: Enumerable<ConsulationListUpdateManyWithWhereWithoutAuthorInput>
+    deleteMany?: Enumerable<ConsulationListScalarWhereInput>
   }
 
-  export type AppointmentUpdateManyWithoutPatientNestedInput = {
-    create?: XOR<Enumerable<AppointmentCreateWithoutPatientInput>, Enumerable<AppointmentUncheckedCreateWithoutPatientInput>>
-    connectOrCreate?: Enumerable<AppointmentCreateOrConnectWithoutPatientInput>
-    upsert?: Enumerable<AppointmentUpsertWithWhereUniqueWithoutPatientInput>
-    createMany?: AppointmentCreateManyPatientInputEnvelope
-    set?: Enumerable<AppointmentWhereUniqueInput>
-    disconnect?: Enumerable<AppointmentWhereUniqueInput>
-    delete?: Enumerable<AppointmentWhereUniqueInput>
-    connect?: Enumerable<AppointmentWhereUniqueInput>
-    update?: Enumerable<AppointmentUpdateWithWhereUniqueWithoutPatientInput>
-    updateMany?: Enumerable<AppointmentUpdateManyWithWhereWithoutPatientInput>
-    deleteMany?: Enumerable<AppointmentScalarWhereInput>
+  export type ConsulationListUpdateManyWithoutPatientNestedInput = {
+    create?: XOR<Enumerable<ConsulationListCreateWithoutPatientInput>, Enumerable<ConsulationListUncheckedCreateWithoutPatientInput>>
+    connectOrCreate?: Enumerable<ConsulationListCreateOrConnectWithoutPatientInput>
+    upsert?: Enumerable<ConsulationListUpsertWithWhereUniqueWithoutPatientInput>
+    createMany?: ConsulationListCreateManyPatientInputEnvelope
+    set?: Enumerable<ConsulationListWhereUniqueInput>
+    disconnect?: Enumerable<ConsulationListWhereUniqueInput>
+    delete?: Enumerable<ConsulationListWhereUniqueInput>
+    connect?: Enumerable<ConsulationListWhereUniqueInput>
+    update?: Enumerable<ConsulationListUpdateWithWhereUniqueWithoutPatientInput>
+    updateMany?: Enumerable<ConsulationListUpdateManyWithWhereWithoutPatientInput>
+    deleteMany?: Enumerable<ConsulationListScalarWhereInput>
   }
 
   export type DoctorUpdateOneWithoutUserNestedInput = {
@@ -6430,32 +7386,46 @@ export namespace Prisma {
     update?: XOR<DoctorUpdateWithoutUserInput, DoctorUncheckedUpdateWithoutUserInput>
   }
 
-  export type AppointmentUncheckedUpdateManyWithoutAuthorNestedInput = {
-    create?: XOR<Enumerable<AppointmentCreateWithoutAuthorInput>, Enumerable<AppointmentUncheckedCreateWithoutAuthorInput>>
-    connectOrCreate?: Enumerable<AppointmentCreateOrConnectWithoutAuthorInput>
-    upsert?: Enumerable<AppointmentUpsertWithWhereUniqueWithoutAuthorInput>
-    createMany?: AppointmentCreateManyAuthorInputEnvelope
-    set?: Enumerable<AppointmentWhereUniqueInput>
-    disconnect?: Enumerable<AppointmentWhereUniqueInput>
-    delete?: Enumerable<AppointmentWhereUniqueInput>
-    connect?: Enumerable<AppointmentWhereUniqueInput>
-    update?: Enumerable<AppointmentUpdateWithWhereUniqueWithoutAuthorInput>
-    updateMany?: Enumerable<AppointmentUpdateManyWithWhereWithoutAuthorInput>
-    deleteMany?: Enumerable<AppointmentScalarWhereInput>
+  export type FileEntityUpdateManyWithoutAuthorNestedInput = {
+    create?: XOR<Enumerable<FileEntityCreateWithoutAuthorInput>, Enumerable<FileEntityUncheckedCreateWithoutAuthorInput>>
+    connectOrCreate?: Enumerable<FileEntityCreateOrConnectWithoutAuthorInput>
+    upsert?: Enumerable<FileEntityUpsertWithWhereUniqueWithoutAuthorInput>
+    createMany?: FileEntityCreateManyAuthorInputEnvelope
+    set?: Enumerable<FileEntityWhereUniqueInput>
+    disconnect?: Enumerable<FileEntityWhereUniqueInput>
+    delete?: Enumerable<FileEntityWhereUniqueInput>
+    connect?: Enumerable<FileEntityWhereUniqueInput>
+    update?: Enumerable<FileEntityUpdateWithWhereUniqueWithoutAuthorInput>
+    updateMany?: Enumerable<FileEntityUpdateManyWithWhereWithoutAuthorInput>
+    deleteMany?: Enumerable<FileEntityScalarWhereInput>
   }
 
-  export type AppointmentUncheckedUpdateManyWithoutPatientNestedInput = {
-    create?: XOR<Enumerable<AppointmentCreateWithoutPatientInput>, Enumerable<AppointmentUncheckedCreateWithoutPatientInput>>
-    connectOrCreate?: Enumerable<AppointmentCreateOrConnectWithoutPatientInput>
-    upsert?: Enumerable<AppointmentUpsertWithWhereUniqueWithoutPatientInput>
-    createMany?: AppointmentCreateManyPatientInputEnvelope
-    set?: Enumerable<AppointmentWhereUniqueInput>
-    disconnect?: Enumerable<AppointmentWhereUniqueInput>
-    delete?: Enumerable<AppointmentWhereUniqueInput>
-    connect?: Enumerable<AppointmentWhereUniqueInput>
-    update?: Enumerable<AppointmentUpdateWithWhereUniqueWithoutPatientInput>
-    updateMany?: Enumerable<AppointmentUpdateManyWithWhereWithoutPatientInput>
-    deleteMany?: Enumerable<AppointmentScalarWhereInput>
+  export type ConsulationListUncheckedUpdateManyWithoutAuthorNestedInput = {
+    create?: XOR<Enumerable<ConsulationListCreateWithoutAuthorInput>, Enumerable<ConsulationListUncheckedCreateWithoutAuthorInput>>
+    connectOrCreate?: Enumerable<ConsulationListCreateOrConnectWithoutAuthorInput>
+    upsert?: Enumerable<ConsulationListUpsertWithWhereUniqueWithoutAuthorInput>
+    createMany?: ConsulationListCreateManyAuthorInputEnvelope
+    set?: Enumerable<ConsulationListWhereUniqueInput>
+    disconnect?: Enumerable<ConsulationListWhereUniqueInput>
+    delete?: Enumerable<ConsulationListWhereUniqueInput>
+    connect?: Enumerable<ConsulationListWhereUniqueInput>
+    update?: Enumerable<ConsulationListUpdateWithWhereUniqueWithoutAuthorInput>
+    updateMany?: Enumerable<ConsulationListUpdateManyWithWhereWithoutAuthorInput>
+    deleteMany?: Enumerable<ConsulationListScalarWhereInput>
+  }
+
+  export type ConsulationListUncheckedUpdateManyWithoutPatientNestedInput = {
+    create?: XOR<Enumerable<ConsulationListCreateWithoutPatientInput>, Enumerable<ConsulationListUncheckedCreateWithoutPatientInput>>
+    connectOrCreate?: Enumerable<ConsulationListCreateOrConnectWithoutPatientInput>
+    upsert?: Enumerable<ConsulationListUpsertWithWhereUniqueWithoutPatientInput>
+    createMany?: ConsulationListCreateManyPatientInputEnvelope
+    set?: Enumerable<ConsulationListWhereUniqueInput>
+    disconnect?: Enumerable<ConsulationListWhereUniqueInput>
+    delete?: Enumerable<ConsulationListWhereUniqueInput>
+    connect?: Enumerable<ConsulationListWhereUniqueInput>
+    update?: Enumerable<ConsulationListUpdateWithWhereUniqueWithoutPatientInput>
+    updateMany?: Enumerable<ConsulationListUpdateManyWithWhereWithoutPatientInput>
+    deleteMany?: Enumerable<ConsulationListScalarWhereInput>
   }
 
   export type DoctorUncheckedUpdateOneWithoutUserNestedInput = {
@@ -6468,6 +7438,20 @@ export namespace Prisma {
     update?: XOR<DoctorUpdateWithoutUserInput, DoctorUncheckedUpdateWithoutUserInput>
   }
 
+  export type FileEntityUncheckedUpdateManyWithoutAuthorNestedInput = {
+    create?: XOR<Enumerable<FileEntityCreateWithoutAuthorInput>, Enumerable<FileEntityUncheckedCreateWithoutAuthorInput>>
+    connectOrCreate?: Enumerable<FileEntityCreateOrConnectWithoutAuthorInput>
+    upsert?: Enumerable<FileEntityUpsertWithWhereUniqueWithoutAuthorInput>
+    createMany?: FileEntityCreateManyAuthorInputEnvelope
+    set?: Enumerable<FileEntityWhereUniqueInput>
+    disconnect?: Enumerable<FileEntityWhereUniqueInput>
+    delete?: Enumerable<FileEntityWhereUniqueInput>
+    connect?: Enumerable<FileEntityWhereUniqueInput>
+    update?: Enumerable<FileEntityUpdateWithWhereUniqueWithoutAuthorInput>
+    updateMany?: Enumerable<FileEntityUpdateManyWithWhereWithoutAuthorInput>
+    deleteMany?: Enumerable<FileEntityScalarWhereInput>
+  }
+
   export type PulseUserCreateNestedOneWithoutAppointmentsAsAuthorInput = {
     create?: XOR<PulseUserCreateWithoutAppointmentsAsAuthorInput, PulseUserUncheckedCreateWithoutAppointmentsAsAuthorInput>
     connectOrCreate?: PulseUserCreateOrConnectWithoutAppointmentsAsAuthorInput
@@ -6478,11 +7462,6 @@ export namespace Prisma {
     create?: XOR<PulseUserCreateWithoutAppointmentsAsPatientInput, PulseUserUncheckedCreateWithoutAppointmentsAsPatientInput>
     connectOrCreate?: PulseUserCreateOrConnectWithoutAppointmentsAsPatientInput
     connect?: PulseUserWhereUniqueInput
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
-    unset?: boolean
   }
 
   export type PulseUserUpdateOneRequiredWithoutAppointmentsAsAuthorNestedInput = {
@@ -6617,6 +7596,20 @@ export namespace Prisma {
     deleteMany?: Enumerable<DoctorScalarWhereInput>
   }
 
+  export type PulseUserCreateNestedOneWithoutAuthoredFilesInput = {
+    create?: XOR<PulseUserCreateWithoutAuthoredFilesInput, PulseUserUncheckedCreateWithoutAuthoredFilesInput>
+    connectOrCreate?: PulseUserCreateOrConnectWithoutAuthoredFilesInput
+    connect?: PulseUserWhereUniqueInput
+  }
+
+  export type PulseUserUpdateOneRequiredWithoutAuthoredFilesNestedInput = {
+    create?: XOR<PulseUserCreateWithoutAuthoredFilesInput, PulseUserUncheckedCreateWithoutAuthoredFilesInput>
+    connectOrCreate?: PulseUserCreateOrConnectWithoutAuthoredFilesInput
+    upsert?: PulseUserUpsertWithoutAuthoredFilesInput
+    connect?: PulseUserWhereUniqueInput
+    update?: XOR<PulseUserUpdateWithoutAuthoredFilesInput, PulseUserUncheckedUpdateWithoutAuthoredFilesInput>
+  }
+
   export type NestedStringFilter = {
     equals?: string
     in?: Enumerable<string>
@@ -6701,39 +7694,6 @@ export namespace Prisma {
     _max?: NestedEnumRoleFilter
   }
 
-  export type NestedStringNullableFilter = {
-    equals?: string | null
-    in?: Enumerable<string> | null
-    notIn?: Enumerable<string> | null
-    lt?: string
-    lte?: string
-    gt?: string
-    gte?: string
-    contains?: string
-    startsWith?: string
-    endsWith?: string
-    not?: NestedStringNullableFilter | string | null
-    isSet?: boolean
-  }
-
-  export type NestedStringNullableWithAggregatesFilter = {
-    equals?: string | null
-    in?: Enumerable<string> | null
-    notIn?: Enumerable<string> | null
-    lt?: string
-    lte?: string
-    gt?: string
-    gte?: string
-    contains?: string
-    startsWith?: string
-    endsWith?: string
-    not?: NestedStringNullableWithAggregatesFilter | string | null
-    _count?: NestedIntNullableFilter
-    _min?: NestedStringNullableFilter
-    _max?: NestedStringNullableFilter
-    isSet?: boolean
-  }
-
   export type NestedIntNullableFilter = {
     equals?: number | null
     in?: Enumerable<number> | null
@@ -6743,6 +7703,18 @@ export namespace Prisma {
     gt?: number
     gte?: number
     not?: NestedIntNullableFilter | number | null
+    isSet?: boolean
+  }
+  export type NestedJsonNullableFilter = 
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase>, Exclude<keyof Required<NestedJsonNullableFilterBase>, 'path'>>,
+        Required<NestedJsonNullableFilterBase>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase>, 'path'>>
+
+  export type NestedJsonNullableFilterBase = {
+    equals?: InputJsonValue | null
+    not?: InputJsonValue | null
     isSet?: boolean
   }
 
@@ -6772,63 +7744,66 @@ export namespace Prisma {
     gte?: number
     not?: NestedFloatFilter | number
   }
+  export type NestedJsonFilter = 
+    | PatchUndefined<
+        Either<Required<NestedJsonFilterBase>, Exclude<keyof Required<NestedJsonFilterBase>, 'path'>>,
+        Required<NestedJsonFilterBase>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonFilterBase>, 'path'>>
 
-  export type AppointmentCreateWithoutAuthorInput = {
+  export type NestedJsonFilterBase = {
+    equals?: InputJsonValue
+    not?: InputJsonValue
+  }
+
+  export type ConsulationListCreateWithoutAuthorInput = {
     id?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    date: Date | string
-    title: string
-    content?: string | null
+    content?: InputJsonValue | null
     patient: PulseUserCreateNestedOneWithoutAppointmentsAsPatientInput
   }
 
-  export type AppointmentUncheckedCreateWithoutAuthorInput = {
+  export type ConsulationListUncheckedCreateWithoutAuthorInput = {
     id?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    date: Date | string
-    title: string
-    content?: string | null
+    content?: InputJsonValue | null
     patientId: string
   }
 
-  export type AppointmentCreateOrConnectWithoutAuthorInput = {
-    where: AppointmentWhereUniqueInput
-    create: XOR<AppointmentCreateWithoutAuthorInput, AppointmentUncheckedCreateWithoutAuthorInput>
+  export type ConsulationListCreateOrConnectWithoutAuthorInput = {
+    where: ConsulationListWhereUniqueInput
+    create: XOR<ConsulationListCreateWithoutAuthorInput, ConsulationListUncheckedCreateWithoutAuthorInput>
   }
 
-  export type AppointmentCreateManyAuthorInputEnvelope = {
-    data: Enumerable<AppointmentCreateManyAuthorInput>
+  export type ConsulationListCreateManyAuthorInputEnvelope = {
+    data: Enumerable<ConsulationListCreateManyAuthorInput>
   }
 
-  export type AppointmentCreateWithoutPatientInput = {
+  export type ConsulationListCreateWithoutPatientInput = {
     id?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    date: Date | string
-    title: string
-    content?: string | null
+    content?: InputJsonValue | null
     author: PulseUserCreateNestedOneWithoutAppointmentsAsAuthorInput
   }
 
-  export type AppointmentUncheckedCreateWithoutPatientInput = {
+  export type ConsulationListUncheckedCreateWithoutPatientInput = {
     id?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    date: Date | string
-    title: string
-    content?: string | null
+    content?: InputJsonValue | null
     authorId: string
   }
 
-  export type AppointmentCreateOrConnectWithoutPatientInput = {
-    where: AppointmentWhereUniqueInput
-    create: XOR<AppointmentCreateWithoutPatientInput, AppointmentUncheckedCreateWithoutPatientInput>
+  export type ConsulationListCreateOrConnectWithoutPatientInput = {
+    where: ConsulationListWhereUniqueInput
+    create: XOR<ConsulationListCreateWithoutPatientInput, ConsulationListUncheckedCreateWithoutPatientInput>
   }
 
-  export type AppointmentCreateManyPatientInputEnvelope = {
-    data: Enumerable<AppointmentCreateManyPatientInput>
+  export type ConsulationListCreateManyPatientInputEnvelope = {
+    data: Enumerable<ConsulationListCreateManyPatientInput>
   }
 
   export type DoctorCreateWithoutUserInput = {
@@ -6856,50 +7831,77 @@ export namespace Prisma {
     create: XOR<DoctorCreateWithoutUserInput, DoctorUncheckedCreateWithoutUserInput>
   }
 
-  export type AppointmentUpsertWithWhereUniqueWithoutAuthorInput = {
-    where: AppointmentWhereUniqueInput
-    update: XOR<AppointmentUpdateWithoutAuthorInput, AppointmentUncheckedUpdateWithoutAuthorInput>
-    create: XOR<AppointmentCreateWithoutAuthorInput, AppointmentUncheckedCreateWithoutAuthorInput>
+  export type FileEntityCreateWithoutAuthorInput = {
+    id?: string
+    fileName: string
+    fileUrl: string
+    key: string
+    metadata?: InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
-  export type AppointmentUpdateWithWhereUniqueWithoutAuthorInput = {
-    where: AppointmentWhereUniqueInput
-    data: XOR<AppointmentUpdateWithoutAuthorInput, AppointmentUncheckedUpdateWithoutAuthorInput>
+  export type FileEntityUncheckedCreateWithoutAuthorInput = {
+    id?: string
+    fileName: string
+    fileUrl: string
+    key: string
+    metadata?: InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
-  export type AppointmentUpdateManyWithWhereWithoutAuthorInput = {
-    where: AppointmentScalarWhereInput
-    data: XOR<AppointmentUpdateManyMutationInput, AppointmentUncheckedUpdateManyWithoutAppointmentsAsAuthorInput>
+  export type FileEntityCreateOrConnectWithoutAuthorInput = {
+    where: FileEntityWhereUniqueInput
+    create: XOR<FileEntityCreateWithoutAuthorInput, FileEntityUncheckedCreateWithoutAuthorInput>
   }
 
-  export type AppointmentScalarWhereInput = {
-    AND?: Enumerable<AppointmentScalarWhereInput>
-    OR?: Enumerable<AppointmentScalarWhereInput>
-    NOT?: Enumerable<AppointmentScalarWhereInput>
+  export type FileEntityCreateManyAuthorInputEnvelope = {
+    data: Enumerable<FileEntityCreateManyAuthorInput>
+  }
+
+  export type ConsulationListUpsertWithWhereUniqueWithoutAuthorInput = {
+    where: ConsulationListWhereUniqueInput
+    update: XOR<ConsulationListUpdateWithoutAuthorInput, ConsulationListUncheckedUpdateWithoutAuthorInput>
+    create: XOR<ConsulationListCreateWithoutAuthorInput, ConsulationListUncheckedCreateWithoutAuthorInput>
+  }
+
+  export type ConsulationListUpdateWithWhereUniqueWithoutAuthorInput = {
+    where: ConsulationListWhereUniqueInput
+    data: XOR<ConsulationListUpdateWithoutAuthorInput, ConsulationListUncheckedUpdateWithoutAuthorInput>
+  }
+
+  export type ConsulationListUpdateManyWithWhereWithoutAuthorInput = {
+    where: ConsulationListScalarWhereInput
+    data: XOR<ConsulationListUpdateManyMutationInput, ConsulationListUncheckedUpdateManyWithoutAppointmentsAsAuthorInput>
+  }
+
+  export type ConsulationListScalarWhereInput = {
+    AND?: Enumerable<ConsulationListScalarWhereInput>
+    OR?: Enumerable<ConsulationListScalarWhereInput>
+    NOT?: Enumerable<ConsulationListScalarWhereInput>
     id?: StringFilter | string
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
-    date?: DateTimeFilter | Date | string
-    title?: StringFilter | string
-    content?: StringNullableFilter | string | null
+    content?: JsonNullableFilter
     authorId?: StringFilter | string
     patientId?: StringFilter | string
   }
 
-  export type AppointmentUpsertWithWhereUniqueWithoutPatientInput = {
-    where: AppointmentWhereUniqueInput
-    update: XOR<AppointmentUpdateWithoutPatientInput, AppointmentUncheckedUpdateWithoutPatientInput>
-    create: XOR<AppointmentCreateWithoutPatientInput, AppointmentUncheckedCreateWithoutPatientInput>
+  export type ConsulationListUpsertWithWhereUniqueWithoutPatientInput = {
+    where: ConsulationListWhereUniqueInput
+    update: XOR<ConsulationListUpdateWithoutPatientInput, ConsulationListUncheckedUpdateWithoutPatientInput>
+    create: XOR<ConsulationListCreateWithoutPatientInput, ConsulationListUncheckedCreateWithoutPatientInput>
   }
 
-  export type AppointmentUpdateWithWhereUniqueWithoutPatientInput = {
-    where: AppointmentWhereUniqueInput
-    data: XOR<AppointmentUpdateWithoutPatientInput, AppointmentUncheckedUpdateWithoutPatientInput>
+  export type ConsulationListUpdateWithWhereUniqueWithoutPatientInput = {
+    where: ConsulationListWhereUniqueInput
+    data: XOR<ConsulationListUpdateWithoutPatientInput, ConsulationListUncheckedUpdateWithoutPatientInput>
   }
 
-  export type AppointmentUpdateManyWithWhereWithoutPatientInput = {
-    where: AppointmentScalarWhereInput
-    data: XOR<AppointmentUpdateManyMutationInput, AppointmentUncheckedUpdateManyWithoutAppointmentsAsPatientInput>
+  export type ConsulationListUpdateManyWithWhereWithoutPatientInput = {
+    where: ConsulationListScalarWhereInput
+    data: XOR<ConsulationListUpdateManyMutationInput, ConsulationListUncheckedUpdateManyWithoutAppointmentsAsPatientInput>
   }
 
   export type DoctorUpsertWithoutUserInput = {
@@ -6925,6 +7927,36 @@ export namespace Prisma {
     specializations?: SpecializationUncheckedUpdateManyWithoutDoctorNestedInput
   }
 
+  export type FileEntityUpsertWithWhereUniqueWithoutAuthorInput = {
+    where: FileEntityWhereUniqueInput
+    update: XOR<FileEntityUpdateWithoutAuthorInput, FileEntityUncheckedUpdateWithoutAuthorInput>
+    create: XOR<FileEntityCreateWithoutAuthorInput, FileEntityUncheckedCreateWithoutAuthorInput>
+  }
+
+  export type FileEntityUpdateWithWhereUniqueWithoutAuthorInput = {
+    where: FileEntityWhereUniqueInput
+    data: XOR<FileEntityUpdateWithoutAuthorInput, FileEntityUncheckedUpdateWithoutAuthorInput>
+  }
+
+  export type FileEntityUpdateManyWithWhereWithoutAuthorInput = {
+    where: FileEntityScalarWhereInput
+    data: XOR<FileEntityUpdateManyMutationInput, FileEntityUncheckedUpdateManyWithoutAuthoredFilesInput>
+  }
+
+  export type FileEntityScalarWhereInput = {
+    AND?: Enumerable<FileEntityScalarWhereInput>
+    OR?: Enumerable<FileEntityScalarWhereInput>
+    NOT?: Enumerable<FileEntityScalarWhereInput>
+    id?: StringFilter | string
+    fileName?: StringFilter | string
+    fileUrl?: StringFilter | string
+    key?: StringFilter | string
+    authorId?: StringFilter | string
+    metadata?: JsonFilter
+    createdAt?: DateTimeFilter | Date | string
+    updatedAt?: DateTimeFilter | Date | string
+  }
+
   export type PulseUserCreateWithoutAppointmentsAsAuthorInput = {
     id?: string
     createdAt?: Date | string
@@ -6936,8 +7968,9 @@ export namespace Prisma {
     phoneNumber: string
     address: string
     role?: Role
-    appointmentsAsPatient?: AppointmentCreateNestedManyWithoutPatientInput
+    appointmentsAsPatient?: ConsulationListCreateNestedManyWithoutPatientInput
     doctor?: DoctorCreateNestedOneWithoutUserInput
+    authoredFiles?: FileEntityCreateNestedManyWithoutAuthorInput
   }
 
   export type PulseUserUncheckedCreateWithoutAppointmentsAsAuthorInput = {
@@ -6951,8 +7984,9 @@ export namespace Prisma {
     phoneNumber: string
     address: string
     role?: Role
-    appointmentsAsPatient?: AppointmentUncheckedCreateNestedManyWithoutPatientInput
+    appointmentsAsPatient?: ConsulationListUncheckedCreateNestedManyWithoutPatientInput
     doctor?: DoctorUncheckedCreateNestedOneWithoutUserInput
+    authoredFiles?: FileEntityUncheckedCreateNestedManyWithoutAuthorInput
   }
 
   export type PulseUserCreateOrConnectWithoutAppointmentsAsAuthorInput = {
@@ -6971,8 +8005,9 @@ export namespace Prisma {
     phoneNumber: string
     address: string
     role?: Role
-    appointmentsAsAuthor?: AppointmentCreateNestedManyWithoutAuthorInput
+    appointmentsAsAuthor?: ConsulationListCreateNestedManyWithoutAuthorInput
     doctor?: DoctorCreateNestedOneWithoutUserInput
+    authoredFiles?: FileEntityCreateNestedManyWithoutAuthorInput
   }
 
   export type PulseUserUncheckedCreateWithoutAppointmentsAsPatientInput = {
@@ -6986,8 +8021,9 @@ export namespace Prisma {
     phoneNumber: string
     address: string
     role?: Role
-    appointmentsAsAuthor?: AppointmentUncheckedCreateNestedManyWithoutAuthorInput
+    appointmentsAsAuthor?: ConsulationListUncheckedCreateNestedManyWithoutAuthorInput
     doctor?: DoctorUncheckedCreateNestedOneWithoutUserInput
+    authoredFiles?: FileEntityUncheckedCreateNestedManyWithoutAuthorInput
   }
 
   export type PulseUserCreateOrConnectWithoutAppointmentsAsPatientInput = {
@@ -7010,8 +8046,9 @@ export namespace Prisma {
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | Role
-    appointmentsAsPatient?: AppointmentUpdateManyWithoutPatientNestedInput
+    appointmentsAsPatient?: ConsulationListUpdateManyWithoutPatientNestedInput
     doctor?: DoctorUpdateOneWithoutUserNestedInput
+    authoredFiles?: FileEntityUpdateManyWithoutAuthorNestedInput
   }
 
   export type PulseUserUncheckedUpdateWithoutAppointmentsAsAuthorInput = {
@@ -7024,8 +8061,9 @@ export namespace Prisma {
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | Role
-    appointmentsAsPatient?: AppointmentUncheckedUpdateManyWithoutPatientNestedInput
+    appointmentsAsPatient?: ConsulationListUncheckedUpdateManyWithoutPatientNestedInput
     doctor?: DoctorUncheckedUpdateOneWithoutUserNestedInput
+    authoredFiles?: FileEntityUncheckedUpdateManyWithoutAuthorNestedInput
   }
 
   export type PulseUserUpsertWithoutAppointmentsAsPatientInput = {
@@ -7043,8 +8081,9 @@ export namespace Prisma {
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | Role
-    appointmentsAsAuthor?: AppointmentUpdateManyWithoutAuthorNestedInput
+    appointmentsAsAuthor?: ConsulationListUpdateManyWithoutAuthorNestedInput
     doctor?: DoctorUpdateOneWithoutUserNestedInput
+    authoredFiles?: FileEntityUpdateManyWithoutAuthorNestedInput
   }
 
   export type PulseUserUncheckedUpdateWithoutAppointmentsAsPatientInput = {
@@ -7057,8 +8096,9 @@ export namespace Prisma {
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | Role
-    appointmentsAsAuthor?: AppointmentUncheckedUpdateManyWithoutAuthorNestedInput
+    appointmentsAsAuthor?: ConsulationListUncheckedUpdateManyWithoutAuthorNestedInput
     doctor?: DoctorUncheckedUpdateOneWithoutUserNestedInput
+    authoredFiles?: FileEntityUncheckedUpdateManyWithoutAuthorNestedInput
   }
 
   export type PulseUserCreateWithoutDoctorInput = {
@@ -7072,8 +8112,9 @@ export namespace Prisma {
     phoneNumber: string
     address: string
     role?: Role
-    appointmentsAsAuthor?: AppointmentCreateNestedManyWithoutAuthorInput
-    appointmentsAsPatient?: AppointmentCreateNestedManyWithoutPatientInput
+    appointmentsAsAuthor?: ConsulationListCreateNestedManyWithoutAuthorInput
+    appointmentsAsPatient?: ConsulationListCreateNestedManyWithoutPatientInput
+    authoredFiles?: FileEntityCreateNestedManyWithoutAuthorInput
   }
 
   export type PulseUserUncheckedCreateWithoutDoctorInput = {
@@ -7087,8 +8128,9 @@ export namespace Prisma {
     phoneNumber: string
     address: string
     role?: Role
-    appointmentsAsAuthor?: AppointmentUncheckedCreateNestedManyWithoutAuthorInput
-    appointmentsAsPatient?: AppointmentUncheckedCreateNestedManyWithoutPatientInput
+    appointmentsAsAuthor?: ConsulationListUncheckedCreateNestedManyWithoutAuthorInput
+    appointmentsAsPatient?: ConsulationListUncheckedCreateNestedManyWithoutPatientInput
+    authoredFiles?: FileEntityUncheckedCreateNestedManyWithoutAuthorInput
   }
 
   export type PulseUserCreateOrConnectWithoutDoctorInput = {
@@ -7130,8 +8172,9 @@ export namespace Prisma {
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | Role
-    appointmentsAsAuthor?: AppointmentUpdateManyWithoutAuthorNestedInput
-    appointmentsAsPatient?: AppointmentUpdateManyWithoutPatientNestedInput
+    appointmentsAsAuthor?: ConsulationListUpdateManyWithoutAuthorNestedInput
+    appointmentsAsPatient?: ConsulationListUpdateManyWithoutPatientNestedInput
+    authoredFiles?: FileEntityUpdateManyWithoutAuthorNestedInput
   }
 
   export type PulseUserUncheckedUpdateWithoutDoctorInput = {
@@ -7144,8 +8187,9 @@ export namespace Prisma {
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | Role
-    appointmentsAsAuthor?: AppointmentUncheckedUpdateManyWithoutAuthorNestedInput
-    appointmentsAsPatient?: AppointmentUncheckedUpdateManyWithoutPatientNestedInput
+    appointmentsAsAuthor?: ConsulationListUncheckedUpdateManyWithoutAuthorNestedInput
+    appointmentsAsPatient?: ConsulationListUncheckedUpdateManyWithoutPatientNestedInput
+    authoredFiles?: FileEntityUncheckedUpdateManyWithoutAuthorNestedInput
   }
 
   export type SpecializationUpsertWithWhereUniqueWithoutDoctorInput = {
@@ -7228,78 +8272,171 @@ export namespace Prisma {
     specializationsIds?: StringNullableListFilter
   }
 
-  export type AppointmentCreateManyAuthorInput = {
+  export type PulseUserCreateWithoutAuthoredFilesInput = {
     id?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    date: Date | string
-    title: string
-    content?: string | null
+    email: string
+    password: string
+    fullName: string
+    uniqueName: string
+    phoneNumber: string
+    address: string
+    role?: Role
+    appointmentsAsAuthor?: ConsulationListCreateNestedManyWithoutAuthorInput
+    appointmentsAsPatient?: ConsulationListCreateNestedManyWithoutPatientInput
+    doctor?: DoctorCreateNestedOneWithoutUserInput
+  }
+
+  export type PulseUserUncheckedCreateWithoutAuthoredFilesInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    email: string
+    password: string
+    fullName: string
+    uniqueName: string
+    phoneNumber: string
+    address: string
+    role?: Role
+    appointmentsAsAuthor?: ConsulationListUncheckedCreateNestedManyWithoutAuthorInput
+    appointmentsAsPatient?: ConsulationListUncheckedCreateNestedManyWithoutPatientInput
+    doctor?: DoctorUncheckedCreateNestedOneWithoutUserInput
+  }
+
+  export type PulseUserCreateOrConnectWithoutAuthoredFilesInput = {
+    where: PulseUserWhereUniqueInput
+    create: XOR<PulseUserCreateWithoutAuthoredFilesInput, PulseUserUncheckedCreateWithoutAuthoredFilesInput>
+  }
+
+  export type PulseUserUpsertWithoutAuthoredFilesInput = {
+    update: XOR<PulseUserUpdateWithoutAuthoredFilesInput, PulseUserUncheckedUpdateWithoutAuthoredFilesInput>
+    create: XOR<PulseUserCreateWithoutAuthoredFilesInput, PulseUserUncheckedCreateWithoutAuthoredFilesInput>
+  }
+
+  export type PulseUserUpdateWithoutAuthoredFilesInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    uniqueName?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | Role
+    appointmentsAsAuthor?: ConsulationListUpdateManyWithoutAuthorNestedInput
+    appointmentsAsPatient?: ConsulationListUpdateManyWithoutPatientNestedInput
+    doctor?: DoctorUpdateOneWithoutUserNestedInput
+  }
+
+  export type PulseUserUncheckedUpdateWithoutAuthoredFilesInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    uniqueName?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | Role
+    appointmentsAsAuthor?: ConsulationListUncheckedUpdateManyWithoutAuthorNestedInput
+    appointmentsAsPatient?: ConsulationListUncheckedUpdateManyWithoutPatientNestedInput
+    doctor?: DoctorUncheckedUpdateOneWithoutUserNestedInput
+  }
+
+  export type ConsulationListCreateManyAuthorInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    content?: InputJsonValue | null
     patientId: string
   }
 
-  export type AppointmentCreateManyPatientInput = {
+  export type ConsulationListCreateManyPatientInput = {
     id?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    date: Date | string
-    title: string
-    content?: string | null
+    content?: InputJsonValue | null
     authorId: string
   }
 
-  export type AppointmentUpdateWithoutAuthorInput = {
+  export type FileEntityCreateManyAuthorInput = {
+    id?: string
+    fileName: string
+    fileUrl: string
+    key: string
+    metadata?: InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ConsulationListUpdateWithoutAuthorInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    title?: StringFieldUpdateOperationsInput | string
-    content?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: InputJsonValue | InputJsonValue | null
     patient?: PulseUserUpdateOneRequiredWithoutAppointmentsAsPatientNestedInput
   }
 
-  export type AppointmentUncheckedUpdateWithoutAuthorInput = {
+  export type ConsulationListUncheckedUpdateWithoutAuthorInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    title?: StringFieldUpdateOperationsInput | string
-    content?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: InputJsonValue | InputJsonValue | null
     patientId?: StringFieldUpdateOperationsInput | string
   }
 
-  export type AppointmentUncheckedUpdateManyWithoutAppointmentsAsAuthorInput = {
+  export type ConsulationListUncheckedUpdateManyWithoutAppointmentsAsAuthorInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    title?: StringFieldUpdateOperationsInput | string
-    content?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: InputJsonValue | InputJsonValue | null
     patientId?: StringFieldUpdateOperationsInput | string
   }
 
-  export type AppointmentUpdateWithoutPatientInput = {
+  export type ConsulationListUpdateWithoutPatientInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    title?: StringFieldUpdateOperationsInput | string
-    content?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: InputJsonValue | InputJsonValue | null
     author?: PulseUserUpdateOneRequiredWithoutAppointmentsAsAuthorNestedInput
   }
 
-  export type AppointmentUncheckedUpdateWithoutPatientInput = {
+  export type ConsulationListUncheckedUpdateWithoutPatientInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    title?: StringFieldUpdateOperationsInput | string
-    content?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: InputJsonValue | InputJsonValue | null
     authorId?: StringFieldUpdateOperationsInput | string
   }
 
-  export type AppointmentUncheckedUpdateManyWithoutAppointmentsAsPatientInput = {
+  export type ConsulationListUncheckedUpdateManyWithoutAppointmentsAsPatientInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    title?: StringFieldUpdateOperationsInput | string
-    content?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: InputJsonValue | InputJsonValue | null
     authorId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type FileEntityUpdateWithoutAuthorInput = {
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    metadata?: InputJsonValue | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FileEntityUncheckedUpdateWithoutAuthorInput = {
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    metadata?: InputJsonValue | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FileEntityUncheckedUpdateManyWithoutAuthoredFilesInput = {
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    metadata?: InputJsonValue | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SpecializationUpdateWithoutDoctorInput = {

@@ -4,12 +4,11 @@ import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
-import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from 'nestjs-prisma';
 import { UserModule } from './users/users.module';
 import { HttpModule } from '@nestjs/axios';
-import { AppointmentsModule } from './appointments/appointments.module';
+import { ConsultationListsModule } from './consultationLists/consultationLists.module';
 import { AuthModule } from './modules/auth/auth.module';
 import config from './common/configs/config';
 import { DoctorModule } from './modules/doctors/doctor.module';
@@ -42,7 +41,7 @@ import { FilemanagerModule } from './filemanager/filemanager.module';
 		}),
 		AuthModule,
 		UserModule,
-		AppointmentsModule,
+		ConsultationListsModule,
 		DoctorModule,
 		SpecializatonModule,
 		BookingModule,
