@@ -36,4 +36,18 @@ export class ConsultationListResolver {
       console.log('error', error)
     }
   }
+
+  // edit consultation list by id here
+  @Mutation(() => ConsulationList)
+  async editConsultationList(
+    @Args('consultationListId', { type: () => String })
+    consultationListId: string,
+    @Args('edit', { type: () => ConsulationListCreateInput })
+    args: ConsulationListCreateInput,
+  ): Promise<ConsulationList> {
+    return mainPrismaClient.consulationList.update({
+      where: { id: consultationListId },
+      data: { ...args },
+    });
+  }
 }
