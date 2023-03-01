@@ -24,6 +24,17 @@ export class UserResolver {
     });
   }
 
+
+  @Query(() => PulseUser)
+	@UseGuards(GqlAuthGuard)
+	getUser(@UserEntity() { id: userId }: PulseUser) {
+		return mainPrismaClient.pulseUser.findUnique({
+			where: {
+				id: userId,
+			},
+		});
+	}
+
   // get all users query
 
   @Query(() => [PulseUser])
