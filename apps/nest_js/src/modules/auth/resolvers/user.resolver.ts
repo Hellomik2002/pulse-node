@@ -6,10 +6,10 @@ import { GqlAuthGuard } from '../tools/gql-auth.guard';
 import { UserEntity } from '../tools/user.decorator';
 
 @Resolver()
-export class UserResolver {
+export class UserResolver { 
   // get user by id query
   @Query(() => PulseUser)
-  getUserById(@Args('id', { type: () => String }) id: string) {
+  getUserById(@Args('id',  { type: () => String }) id: string) {
     return mainPrismaClient.pulseUser.findUnique({
       where: {
         id
