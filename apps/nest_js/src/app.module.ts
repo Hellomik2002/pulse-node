@@ -8,14 +8,13 @@ import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from 'nestjs-prisma';
 import { UserModule } from './users/users.module';
 import { HttpModule } from '@nestjs/axios';
-import { ConsultationListsModule } from './consultationLists/consultationLists.module';
+import { ConsultationListsModule } from './modules/consultationLists/consultationLists.module';
 import { AuthModule } from './modules/auth/auth.module';
 import config from './common/configs/config';
 import { DoctorModule } from './modules/doctors/doctor.module';
 import { SpecializatonModule } from './modules/specialization/specialization.module';
-import { BookingResolver } from './booking/booking.resolver';
 import { BookingModule } from './modules/booking/booking.module';
-import { FilemanagerModule } from './filemanager/filemanager.module';
+import { FilemanagerModule } from './modules/filemanager/filemanager.module';
 
 @Module({
 	imports: [
@@ -48,6 +47,6 @@ import { FilemanagerModule } from './filemanager/filemanager.module';
 		FilemanagerModule,
 	],
 	controllers: [AppController],
-	providers: [AppService, BookingResolver],
+	providers: [AppService],
 })
 export class AppModule {}

@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Int, Query, Resolver } from '@nestjs/graphql';
+import { Args, Query, Resolver } from '@nestjs/graphql';
 import { PulseUser } from 'src/@generated/pulse-user/pulse-user.model';
 import { mainPrismaClient } from 'src/prisma/main_client';
 import { GqlAuthGuard } from '../tools/gql-auth.guard';

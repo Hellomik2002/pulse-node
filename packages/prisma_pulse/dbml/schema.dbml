@@ -15,11 +15,24 @@ Table User {
   role Role [not null, default: 'USER']
   appointmentsAsAuthor Appointment [not null]
   appointmentsAsPatient Appointment [not null]
+  researchDocumentsAsAuthour ResearchDocument [not null]
+  researchDocumentsAsPatient ResearchDocument [not null]
   doctor Doctor
   authoredFiles FileEntity [not null]
 }
 
 Table Appointment {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  content Json
+  author User [not null]
+  authorId String [not null]
+  patient User [not null]
+  patientId String [not null]
+}
+
+Table ResearchDocument {
   id String [pk]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
@@ -73,6 +86,10 @@ Enum Role {
 Ref: Appointment.authorId > User.id
 
 Ref: Appointment.patientId > User.id
+
+Ref: ResearchDocument.authorId > User.id
+
+Ref: ResearchDocument.patientId > User.id
 
 Ref: Doctor.userId - User.id
 

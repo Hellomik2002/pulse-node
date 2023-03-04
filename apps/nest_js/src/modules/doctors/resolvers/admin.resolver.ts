@@ -1,8 +1,8 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { DoctorCreateInput } from 'src/@generated/doctor/doctor-create.input';
 import { Doctor } from 'src/@generated/doctor/doctor.model';
-import { CalComAccountManagerService } from 'src/cal-com/cal-com-account-manager/cal-com-account-manager.service';
-import { CalComAccountSignUpDto } from 'src/cal-com/cal-com-account-manager/dto/createCalAccountDto';
+import { CalComAccountManagerService } from 'src/modules/cal-com/cal-com-account-manager/cal-com-account-manager.service';
+import { CalComAccountSignUpDto } from 'src/modules/cal-com/cal-com-account-manager/dto/createCalAccountDto';
 import { PasswordService } from 'src/modules/auth/services/password.service';
 import { mainPrismaClient } from 'src/prisma/main_client';
 

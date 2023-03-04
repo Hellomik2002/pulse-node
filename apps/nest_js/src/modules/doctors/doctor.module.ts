@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { PasswordService } from 'src/auth/services/password.service';
-import { CalComAccountManagerService } from 'src/cal-com/cal-com-account-manager/cal-com-account-manager.service';
+import { CalComAccountManagerService } from 'src/modules/cal-com/cal-com-account-manager/cal-com-account-manager.service';
 import { AuthModule } from '../auth/auth.module';
 import { AdminDoctor } from './resolvers/admin.resolver';
 import { DoctorResolver } from './resolvers/doctor.resolver';

@@ -137,6 +137,15 @@ exports.Prisma.QueryMode = makeEnum({
   insensitive: 'insensitive'
 });
 
+exports.Prisma.ResearchDocumentScalarFieldEnum = makeEnum({
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  content: 'content',
+  authorId: 'authorId',
+  patientId: 'patientId'
+});
+
 exports.Prisma.SortOrder = makeEnum({
   asc: 'asc',
   desc: 'desc'
@@ -159,6 +168,7 @@ exports.Role = makeEnum({
 exports.Prisma.ModelName = makeEnum({
   PulseUser: 'PulseUser',
   ConsulationList: 'ConsulationList',
+  ResearchDocument: 'ResearchDocument',
   Doctor: 'Doctor',
   Specialization: 'Specialization',
   FileEntity: 'FileEntity'
