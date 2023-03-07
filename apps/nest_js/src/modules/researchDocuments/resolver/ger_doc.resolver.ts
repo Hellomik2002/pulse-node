@@ -12,10 +12,7 @@ import { mainPrismaClient } from "src/prisma/main_client";
 import { PulseUser } from "@calcom/prisma_pulse";
 
 @Resolver()
-export class ResearchDocumentsResolver {
-  // inject prisma service here
-  private readonly prisma: PrismaService;
-
+export class MyResearchDocumentsResolver {
   @Query(() => ResearchDocument)
   @UseGuards(GqlAuthGuard)
   async getMyResearchDocument(@UserEntity() { id: userId }: PulseUser): Promise<ResearchDocument> {
