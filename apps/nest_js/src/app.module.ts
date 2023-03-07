@@ -10,11 +10,13 @@ import { ResearchDocumentsModule } from "src/modules/researchDocuments/researchD
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import config from "./common/configs/config";
+import { AppointmentModule } from "./modules/appointment/appointment.module";
 import { AuthModule } from "./modules/auth/auth.module";
 import { BookingModule } from "./modules/booking/booking.module";
 import { ConsultationListsModule } from "./modules/consultationLists/consultationLists.module";
 import { DoctorModule } from "./modules/doctors/doctor.module";
 import { FilemanagerModule } from "./modules/filemanager/filemanager.module";
+import { PharmacyModule } from "./modules/pharmacy/pharmacy.module";
 import { SpecializatonModule } from "./modules/specialization/specialization.module";
 import { UserModule } from "./users/users.module";
 
@@ -45,9 +47,15 @@ import { UserModule } from "./users/users.module";
     ConsultationListsModule,
     DoctorModule,
     SpecializatonModule,
+
     ResearchDocumentsModule,
     BookingModule,
     FilemanagerModule,
+
+    BookingModule,
+    FilemanagerModule,
+    AppointmentModule,
+    PharmacyModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -76,6 +76,15 @@ Table FileEntity {
   updatedAt DateTime [not null]
 }
 
+Table Pharmacy {
+  id String [pk]
+  name String [not null]
+  label String
+  company String
+  price Float[] [not null]
+  photoUrls String[] [not null]
+}
+
 Enum Role {
   ADMIN
   USER
