@@ -13,11 +13,11 @@ import { PulseUser } from "@calcom/prisma_pulse";
 
 @Resolver()
 export class MyResearchDocumentsResolver {
-  @Query(() => ResearchDocument)
+  @Query(() => [ResearchDocument])
   @UseGuards(GqlAuthGuard)
-  async getMyResearchDocument(@UserEntity() { id: userId }: PulseUser): Promise<ResearchDocument> {
-    return await mainPrismaClient.researchDocument.findFirst({
-      where: { id: userId },
+  async getMyResearchDocument(@UserEntity() { id: userId }: PulseUser): Promise<ResearchDocument[]> {
+    return await mainPrismaClient.researchDocument.findMany({
+      where: { patientId: userId },
       include: {
         patient: true,
         author: true,
