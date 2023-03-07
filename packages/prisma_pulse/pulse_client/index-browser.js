@@ -129,6 +129,7 @@ exports.Prisma.PulseUserScalarFieldEnum = makeEnum({
   uniqueName: 'uniqueName',
   phoneNumber: 'phoneNumber',
   address: 'address',
+  avatar: 'avatar',
   role: 'role'
 });
 

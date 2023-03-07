@@ -29,6 +29,7 @@ model PulseUser {
   uniqueName                 String             @unique
   phoneNumber                String             @unique
   address                    String
+  avatar                     String?            @default("")
   role                       Role               @default(USER)
   appointmentsAsAuthor       ConsulationList[]  @relation("Author")
   appointmentsAsPatient      ConsulationList[]  @relation("Patient")
@@ -95,15 +96,15 @@ model Specialization {
 }
 
 model FileEntity {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
   fileName  String
   fileUrl   String
   key       String
-  authorId  String    @unique @db.ObjectId
-  author    PulseUser @relation(fields: [authorId], references: [id])
-  metadata  Json      @default("{}")
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  authorId  String?    @unique @db.ObjectId
+  author    PulseUser? @relation(fields: [authorId], references: [id])
+  metadata  Json       @default("{}")
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
 
 // _id: string;

@@ -24,6 +24,7 @@ export type PulseUser = {
   uniqueName: string
   phoneNumber: string
   address: string
+  avatar: string | null
   role: Role
 }
 
@@ -87,7 +88,7 @@ export type FileEntity = {
   fileName: string
   fileUrl: string
   key: string
-  authorId: string
+  authorId: string | null
   metadata: Prisma.JsonValue
   createdAt: Date
   updatedAt: Date
@@ -1054,6 +1055,7 @@ export namespace Prisma {
     uniqueName: string | null
     phoneNumber: string | null
     address: string | null
+    avatar: string | null
     role: Role | null
   }
 
@@ -1067,6 +1069,7 @@ export namespace Prisma {
     uniqueName: string | null
     phoneNumber: string | null
     address: string | null
+    avatar: string | null
     role: Role | null
   }
 
@@ -1080,6 +1083,7 @@ export namespace Prisma {
     uniqueName: number
     phoneNumber: number
     address: number
+    avatar: number
     role: number
     _all: number
   }
@@ -1095,6 +1099,7 @@ export namespace Prisma {
     uniqueName?: true
     phoneNumber?: true
     address?: true
+    avatar?: true
     role?: true
   }
 
@@ -1108,6 +1113,7 @@ export namespace Prisma {
     uniqueName?: true
     phoneNumber?: true
     address?: true
+    avatar?: true
     role?: true
   }
 
@@ -1121,6 +1127,7 @@ export namespace Prisma {
     uniqueName?: true
     phoneNumber?: true
     address?: true
+    avatar?: true
     role?: true
     _all?: true
   }
@@ -1208,6 +1215,7 @@ export namespace Prisma {
     uniqueName: string
     phoneNumber: string
     address: string
+    avatar: string | null
     role: Role
     _count: PulseUserCountAggregateOutputType | null
     _min: PulseUserMinAggregateOutputType | null
@@ -1238,6 +1246,7 @@ export namespace Prisma {
     uniqueName?: boolean
     phoneNumber?: boolean
     address?: boolean
+    avatar?: boolean
     role?: boolean
     appointmentsAsAuthor?: boolean | PulseUser$appointmentsAsAuthorArgs
     appointmentsAsPatient?: boolean | PulseUser$appointmentsAsPatientArgs
@@ -6411,7 +6420,7 @@ export namespace Prisma {
     fileName: string
     fileUrl: string
     key: string
-    authorId: string
+    authorId: string | null
     metadata: JsonValue
     createdAt: Date
     updatedAt: Date
@@ -6458,12 +6467,12 @@ export namespace Prisma {
     S extends { include: any } & (FileEntityArgs | FileEntityFindManyArgs)
     ? FileEntity  & {
     [P in TruthyKeys<S['include']>]:
-        P extends 'author' ? PulseUserGetPayload<S['include'][P]> :  never
+        P extends 'author' ? PulseUserGetPayload<S['include'][P]> | null :  never
   } 
     : S extends { select: any } & (FileEntityArgs | FileEntityFindManyArgs)
       ? {
     [P in TruthyKeys<S['select']>]:
-        P extends 'author' ? PulseUserGetPayload<S['select'][P]> :  P extends keyof FileEntity ? FileEntity[P] : never
+        P extends 'author' ? PulseUserGetPayload<S['select'][P]> | null :  P extends keyof FileEntity ? FileEntity[P] : never
   } 
       : FileEntity
 
@@ -7320,6 +7329,7 @@ export namespace Prisma {
     uniqueName: 'uniqueName',
     phoneNumber: 'phoneNumber',
     address: 'address',
+    avatar: 'avatar',
     role: 'role'
   };
 
@@ -7382,6 +7392,7 @@ export namespace Prisma {
     uniqueName?: StringFilter | string
     phoneNumber?: StringFilter | string
     address?: StringFilter | string
+    avatar?: StringNullableFilter | string | null
     role?: EnumRoleFilter | Role
     appointmentsAsAuthor?: ConsulationListListRelationFilter
     appointmentsAsPatient?: ConsulationListListRelationFilter
@@ -7401,6 +7412,7 @@ export namespace Prisma {
     uniqueName?: SortOrder
     phoneNumber?: SortOrder
     address?: SortOrder
+    avatar?: SortOrder
     role?: SortOrder
     appointmentsAsAuthor?: ConsulationListOrderByRelationAggregateInput
     appointmentsAsPatient?: ConsulationListOrderByRelationAggregateInput
@@ -7427,6 +7439,7 @@ export namespace Prisma {
     uniqueName?: SortOrder
     phoneNumber?: SortOrder
     address?: SortOrder
+    avatar?: SortOrder
     role?: SortOrder
     _count?: PulseUserCountOrderByAggregateInput
     _max?: PulseUserMaxOrderByAggregateInput
@@ -7446,6 +7459,7 @@ export namespace Prisma {
     uniqueName?: StringWithAggregatesFilter | string
     phoneNumber?: StringWithAggregatesFilter | string
     address?: StringWithAggregatesFilter | string
+    avatar?: StringNullableWithAggregatesFilter | string | null
     role?: EnumRoleWithAggregatesFilter | Role
   }
 
@@ -7666,8 +7680,8 @@ export namespace Prisma {
     fileName?: StringFilter | string
     fileUrl?: StringFilter | string
     key?: StringFilter | string
-    authorId?: StringFilter | string
-    author?: XOR<PulseUserRelationFilter, PulseUserWhereInput>
+    authorId?: StringNullableFilter | string | null
+    author?: XOR<PulseUserRelationFilter, PulseUserWhereInput> | null
     metadata?: JsonFilter
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
@@ -7712,7 +7726,7 @@ export namespace Prisma {
     fileName?: StringWithAggregatesFilter | string
     fileUrl?: StringWithAggregatesFilter | string
     key?: StringWithAggregatesFilter | string
-    authorId?: StringWithAggregatesFilter | string
+    authorId?: StringNullableWithAggregatesFilter | string | null
     metadata?: JsonWithAggregatesFilter
     createdAt?: DateTimeWithAggregatesFilter | Date | string
     updatedAt?: DateTimeWithAggregatesFilter | Date | string
@@ -7728,6 +7742,7 @@ export namespace Prisma {
     uniqueName: string
     phoneNumber: string
     address: string
+    avatar?: string | null
     role?: Role
     appointmentsAsAuthor?: ConsulationListCreateNestedManyWithoutAuthorInput
     appointmentsAsPatient?: ConsulationListCreateNestedManyWithoutPatientInput
@@ -7747,6 +7762,7 @@ export namespace Prisma {
     uniqueName: string
     phoneNumber: string
     address: string
+    avatar?: string | null
     role?: Role
     appointmentsAsAuthor?: ConsulationListUncheckedCreateNestedManyWithoutAuthorInput
     appointmentsAsPatient?: ConsulationListUncheckedCreateNestedManyWithoutPatientInput
@@ -7765,6 +7781,7 @@ export namespace Prisma {
     uniqueName?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | Role
     appointmentsAsAuthor?: ConsulationListUpdateManyWithoutAuthorNestedInput
     appointmentsAsPatient?: ConsulationListUpdateManyWithoutPatientNestedInput
@@ -7783,6 +7800,7 @@ export namespace Prisma {
     uniqueName?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | Role
     appointmentsAsAuthor?: ConsulationListUncheckedUpdateManyWithoutAuthorNestedInput
     appointmentsAsPatient?: ConsulationListUncheckedUpdateManyWithoutPatientNestedInput
@@ -7802,6 +7820,7 @@ export namespace Prisma {
     uniqueName: string
     phoneNumber: string
     address: string
+    avatar?: string | null
     role?: Role
   }
 
@@ -7814,6 +7833,7 @@ export namespace Prisma {
     uniqueName?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | Role
   }
 
@@ -7826,6 +7846,7 @@ export namespace Prisma {
     uniqueName?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | Role
   }
 
@@ -8066,7 +8087,7 @@ export namespace Prisma {
     fileName: string
     fileUrl: string
     key: string
-    author: PulseUserCreateNestedOneWithoutAuthoredFilesInput
+    author?: PulseUserCreateNestedOneWithoutAuthoredFilesInput
     metadata?: InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -8077,7 +8098,7 @@ export namespace Prisma {
     fileName: string
     fileUrl: string
     key: string
-    authorId: string
+    authorId?: string | null
     metadata?: InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -8087,7 +8108,7 @@ export namespace Prisma {
     fileName?: StringFieldUpdateOperationsInput | string
     fileUrl?: StringFieldUpdateOperationsInput | string
     key?: StringFieldUpdateOperationsInput | string
-    author?: PulseUserUpdateOneRequiredWithoutAuthoredFilesNestedInput
+    author?: PulseUserUpdateOneWithoutAuthoredFilesNestedInput
     metadata?: InputJsonValue | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8097,7 +8118,7 @@ export namespace Prisma {
     fileName?: StringFieldUpdateOperationsInput | string
     fileUrl?: StringFieldUpdateOperationsInput | string
     key?: StringFieldUpdateOperationsInput | string
-    authorId?: StringFieldUpdateOperationsInput | string
+    authorId?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: InputJsonValue | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8108,7 +8129,7 @@ export namespace Prisma {
     fileName: string
     fileUrl: string
     key: string
-    authorId: string
+    authorId?: string | null
     metadata?: InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -8127,7 +8148,7 @@ export namespace Prisma {
     fileName?: StringFieldUpdateOperationsInput | string
     fileUrl?: StringFieldUpdateOperationsInput | string
     key?: StringFieldUpdateOperationsInput | string
-    authorId?: StringFieldUpdateOperationsInput | string
+    authorId?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: InputJsonValue | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8157,6 +8178,22 @@ export namespace Prisma {
     gt?: Date | string
     gte?: Date | string
     not?: NestedDateTimeFilter | Date | string
+  }
+
+  export type StringNullableFilter = {
+    equals?: string | null
+    in?: Enumerable<string> | null
+    notIn?: Enumerable<string> | null
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
+    mode?: QueryMode
+    not?: NestedStringNullableFilter | string | null
+    isSet?: boolean
   }
 
   export type EnumRoleFilter = {
@@ -8211,6 +8248,7 @@ export namespace Prisma {
     uniqueName?: SortOrder
     phoneNumber?: SortOrder
     address?: SortOrder
+    avatar?: SortOrder
     role?: SortOrder
   }
 
@@ -8224,6 +8262,7 @@ export namespace Prisma {
     uniqueName?: SortOrder
     phoneNumber?: SortOrder
     address?: SortOrder
+    avatar?: SortOrder
     role?: SortOrder
   }
 
@@ -8237,6 +8276,7 @@ export namespace Prisma {
     uniqueName?: SortOrder
     phoneNumber?: SortOrder
     address?: SortOrder
+    avatar?: SortOrder
     role?: SortOrder
   }
 
@@ -8270,6 +8310,25 @@ export namespace Prisma {
     _count?: NestedIntFilter
     _min?: NestedDateTimeFilter
     _max?: NestedDateTimeFilter
+  }
+
+  export type StringNullableWithAggregatesFilter = {
+    equals?: string | null
+    in?: Enumerable<string> | null
+    notIn?: Enumerable<string> | null
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter | string | null
+    _count?: NestedIntNullableFilter
+    _min?: NestedStringNullableFilter
+    _max?: NestedStringNullableFilter
+    isSet?: boolean
   }
 
   export type EnumRoleWithAggregatesFilter = {
@@ -8620,6 +8679,11 @@ export namespace Prisma {
     set?: string
   }
 
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+    unset?: boolean
+  }
+
   export type EnumRoleFieldUpdateOperationsInput = {
     set?: Role
   }
@@ -8962,10 +9026,12 @@ export namespace Prisma {
     connect?: PulseUserWhereUniqueInput
   }
 
-  export type PulseUserUpdateOneRequiredWithoutAuthoredFilesNestedInput = {
+  export type PulseUserUpdateOneWithoutAuthoredFilesNestedInput = {
     create?: XOR<PulseUserCreateWithoutAuthoredFilesInput, PulseUserUncheckedCreateWithoutAuthoredFilesInput>
     connectOrCreate?: PulseUserCreateOrConnectWithoutAuthoredFilesInput
     upsert?: PulseUserUpsertWithoutAuthoredFilesInput
+    disconnect?: boolean
+    delete?: boolean
     connect?: PulseUserWhereUniqueInput
     update?: XOR<PulseUserUpdateWithoutAuthoredFilesInput, PulseUserUncheckedUpdateWithoutAuthoredFilesInput>
   }
@@ -8993,6 +9059,21 @@ export namespace Prisma {
     gt?: Date | string
     gte?: Date | string
     not?: NestedDateTimeFilter | Date | string
+  }
+
+  export type NestedStringNullableFilter = {
+    equals?: string | null
+    in?: Enumerable<string> | null
+    notIn?: Enumerable<string> | null
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
+    not?: NestedStringNullableFilter | string | null
+    isSet?: boolean
   }
 
   export type NestedEnumRoleFilter = {
@@ -9044,14 +9125,22 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter
   }
 
-  export type NestedEnumRoleWithAggregatesFilter = {
-    equals?: Role
-    in?: Enumerable<Role>
-    notIn?: Enumerable<Role>
-    not?: NestedEnumRoleWithAggregatesFilter | Role
-    _count?: NestedIntFilter
-    _min?: NestedEnumRoleFilter
-    _max?: NestedEnumRoleFilter
+  export type NestedStringNullableWithAggregatesFilter = {
+    equals?: string | null
+    in?: Enumerable<string> | null
+    notIn?: Enumerable<string> | null
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
+    not?: NestedStringNullableWithAggregatesFilter | string | null
+    _count?: NestedIntNullableFilter
+    _min?: NestedStringNullableFilter
+    _max?: NestedStringNullableFilter
+    isSet?: boolean
   }
 
   export type NestedIntNullableFilter = {
@@ -9064,6 +9153,16 @@ export namespace Prisma {
     gte?: number
     not?: NestedIntNullableFilter | number | null
     isSet?: boolean
+  }
+
+  export type NestedEnumRoleWithAggregatesFilter = {
+    equals?: Role
+    in?: Enumerable<Role>
+    notIn?: Enumerable<Role>
+    not?: NestedEnumRoleWithAggregatesFilter | Role
+    _count?: NestedIntFilter
+    _min?: NestedEnumRoleFilter
+    _max?: NestedEnumRoleFilter
   }
   export type NestedJsonNullableFilter = 
     | PatchUndefined<
@@ -9405,7 +9504,7 @@ export namespace Prisma {
     fileName?: StringFilter | string
     fileUrl?: StringFilter | string
     key?: StringFilter | string
-    authorId?: StringFilter | string
+    authorId?: StringNullableFilter | string | null
     metadata?: JsonFilter
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
@@ -9421,6 +9520,7 @@ export namespace Prisma {
     uniqueName: string
     phoneNumber: string
     address: string
+    avatar?: string | null
     role?: Role
     appointmentsAsPatient?: ConsulationListCreateNestedManyWithoutPatientInput
     researchDocumentsAsAuthour?: ResearchDocumentCreateNestedManyWithoutAuthorInput
@@ -9439,6 +9539,7 @@ export namespace Prisma {
     uniqueName: string
     phoneNumber: string
     address: string
+    avatar?: string | null
     role?: Role
     appointmentsAsPatient?: ConsulationListUncheckedCreateNestedManyWithoutPatientInput
     researchDocumentsAsAuthour?: ResearchDocumentUncheckedCreateNestedManyWithoutAuthorInput
@@ -9462,6 +9563,7 @@ export namespace Prisma {
     uniqueName: string
     phoneNumber: string
     address: string
+    avatar?: string | null
     role?: Role
     appointmentsAsAuthor?: ConsulationListCreateNestedManyWithoutAuthorInput
     researchDocumentsAsAuthour?: ResearchDocumentCreateNestedManyWithoutAuthorInput
@@ -9480,6 +9582,7 @@ export namespace Prisma {
     uniqueName: string
     phoneNumber: string
     address: string
+    avatar?: string | null
     role?: Role
     appointmentsAsAuthor?: ConsulationListUncheckedCreateNestedManyWithoutAuthorInput
     researchDocumentsAsAuthour?: ResearchDocumentUncheckedCreateNestedManyWithoutAuthorInput
@@ -9507,6 +9610,7 @@ export namespace Prisma {
     uniqueName?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | Role
     appointmentsAsPatient?: ConsulationListUpdateManyWithoutPatientNestedInput
     researchDocumentsAsAuthour?: ResearchDocumentUpdateManyWithoutAuthorNestedInput
@@ -9524,6 +9628,7 @@ export namespace Prisma {
     uniqueName?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | Role
     appointmentsAsPatient?: ConsulationListUncheckedUpdateManyWithoutPatientNestedInput
     researchDocumentsAsAuthour?: ResearchDocumentUncheckedUpdateManyWithoutAuthorNestedInput
@@ -9546,6 +9651,7 @@ export namespace Prisma {
     uniqueName?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | Role
     appointmentsAsAuthor?: ConsulationListUpdateManyWithoutAuthorNestedInput
     researchDocumentsAsAuthour?: ResearchDocumentUpdateManyWithoutAuthorNestedInput
@@ -9563,6 +9669,7 @@ export namespace Prisma {
     uniqueName?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | Role
     appointmentsAsAuthor?: ConsulationListUncheckedUpdateManyWithoutAuthorNestedInput
     researchDocumentsAsAuthour?: ResearchDocumentUncheckedUpdateManyWithoutAuthorNestedInput
@@ -9581,6 +9688,7 @@ export namespace Prisma {
     uniqueName: string
     phoneNumber: string
     address: string
+    avatar?: string | null
     role?: Role
     appointmentsAsAuthor?: ConsulationListCreateNestedManyWithoutAuthorInput
     appointmentsAsPatient?: ConsulationListCreateNestedManyWithoutPatientInput
@@ -9599,6 +9707,7 @@ export namespace Prisma {
     uniqueName: string
     phoneNumber: string
     address: string
+    avatar?: string | null
     role?: Role
     appointmentsAsAuthor?: ConsulationListUncheckedCreateNestedManyWithoutAuthorInput
     appointmentsAsPatient?: ConsulationListUncheckedCreateNestedManyWithoutPatientInput
@@ -9622,6 +9731,7 @@ export namespace Prisma {
     uniqueName: string
     phoneNumber: string
     address: string
+    avatar?: string | null
     role?: Role
     appointmentsAsAuthor?: ConsulationListCreateNestedManyWithoutAuthorInput
     appointmentsAsPatient?: ConsulationListCreateNestedManyWithoutPatientInput
@@ -9640,6 +9750,7 @@ export namespace Prisma {
     uniqueName: string
     phoneNumber: string
     address: string
+    avatar?: string | null
     role?: Role
     appointmentsAsAuthor?: ConsulationListUncheckedCreateNestedManyWithoutAuthorInput
     appointmentsAsPatient?: ConsulationListUncheckedCreateNestedManyWithoutPatientInput
@@ -9667,6 +9778,7 @@ export namespace Prisma {
     uniqueName?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | Role
     appointmentsAsAuthor?: ConsulationListUpdateManyWithoutAuthorNestedInput
     appointmentsAsPatient?: ConsulationListUpdateManyWithoutPatientNestedInput
@@ -9684,6 +9796,7 @@ export namespace Prisma {
     uniqueName?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | Role
     appointmentsAsAuthor?: ConsulationListUncheckedUpdateManyWithoutAuthorNestedInput
     appointmentsAsPatient?: ConsulationListUncheckedUpdateManyWithoutPatientNestedInput
@@ -9706,6 +9819,7 @@ export namespace Prisma {
     uniqueName?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | Role
     appointmentsAsAuthor?: ConsulationListUpdateManyWithoutAuthorNestedInput
     appointmentsAsPatient?: ConsulationListUpdateManyWithoutPatientNestedInput
@@ -9723,6 +9837,7 @@ export namespace Prisma {
     uniqueName?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | Role
     appointmentsAsAuthor?: ConsulationListUncheckedUpdateManyWithoutAuthorNestedInput
     appointmentsAsPatient?: ConsulationListUncheckedUpdateManyWithoutPatientNestedInput
@@ -9741,6 +9856,7 @@ export namespace Prisma {
     uniqueName: string
     phoneNumber: string
     address: string
+    avatar?: string | null
     role?: Role
     appointmentsAsAuthor?: ConsulationListCreateNestedManyWithoutAuthorInput
     appointmentsAsPatient?: ConsulationListCreateNestedManyWithoutPatientInput
@@ -9759,6 +9875,7 @@ export namespace Prisma {
     uniqueName: string
     phoneNumber: string
     address: string
+    avatar?: string | null
     role?: Role
     appointmentsAsAuthor?: ConsulationListUncheckedCreateNestedManyWithoutAuthorInput
     appointmentsAsPatient?: ConsulationListUncheckedCreateNestedManyWithoutPatientInput
@@ -9805,6 +9922,7 @@ export namespace Prisma {
     uniqueName?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | Role
     appointmentsAsAuthor?: ConsulationListUpdateManyWithoutAuthorNestedInput
     appointmentsAsPatient?: ConsulationListUpdateManyWithoutPatientNestedInput
@@ -9822,6 +9940,7 @@ export namespace Prisma {
     uniqueName?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | Role
     appointmentsAsAuthor?: ConsulationListUncheckedUpdateManyWithoutAuthorNestedInput
     appointmentsAsPatient?: ConsulationListUncheckedUpdateManyWithoutPatientNestedInput
@@ -9920,6 +10039,7 @@ export namespace Prisma {
     uniqueName: string
     phoneNumber: string
     address: string
+    avatar?: string | null
     role?: Role
     appointmentsAsAuthor?: ConsulationListCreateNestedManyWithoutAuthorInput
     appointmentsAsPatient?: ConsulationListCreateNestedManyWithoutPatientInput
@@ -9938,6 +10058,7 @@ export namespace Prisma {
     uniqueName: string
     phoneNumber: string
     address: string
+    avatar?: string | null
     role?: Role
     appointmentsAsAuthor?: ConsulationListUncheckedCreateNestedManyWithoutAuthorInput
     appointmentsAsPatient?: ConsulationListUncheckedCreateNestedManyWithoutPatientInput
@@ -9965,6 +10086,7 @@ export namespace Prisma {
     uniqueName?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | Role
     appointmentsAsAuthor?: ConsulationListUpdateManyWithoutAuthorNestedInput
     appointmentsAsPatient?: ConsulationListUpdateManyWithoutPatientNestedInput
@@ -9982,6 +10104,7 @@ export namespace Prisma {
     uniqueName?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | Role
     appointmentsAsAuthor?: ConsulationListUncheckedUpdateManyWithoutAuthorNestedInput
     appointmentsAsPatient?: ConsulationListUncheckedUpdateManyWithoutPatientNestedInput

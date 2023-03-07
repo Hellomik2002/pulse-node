@@ -16,20 +16,15 @@ export class FilemanagerController {
       const isEditor = headers.iseditor;
       const uploadedFile = await this.fileUploadService.uploadFile(file.buffer, file.originalname, authorId);
       console.log('File has been uploaded,', uploadedFile.fileName);
-      if (isEditor === 'true') {
-        console.log('Editor is uploading file');
-        return {
-          success: 1,
-          file: {
-
-            url: uploadedFile.fileUrl,
-            title: uploadedFile.fileName,
-            size: file.size,
-            extensions: file.mimetype,
-          }
-        };
-      }
-      return uploadedFile
+      return {
+        success: 1,
+        file: {
+          url: uploadedFile.fileUrl,
+          title: uploadedFile.fileName,
+          size: file.size,
+          extensions: file.mimetype,
+        }
+      };
     } catch (error) {
       console.log('File upload failed', error);
       return error;
