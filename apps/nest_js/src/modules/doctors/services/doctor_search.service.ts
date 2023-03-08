@@ -1,3 +1,4 @@
+import { flatObj } from "src/common/utils/flat_object";
 import { typesnceClient } from "src/modules/pharmacy/pharmacy.module";
 import { mainPrismaClient } from "src/prisma/main_client";
 
@@ -8,16 +9,34 @@ export class DoctorSeacrhService {
     this.init();
   }
   async init() {
-    const doctors = await mainPrismaClient.doctor.findMany();
-    await typesnceClient.collections("doctors").documents().import(doctors, {
-      action: "upsert",
+    await typesnceClient.collections("doctors").documents().delete({
+      filter_by: "user_fullName:='Doctor' || user_fullName:!='Doctor'",
     });
+
+    const doctors = await mainPrismaClient.doctor.findMany({
+      include: {
+        user: true,
+      },
+    });
+
+    await typesnceClient
+      .collections("doctors")
+      .documents()
+      .import(
+        doctors.map((val) => ({ ...flatObj(val), ...val })),
+        {
+          action: "upsert",
+        }
+      );
   }
 
   async upsertDoctor(doctor: Doctor) {
-    await typesnceClient.collections("doctors").documents().upsert(doctor);
+    await typesnceClient
+      .collections("doctors")
+      .documents()
+      .upsert({ ...flatObj(doctor), ...doctor });
   }
   async removeDoctor(doctorId: string) {
-    await typesnceClient.collections("doctors").documents("doctorid").delete();
+    await typesnceClient.collections("doctors").documents(doctorId).delete();
   }
 }
