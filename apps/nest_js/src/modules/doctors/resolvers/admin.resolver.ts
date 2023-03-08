@@ -7,11 +7,14 @@ import { CalComAccountManagerService } from "src/modules/cal-com/cal-com-account
 import { CalComAccountSignUpDto } from "src/modules/cal-com/cal-com-account-manager/dto/createCalAccountDto";
 import { mainPrismaClient } from "src/prisma/main_client";
 
+import { DoctorSeacrhService } from "../services/doctor_search.service";
+
 @Resolver()
 export class AdminDoctor {
   constructor(
     private readonly passwordService: PasswordService,
-    private readonly calcomAccountManagerService: CalComAccountManagerService
+    private readonly calcomAccountManagerService: CalComAccountManagerService,
+    private readonly doctorSeacrhService: DoctorSeacrhService
   ) {}
 
   @Mutation(() => Doctor)
@@ -44,6 +47,7 @@ export class AdminDoctor {
     } catch (e) {
       console.log(e);
     }
+    this.doctorSeacrhService.upsertDoctor(newDoctor);
     // const newDoctor = await mainPrismaClient.doctor.update({where: {id: newDoctor.id}, data: {calcomAccountId: res.id}}});
     return newDoctor;
   }
@@ -60,6 +64,7 @@ export class AdminDoctor {
         ...newDoctor,
       },
     });
+    this.doctorSeacrhService.upsertDoctor(newDoctorRes);
 
     return newDoctorRes;
   }
@@ -69,6 +74,7 @@ export class AdminDoctor {
     const deletedDoctor = await mainPrismaClient.doctor.delete({
       where: { id: doctorId },
     });
+    this.doctorSeacrhService.removeDoctor(doctorId);
     return deletedDoctor;
   }
 
