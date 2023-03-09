@@ -55,6 +55,23 @@ export type ResearchDocument = {
 }
 
 /**
+ * Model Clinic
+ * 
+ */
+export type Clinic = {
+  id: string
+  createdAt: Date
+  updatedAt: Date
+  name: string
+  email: string
+  address: string
+  coverPhoto: string
+  phoneNumber: string
+  description: string
+  doctorIds: string[]
+}
+
+/**
  * Model Doctor
  * 
  */
@@ -66,6 +83,7 @@ export type Doctor = {
   calUserId: number
   userId: string
   specializationsIds: string[]
+  clinicId: string | null
   description: Prisma.JsonValue | null
 }
 
@@ -242,6 +260,16 @@ export class PrismaClient<
     * ```
     */
   get researchDocument(): Prisma.ResearchDocumentDelegate<GlobalReject>;
+
+  /**
+   * `prisma.clinic`: Exposes CRUD operations for the **Clinic** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Clinics
+    * const clinics = await prisma.clinic.findMany()
+    * ```
+    */
+  get clinic(): Prisma.ClinicDelegate<GlobalReject>;
 
   /**
    * `prisma.doctor`: Exposes CRUD operations for the **Doctor** model.
@@ -754,6 +782,7 @@ export namespace Prisma {
     PulseUser: 'PulseUser',
     ConsulationList: 'ConsulationList',
     ResearchDocument: 'ResearchDocument',
+    Clinic: 'Clinic',
     Doctor: 'Doctor',
     Specialization: 'Specialization',
     FileEntity: 'FileEntity',
@@ -965,6 +994,49 @@ export namespace Prisma {
      * Select specific fields to fetch from the PulseUserCountOutputType
      */
     select?: PulseUserCountOutputTypeSelect | null
+  }
+
+
+
+  /**
+   * Count Type ClinicCountOutputType
+   */
+
+
+  export type ClinicCountOutputType = {
+    doctors: number
+  }
+
+  export type ClinicCountOutputTypeSelect = {
+    doctors?: boolean
+  }
+
+  export type ClinicCountOutputTypeGetPayload<S extends boolean | null | undefined | ClinicCountOutputTypeArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? ClinicCountOutputType :
+    S extends undefined ? never :
+    S extends { include: any } & (ClinicCountOutputTypeArgs)
+    ? ClinicCountOutputType 
+    : S extends { select: any } & (ClinicCountOutputTypeArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+    P extends keyof ClinicCountOutputType ? ClinicCountOutputType[P] : never
+  } 
+      : ClinicCountOutputType
+
+
+
+
+  // Custom InputTypes
+
+  /**
+   * ClinicCountOutputType without action
+   */
+  export type ClinicCountOutputTypeArgs = {
+    /**
+     * Select specific fields to fetch from the ClinicCountOutputType
+     */
+    select?: ClinicCountOutputTypeSelect | null
   }
 
 
@@ -4228,6 +4300,1054 @@ export namespace Prisma {
 
 
   /**
+   * Model Clinic
+   */
+
+
+  export type AggregateClinic = {
+    _count: ClinicCountAggregateOutputType | null
+    _min: ClinicMinAggregateOutputType | null
+    _max: ClinicMaxAggregateOutputType | null
+  }
+
+  export type ClinicMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    name: string | null
+    email: string | null
+    address: string | null
+    coverPhoto: string | null
+    phoneNumber: string | null
+    description: string | null
+  }
+
+  export type ClinicMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    name: string | null
+    email: string | null
+    address: string | null
+    coverPhoto: string | null
+    phoneNumber: string | null
+    description: string | null
+  }
+
+  export type ClinicCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    updatedAt: number
+    name: number
+    email: number
+    address: number
+    coverPhoto: number
+    phoneNumber: number
+    description: number
+    doctorIds: number
+    _all: number
+  }
+
+
+  export type ClinicMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    name?: true
+    email?: true
+    address?: true
+    coverPhoto?: true
+    phoneNumber?: true
+    description?: true
+  }
+
+  export type ClinicMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    name?: true
+    email?: true
+    address?: true
+    coverPhoto?: true
+    phoneNumber?: true
+    description?: true
+  }
+
+  export type ClinicCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    name?: true
+    email?: true
+    address?: true
+    coverPhoto?: true
+    phoneNumber?: true
+    description?: true
+    doctorIds?: true
+    _all?: true
+  }
+
+  export type ClinicAggregateArgs = {
+    /**
+     * Filter which Clinic to aggregate.
+     */
+    where?: ClinicWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Clinics to fetch.
+     */
+    orderBy?: Enumerable<ClinicOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ClinicWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Clinics from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Clinics.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Clinics
+    **/
+    _count?: true | ClinicCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ClinicMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ClinicMaxAggregateInputType
+  }
+
+  export type GetClinicAggregateType<T extends ClinicAggregateArgs> = {
+        [P in keyof T & keyof AggregateClinic]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateClinic[P]>
+      : GetScalarType<T[P], AggregateClinic[P]>
+  }
+
+
+
+
+  export type ClinicGroupByArgs = {
+    where?: ClinicWhereInput
+    orderBy?: Enumerable<ClinicOrderByWithAggregationInput>
+    by: ClinicScalarFieldEnum[]
+    having?: ClinicScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ClinicCountAggregateInputType | true
+    _min?: ClinicMinAggregateInputType
+    _max?: ClinicMaxAggregateInputType
+  }
+
+
+  export type ClinicGroupByOutputType = {
+    id: string
+    createdAt: Date
+    updatedAt: Date
+    name: string
+    email: string
+    address: string
+    coverPhoto: string
+    phoneNumber: string
+    description: string
+    doctorIds: string[]
+    _count: ClinicCountAggregateOutputType | null
+    _min: ClinicMinAggregateOutputType | null
+    _max: ClinicMaxAggregateOutputType | null
+  }
+
+  type GetClinicGroupByPayload<T extends ClinicGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickArray<ClinicGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ClinicGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ClinicGroupByOutputType[P]>
+            : GetScalarType<T[P], ClinicGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ClinicSelect = {
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    name?: boolean
+    email?: boolean
+    address?: boolean
+    coverPhoto?: boolean
+    phoneNumber?: boolean
+    description?: boolean
+    doctorIds?: boolean
+    doctors?: boolean | Clinic$doctorsArgs
+    _count?: boolean | ClinicCountOutputTypeArgs
+  }
+
+
+  export type ClinicInclude = {
+    doctors?: boolean | Clinic$doctorsArgs
+    _count?: boolean | ClinicCountOutputTypeArgs
+  }
+
+  export type ClinicGetPayload<S extends boolean | null | undefined | ClinicArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? Clinic :
+    S extends undefined ? never :
+    S extends { include: any } & (ClinicArgs | ClinicFindManyArgs)
+    ? Clinic  & {
+    [P in TruthyKeys<S['include']>]:
+        P extends 'doctors' ? Array < DoctorGetPayload<S['include'][P]>>  :
+        P extends '_count' ? ClinicCountOutputTypeGetPayload<S['include'][P]> :  never
+  } 
+    : S extends { select: any } & (ClinicArgs | ClinicFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+        P extends 'doctors' ? Array < DoctorGetPayload<S['select'][P]>>  :
+        P extends '_count' ? ClinicCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof Clinic ? Clinic[P] : never
+  } 
+      : Clinic
+
+
+  type ClinicCountArgs = 
+    Omit<ClinicFindManyArgs, 'select' | 'include'> & {
+      select?: ClinicCountAggregateInputType | true
+    }
+
+  export interface ClinicDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+
+    /**
+     * Find zero or one Clinic that matches the filter.
+     * @param {ClinicFindUniqueArgs} args - Arguments to find a Clinic
+     * @example
+     * // Get one Clinic
+     * const clinic = await prisma.clinic.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends ClinicFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, ClinicFindUniqueArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Clinic'> extends True ? Prisma__ClinicClient<ClinicGetPayload<T>> : Prisma__ClinicClient<ClinicGetPayload<T> | null, null>
+
+    /**
+     * Find one Clinic that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {ClinicFindUniqueOrThrowArgs} args - Arguments to find a Clinic
+     * @example
+     * // Get one Clinic
+     * const clinic = await prisma.clinic.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends ClinicFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, ClinicFindUniqueOrThrowArgs>
+    ): Prisma__ClinicClient<ClinicGetPayload<T>>
+
+    /**
+     * Find the first Clinic that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClinicFindFirstArgs} args - Arguments to find a Clinic
+     * @example
+     * // Get one Clinic
+     * const clinic = await prisma.clinic.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends ClinicFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, ClinicFindFirstArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Clinic'> extends True ? Prisma__ClinicClient<ClinicGetPayload<T>> : Prisma__ClinicClient<ClinicGetPayload<T> | null, null>
+
+    /**
+     * Find the first Clinic that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClinicFindFirstOrThrowArgs} args - Arguments to find a Clinic
+     * @example
+     * // Get one Clinic
+     * const clinic = await prisma.clinic.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends ClinicFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, ClinicFindFirstOrThrowArgs>
+    ): Prisma__ClinicClient<ClinicGetPayload<T>>
+
+    /**
+     * Find zero or more Clinics that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClinicFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Clinics
+     * const clinics = await prisma.clinic.findMany()
+     * 
+     * // Get first 10 Clinics
+     * const clinics = await prisma.clinic.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const clinicWithIdOnly = await prisma.clinic.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends ClinicFindManyArgs>(
+      args?: SelectSubset<T, ClinicFindManyArgs>
+    ): Prisma.PrismaPromise<Array<ClinicGetPayload<T>>>
+
+    /**
+     * Create a Clinic.
+     * @param {ClinicCreateArgs} args - Arguments to create a Clinic.
+     * @example
+     * // Create one Clinic
+     * const Clinic = await prisma.clinic.create({
+     *   data: {
+     *     // ... data to create a Clinic
+     *   }
+     * })
+     * 
+    **/
+    create<T extends ClinicCreateArgs>(
+      args: SelectSubset<T, ClinicCreateArgs>
+    ): Prisma__ClinicClient<ClinicGetPayload<T>>
+
+    /**
+     * Create many Clinics.
+     *     @param {ClinicCreateManyArgs} args - Arguments to create many Clinics.
+     *     @example
+     *     // Create many Clinics
+     *     const clinic = await prisma.clinic.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends ClinicCreateManyArgs>(
+      args?: SelectSubset<T, ClinicCreateManyArgs>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Clinic.
+     * @param {ClinicDeleteArgs} args - Arguments to delete one Clinic.
+     * @example
+     * // Delete one Clinic
+     * const Clinic = await prisma.clinic.delete({
+     *   where: {
+     *     // ... filter to delete one Clinic
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends ClinicDeleteArgs>(
+      args: SelectSubset<T, ClinicDeleteArgs>
+    ): Prisma__ClinicClient<ClinicGetPayload<T>>
+
+    /**
+     * Update one Clinic.
+     * @param {ClinicUpdateArgs} args - Arguments to update one Clinic.
+     * @example
+     * // Update one Clinic
+     * const clinic = await prisma.clinic.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends ClinicUpdateArgs>(
+      args: SelectSubset<T, ClinicUpdateArgs>
+    ): Prisma__ClinicClient<ClinicGetPayload<T>>
+
+    /**
+     * Delete zero or more Clinics.
+     * @param {ClinicDeleteManyArgs} args - Arguments to filter Clinics to delete.
+     * @example
+     * // Delete a few Clinics
+     * const { count } = await prisma.clinic.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends ClinicDeleteManyArgs>(
+      args?: SelectSubset<T, ClinicDeleteManyArgs>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Clinics.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClinicUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Clinics
+     * const clinic = await prisma.clinic.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends ClinicUpdateManyArgs>(
+      args: SelectSubset<T, ClinicUpdateManyArgs>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Clinic.
+     * @param {ClinicUpsertArgs} args - Arguments to update or create a Clinic.
+     * @example
+     * // Update or create a Clinic
+     * const clinic = await prisma.clinic.upsert({
+     *   create: {
+     *     // ... data to create a Clinic
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Clinic we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends ClinicUpsertArgs>(
+      args: SelectSubset<T, ClinicUpsertArgs>
+    ): Prisma__ClinicClient<ClinicGetPayload<T>>
+
+    /**
+     * Find zero or more Clinics that matches the filter.
+     * @param {ClinicFindRawArgs} args - Select which filters you would like to apply.
+     * @example
+     * const clinic = await prisma.clinic.findRaw({
+     *   filter: { age: { $gt: 25 } } 
+     * })
+    **/
+    findRaw(
+      args?: ClinicFindRawArgs
+    ): Prisma.PrismaPromise<JsonObject>
+
+    /**
+     * Perform aggregation operations on a Clinic.
+     * @param {ClinicAggregateRawArgs} args - Select which aggregations you would like to apply.
+     * @example
+     * const clinic = await prisma.clinic.aggregateRaw({
+     *   pipeline: [
+     *     { $match: { status: "registered" } },
+     *     { $group: { _id: "$country", total: { $sum: 1 } } }
+     *   ]
+     * })
+    **/
+    aggregateRaw(
+      args?: ClinicAggregateRawArgs
+    ): Prisma.PrismaPromise<JsonObject>
+
+    /**
+     * Count the number of Clinics.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClinicCountArgs} args - Arguments to filter Clinics to count.
+     * @example
+     * // Count the number of Clinics
+     * const count = await prisma.clinic.count({
+     *   where: {
+     *     // ... the filter for the Clinics we want to count
+     *   }
+     * })
+    **/
+    count<T extends ClinicCountArgs>(
+      args?: Subset<T, ClinicCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends _Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ClinicCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Clinic.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClinicAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ClinicAggregateArgs>(args: Subset<T, ClinicAggregateArgs>): Prisma.PrismaPromise<GetClinicAggregateType<T>>
+
+    /**
+     * Group by Clinic.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClinicGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ClinicGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ClinicGroupByArgs['orderBy'] }
+        : { orderBy?: ClinicGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ClinicGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetClinicGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Clinic.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__ClinicClient<T, Null = never> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+    doctors<T extends Clinic$doctorsArgs= {}>(args?: Subset<T, Clinic$doctorsArgs>): Prisma.PrismaPromise<Array<DoctorGetPayload<T>>| Null>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * Clinic base type for findUnique actions
+   */
+  export type ClinicFindUniqueArgsBase = {
+    /**
+     * Select specific fields to fetch from the Clinic
+     */
+    select?: ClinicSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ClinicInclude | null
+    /**
+     * Filter, which Clinic to fetch.
+     */
+    where: ClinicWhereUniqueInput
+  }
+
+  /**
+   * Clinic findUnique
+   */
+  export interface ClinicFindUniqueArgs extends ClinicFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Clinic findUniqueOrThrow
+   */
+  export type ClinicFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the Clinic
+     */
+    select?: ClinicSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ClinicInclude | null
+    /**
+     * Filter, which Clinic to fetch.
+     */
+    where: ClinicWhereUniqueInput
+  }
+
+
+  /**
+   * Clinic base type for findFirst actions
+   */
+  export type ClinicFindFirstArgsBase = {
+    /**
+     * Select specific fields to fetch from the Clinic
+     */
+    select?: ClinicSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ClinicInclude | null
+    /**
+     * Filter, which Clinic to fetch.
+     */
+    where?: ClinicWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Clinics to fetch.
+     */
+    orderBy?: Enumerable<ClinicOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Clinics.
+     */
+    cursor?: ClinicWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Clinics from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Clinics.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Clinics.
+     */
+    distinct?: Enumerable<ClinicScalarFieldEnum>
+  }
+
+  /**
+   * Clinic findFirst
+   */
+  export interface ClinicFindFirstArgs extends ClinicFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Clinic findFirstOrThrow
+   */
+  export type ClinicFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the Clinic
+     */
+    select?: ClinicSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ClinicInclude | null
+    /**
+     * Filter, which Clinic to fetch.
+     */
+    where?: ClinicWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Clinics to fetch.
+     */
+    orderBy?: Enumerable<ClinicOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Clinics.
+     */
+    cursor?: ClinicWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Clinics from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Clinics.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Clinics.
+     */
+    distinct?: Enumerable<ClinicScalarFieldEnum>
+  }
+
+
+  /**
+   * Clinic findMany
+   */
+  export type ClinicFindManyArgs = {
+    /**
+     * Select specific fields to fetch from the Clinic
+     */
+    select?: ClinicSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ClinicInclude | null
+    /**
+     * Filter, which Clinics to fetch.
+     */
+    where?: ClinicWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Clinics to fetch.
+     */
+    orderBy?: Enumerable<ClinicOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Clinics.
+     */
+    cursor?: ClinicWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Clinics from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Clinics.
+     */
+    skip?: number
+    distinct?: Enumerable<ClinicScalarFieldEnum>
+  }
+
+
+  /**
+   * Clinic create
+   */
+  export type ClinicCreateArgs = {
+    /**
+     * Select specific fields to fetch from the Clinic
+     */
+    select?: ClinicSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ClinicInclude | null
+    /**
+     * The data needed to create a Clinic.
+     */
+    data: XOR<ClinicCreateInput, ClinicUncheckedCreateInput>
+  }
+
+
+  /**
+   * Clinic createMany
+   */
+  export type ClinicCreateManyArgs = {
+    /**
+     * The data used to create many Clinics.
+     */
+    data: Enumerable<ClinicCreateManyInput>
+  }
+
+
+  /**
+   * Clinic update
+   */
+  export type ClinicUpdateArgs = {
+    /**
+     * Select specific fields to fetch from the Clinic
+     */
+    select?: ClinicSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ClinicInclude | null
+    /**
+     * The data needed to update a Clinic.
+     */
+    data: XOR<ClinicUpdateInput, ClinicUncheckedUpdateInput>
+    /**
+     * Choose, which Clinic to update.
+     */
+    where: ClinicWhereUniqueInput
+  }
+
+
+  /**
+   * Clinic updateMany
+   */
+  export type ClinicUpdateManyArgs = {
+    /**
+     * The data used to update Clinics.
+     */
+    data: XOR<ClinicUpdateManyMutationInput, ClinicUncheckedUpdateManyInput>
+    /**
+     * Filter which Clinics to update
+     */
+    where?: ClinicWhereInput
+  }
+
+
+  /**
+   * Clinic upsert
+   */
+  export type ClinicUpsertArgs = {
+    /**
+     * Select specific fields to fetch from the Clinic
+     */
+    select?: ClinicSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ClinicInclude | null
+    /**
+     * The filter to search for the Clinic to update in case it exists.
+     */
+    where: ClinicWhereUniqueInput
+    /**
+     * In case the Clinic found by the `where` argument doesn't exist, create a new Clinic with this data.
+     */
+    create: XOR<ClinicCreateInput, ClinicUncheckedCreateInput>
+    /**
+     * In case the Clinic was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ClinicUpdateInput, ClinicUncheckedUpdateInput>
+  }
+
+
+  /**
+   * Clinic delete
+   */
+  export type ClinicDeleteArgs = {
+    /**
+     * Select specific fields to fetch from the Clinic
+     */
+    select?: ClinicSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ClinicInclude | null
+    /**
+     * Filter which Clinic to delete.
+     */
+    where: ClinicWhereUniqueInput
+  }
+
+
+  /**
+   * Clinic deleteMany
+   */
+  export type ClinicDeleteManyArgs = {
+    /**
+     * Filter which Clinics to delete
+     */
+    where?: ClinicWhereInput
+  }
+
+
+  /**
+   * Clinic findRaw
+   */
+  export type ClinicFindRawArgs = {
+    /**
+     * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
+     */
+    filter?: InputJsonValue
+    /**
+     * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
+     */
+    options?: InputJsonValue
+  }
+
+
+  /**
+   * Clinic aggregateRaw
+   */
+  export type ClinicAggregateRawArgs = {
+    /**
+     * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
+     */
+    pipeline?: InputJsonValue[]
+    /**
+     * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
+     */
+    options?: InputJsonValue
+  }
+
+
+  /**
+   * Clinic.doctors
+   */
+  export type Clinic$doctorsArgs = {
+    /**
+     * Select specific fields to fetch from the Doctor
+     */
+    select?: DoctorSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DoctorInclude | null
+    where?: DoctorWhereInput
+    orderBy?: Enumerable<DoctorOrderByWithRelationInput>
+    cursor?: DoctorWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<DoctorScalarFieldEnum>
+  }
+
+
+  /**
+   * Clinic without action
+   */
+  export type ClinicArgs = {
+    /**
+     * Select specific fields to fetch from the Clinic
+     */
+    select?: ClinicSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ClinicInclude | null
+  }
+
+
+
+  /**
    * Model Doctor
    */
 
@@ -4255,6 +5375,7 @@ export namespace Prisma {
     calLink: string | null
     calUserId: number | null
     userId: string | null
+    clinicId: string | null
   }
 
   export type DoctorMaxAggregateOutputType = {
@@ -4264,6 +5385,7 @@ export namespace Prisma {
     calLink: string | null
     calUserId: number | null
     userId: string | null
+    clinicId: string | null
   }
 
   export type DoctorCountAggregateOutputType = {
@@ -4274,6 +5396,7 @@ export namespace Prisma {
     calUserId: number
     userId: number
     specializationsIds: number
+    clinicId: number
     description: number
     _all: number
   }
@@ -4294,6 +5417,7 @@ export namespace Prisma {
     calLink?: true
     calUserId?: true
     userId?: true
+    clinicId?: true
   }
 
   export type DoctorMaxAggregateInputType = {
@@ -4303,6 +5427,7 @@ export namespace Prisma {
     calLink?: true
     calUserId?: true
     userId?: true
+    clinicId?: true
   }
 
   export type DoctorCountAggregateInputType = {
@@ -4313,6 +5438,7 @@ export namespace Prisma {
     calUserId?: true
     userId?: true
     specializationsIds?: true
+    clinicId?: true
     description?: true
     _all?: true
   }
@@ -4412,6 +5538,7 @@ export namespace Prisma {
     calUserId: number
     userId: string
     specializationsIds: string[]
+    clinicId: string | null
     description: JsonValue | null
     _count: DoctorCountAggregateOutputType | null
     _avg: DoctorAvgAggregateOutputType | null
@@ -4444,6 +5571,8 @@ export namespace Prisma {
     userId?: boolean
     specializationsIds?: boolean
     specializations?: boolean | Doctor$specializationsArgs
+    clinicId?: boolean
+    clinic?: boolean | ClinicArgs
     description?: boolean
     _count?: boolean | DoctorCountOutputTypeArgs
   }
@@ -4452,6 +5581,7 @@ export namespace Prisma {
   export type DoctorInclude = {
     user?: boolean | PulseUserArgs
     specializations?: boolean | Doctor$specializationsArgs
+    clinic?: boolean | ClinicArgs
     _count?: boolean | DoctorCountOutputTypeArgs
   }
 
@@ -4464,6 +5594,7 @@ export namespace Prisma {
     [P in TruthyKeys<S['include']>]:
         P extends 'user' ? PulseUserGetPayload<S['include'][P]> :
         P extends 'specializations' ? Array < SpecializationGetPayload<S['include'][P]>>  :
+        P extends 'clinic' ? ClinicGetPayload<S['include'][P]> | null :
         P extends '_count' ? DoctorCountOutputTypeGetPayload<S['include'][P]> :  never
   } 
     : S extends { select: any } & (DoctorArgs | DoctorFindManyArgs)
@@ -4471,6 +5602,7 @@ export namespace Prisma {
     [P in TruthyKeys<S['select']>]:
         P extends 'user' ? PulseUserGetPayload<S['select'][P]> :
         P extends 'specializations' ? Array < SpecializationGetPayload<S['select'][P]>>  :
+        P extends 'clinic' ? ClinicGetPayload<S['select'][P]> | null :
         P extends '_count' ? DoctorCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof Doctor ? Doctor[P] : never
   } 
       : Doctor
@@ -4873,6 +6005,8 @@ export namespace Prisma {
     user<T extends PulseUserArgs= {}>(args?: Subset<T, PulseUserArgs>): Prisma__PulseUserClient<PulseUserGetPayload<T> | Null>;
 
     specializations<T extends Doctor$specializationsArgs= {}>(args?: Subset<T, Doctor$specializationsArgs>): Prisma.PrismaPromise<Array<SpecializationGetPayload<T>>| Null>;
+
+    clinic<T extends ClinicArgs= {}>(args?: Subset<T, ClinicArgs>): Prisma__ClinicClient<ClinicGetPayload<T> | Null>;
 
     private get _document();
     /**
@@ -8281,6 +9415,22 @@ export namespace Prisma {
   // Based on
   // https://github.com/microsoft/TypeScript/issues/3192#issuecomment-261720275
 
+  export const ClinicScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    name: 'name',
+    email: 'email',
+    address: 'address',
+    coverPhoto: 'coverPhoto',
+    phoneNumber: 'phoneNumber',
+    description: 'description',
+    doctorIds: 'doctorIds'
+  };
+
+  export type ClinicScalarFieldEnum = (typeof ClinicScalarFieldEnum)[keyof typeof ClinicScalarFieldEnum]
+
+
   export const ConsulationListScalarFieldEnum: {
     id: 'id',
     createdAt: 'createdAt',
@@ -8301,6 +9451,7 @@ export namespace Prisma {
     calUserId: 'calUserId',
     userId: 'userId',
     specializationsIds: 'specializationsIds',
+    clinicId: 'clinicId',
     description: 'description'
   };
 
@@ -8583,6 +9734,73 @@ export namespace Prisma {
     patientId?: StringWithAggregatesFilter | string
   }
 
+  export type ClinicWhereInput = {
+    AND?: Enumerable<ClinicWhereInput>
+    OR?: Enumerable<ClinicWhereInput>
+    NOT?: Enumerable<ClinicWhereInput>
+    id?: StringFilter | string
+    createdAt?: DateTimeFilter | Date | string
+    updatedAt?: DateTimeFilter | Date | string
+    name?: StringFilter | string
+    email?: StringFilter | string
+    address?: StringFilter | string
+    coverPhoto?: StringFilter | string
+    phoneNumber?: StringFilter | string
+    description?: StringFilter | string
+    doctorIds?: StringNullableListFilter
+    doctors?: DoctorListRelationFilter
+  }
+
+  export type ClinicOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    name?: SortOrder
+    email?: SortOrder
+    address?: SortOrder
+    coverPhoto?: SortOrder
+    phoneNumber?: SortOrder
+    description?: SortOrder
+    doctorIds?: SortOrder
+    doctors?: DoctorOrderByRelationAggregateInput
+  }
+
+  export type ClinicWhereUniqueInput = {
+    id?: string
+  }
+
+  export type ClinicOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    name?: SortOrder
+    email?: SortOrder
+    address?: SortOrder
+    coverPhoto?: SortOrder
+    phoneNumber?: SortOrder
+    description?: SortOrder
+    doctorIds?: SortOrder
+    _count?: ClinicCountOrderByAggregateInput
+    _max?: ClinicMaxOrderByAggregateInput
+    _min?: ClinicMinOrderByAggregateInput
+  }
+
+  export type ClinicScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<ClinicScalarWhereWithAggregatesInput>
+    OR?: Enumerable<ClinicScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<ClinicScalarWhereWithAggregatesInput>
+    id?: StringWithAggregatesFilter | string
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter | Date | string
+    name?: StringWithAggregatesFilter | string
+    email?: StringWithAggregatesFilter | string
+    address?: StringWithAggregatesFilter | string
+    coverPhoto?: StringWithAggregatesFilter | string
+    phoneNumber?: StringWithAggregatesFilter | string
+    description?: StringWithAggregatesFilter | string
+    doctorIds?: StringNullableListFilter
+  }
+
   export type DoctorWhereInput = {
     AND?: Enumerable<DoctorWhereInput>
     OR?: Enumerable<DoctorWhereInput>
@@ -8596,6 +9814,8 @@ export namespace Prisma {
     userId?: StringFilter | string
     specializationsIds?: StringNullableListFilter
     specializations?: SpecializationListRelationFilter
+    clinicId?: StringNullableFilter | string | null
+    clinic?: XOR<ClinicRelationFilter, ClinicWhereInput> | null
     description?: JsonNullableFilter
   }
 
@@ -8609,6 +9829,8 @@ export namespace Prisma {
     userId?: SortOrder
     specializationsIds?: SortOrder
     specializations?: SpecializationOrderByRelationAggregateInput
+    clinicId?: SortOrder
+    clinic?: ClinicOrderByWithRelationInput
     description?: SortOrder
   }
 
@@ -8625,6 +9847,7 @@ export namespace Prisma {
     calUserId?: SortOrder
     userId?: SortOrder
     specializationsIds?: SortOrder
+    clinicId?: SortOrder
     description?: SortOrder
     _count?: DoctorCountOrderByAggregateInput
     _avg?: DoctorAvgOrderByAggregateInput
@@ -8644,6 +9867,7 @@ export namespace Prisma {
     calUserId?: IntWithAggregatesFilter | number
     userId?: StringWithAggregatesFilter | string
     specializationsIds?: StringNullableListFilter
+    clinicId?: StringNullableWithAggregatesFilter | string | null
     description?: JsonNullableWithAggregatesFilter
   }
 
@@ -9033,6 +10257,97 @@ export namespace Prisma {
     patientId?: StringFieldUpdateOperationsInput | string
   }
 
+  export type ClinicCreateInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    email: string
+    address: string
+    coverPhoto: string
+    phoneNumber: string
+    description: string
+    doctorIds?: ClinicCreatedoctorIdsInput | Enumerable<string>
+    doctors?: DoctorCreateNestedManyWithoutClinicInput
+  }
+
+  export type ClinicUncheckedCreateInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    email: string
+    address: string
+    coverPhoto: string
+    phoneNumber: string
+    description: string
+    doctorIds?: ClinicCreatedoctorIdsInput | Enumerable<string>
+    doctors?: DoctorUncheckedCreateNestedManyWithoutClinicInput
+  }
+
+  export type ClinicUpdateInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    coverPhoto?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    doctorIds?: ClinicUpdatedoctorIdsInput | Enumerable<string>
+    doctors?: DoctorUpdateManyWithoutClinicNestedInput
+  }
+
+  export type ClinicUncheckedUpdateInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    coverPhoto?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    doctorIds?: ClinicUpdatedoctorIdsInput | Enumerable<string>
+    doctors?: DoctorUncheckedUpdateManyWithoutClinicNestedInput
+  }
+
+  export type ClinicCreateManyInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    email: string
+    address: string
+    coverPhoto: string
+    phoneNumber: string
+    description: string
+    doctorIds?: ClinicCreatedoctorIdsInput | Enumerable<string>
+  }
+
+  export type ClinicUpdateManyMutationInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    coverPhoto?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    doctorIds?: ClinicUpdatedoctorIdsInput | Enumerable<string>
+  }
+
+  export type ClinicUncheckedUpdateManyInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    coverPhoto?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    doctorIds?: ClinicUpdatedoctorIdsInput | Enumerable<string>
+  }
+
   export type DoctorCreateInput = {
     id?: string
     createdAt?: Date | string
@@ -9042,6 +10357,7 @@ export namespace Prisma {
     user: PulseUserCreateNestedOneWithoutDoctorInput
     specializationsIds?: DoctorCreatespecializationsIdsInput | Enumerable<string>
     specializations?: SpecializationCreateNestedManyWithoutDoctorInput
+    clinic?: ClinicCreateNestedOneWithoutDoctorsInput
     description?: InputJsonValue | null
   }
 
@@ -9054,6 +10370,7 @@ export namespace Prisma {
     userId: string
     specializationsIds?: DoctorCreatespecializationsIdsInput | Enumerable<string>
     specializations?: SpecializationUncheckedCreateNestedManyWithoutDoctorInput
+    clinicId?: string | null
     description?: InputJsonValue | null
   }
 
@@ -9065,6 +10382,7 @@ export namespace Prisma {
     user?: PulseUserUpdateOneRequiredWithoutDoctorNestedInput
     specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
     specializations?: SpecializationUpdateManyWithoutDoctorNestedInput
+    clinic?: ClinicUpdateOneWithoutDoctorsNestedInput
     description?: InputJsonValue | InputJsonValue | null
   }
 
@@ -9076,6 +10394,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
     specializations?: SpecializationUncheckedUpdateManyWithoutDoctorNestedInput
+    clinicId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: InputJsonValue | InputJsonValue | null
   }
 
@@ -9087,6 +10406,7 @@ export namespace Prisma {
     calUserId?: number
     userId: string
     specializationsIds?: DoctorCreatespecializationsIdsInput | Enumerable<string>
+    clinicId?: string | null
     description?: InputJsonValue | null
   }
 
@@ -9106,6 +10426,7 @@ export namespace Prisma {
     calUserId?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
     specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
+    clinicId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: InputJsonValue | InputJsonValue | null
   }
 
@@ -9558,6 +10879,61 @@ export namespace Prisma {
     patientId?: SortOrder
   }
 
+  export type StringNullableListFilter = {
+    equals?: Enumerable<string> | null
+    has?: string | null
+    hasEvery?: Enumerable<string>
+    hasSome?: Enumerable<string>
+    isEmpty?: boolean
+  }
+
+  export type DoctorListRelationFilter = {
+    every?: DoctorWhereInput
+    some?: DoctorWhereInput
+    none?: DoctorWhereInput
+  }
+
+  export type DoctorOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ClinicCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    name?: SortOrder
+    email?: SortOrder
+    address?: SortOrder
+    coverPhoto?: SortOrder
+    phoneNumber?: SortOrder
+    description?: SortOrder
+    doctorIds?: SortOrder
+  }
+
+  export type ClinicMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    name?: SortOrder
+    email?: SortOrder
+    address?: SortOrder
+    coverPhoto?: SortOrder
+    phoneNumber?: SortOrder
+    description?: SortOrder
+  }
+
+  export type ClinicMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    name?: SortOrder
+    email?: SortOrder
+    address?: SortOrder
+    coverPhoto?: SortOrder
+    phoneNumber?: SortOrder
+    description?: SortOrder
+  }
+
   export type IntFilter = {
     equals?: number
     in?: Enumerable<number>
@@ -9569,18 +10945,15 @@ export namespace Prisma {
     not?: NestedIntFilter | number
   }
 
-  export type StringNullableListFilter = {
-    equals?: Enumerable<string> | null
-    has?: string | null
-    hasEvery?: Enumerable<string>
-    hasSome?: Enumerable<string>
-    isEmpty?: boolean
-  }
-
   export type SpecializationListRelationFilter = {
     every?: SpecializationWhereInput
     some?: SpecializationWhereInput
     none?: SpecializationWhereInput
+  }
+
+  export type ClinicRelationFilter = {
+    is?: ClinicWhereInput | null
+    isNot?: ClinicWhereInput | null
   }
 
   export type SpecializationOrderByRelationAggregateInput = {
@@ -9595,6 +10968,7 @@ export namespace Prisma {
     calUserId?: SortOrder
     userId?: SortOrder
     specializationsIds?: SortOrder
+    clinicId?: SortOrder
     description?: SortOrder
   }
 
@@ -9609,6 +10983,7 @@ export namespace Prisma {
     calLink?: SortOrder
     calUserId?: SortOrder
     userId?: SortOrder
+    clinicId?: SortOrder
   }
 
   export type DoctorMinOrderByAggregateInput = {
@@ -9618,6 +10993,7 @@ export namespace Prisma {
     calLink?: SortOrder
     calUserId?: SortOrder
     userId?: SortOrder
+    clinicId?: SortOrder
   }
 
   export type DoctorSumOrderByAggregateInput = {
@@ -9638,16 +11014,6 @@ export namespace Prisma {
     _sum?: NestedIntFilter
     _min?: NestedIntFilter
     _max?: NestedIntFilter
-  }
-
-  export type DoctorListRelationFilter = {
-    every?: DoctorWhereInput
-    some?: DoctorWhereInput
-    none?: DoctorWhereInput
-  }
-
-  export type DoctorOrderByRelationAggregateInput = {
-    _count?: SortOrder
   }
 
   export type SpecializationCountOrderByAggregateInput = {
@@ -10079,6 +11445,57 @@ export namespace Prisma {
     update?: XOR<PulseUserUpdateWithoutResearchDocumentsAsPatientInput, PulseUserUncheckedUpdateWithoutResearchDocumentsAsPatientInput>
   }
 
+  export type ClinicCreatedoctorIdsInput = {
+    set: Enumerable<string>
+  }
+
+  export type DoctorCreateNestedManyWithoutClinicInput = {
+    create?: XOR<Enumerable<DoctorCreateWithoutClinicInput>, Enumerable<DoctorUncheckedCreateWithoutClinicInput>>
+    connectOrCreate?: Enumerable<DoctorCreateOrConnectWithoutClinicInput>
+    createMany?: DoctorCreateManyClinicInputEnvelope
+    connect?: Enumerable<DoctorWhereUniqueInput>
+  }
+
+  export type DoctorUncheckedCreateNestedManyWithoutClinicInput = {
+    create?: XOR<Enumerable<DoctorCreateWithoutClinicInput>, Enumerable<DoctorUncheckedCreateWithoutClinicInput>>
+    connectOrCreate?: Enumerable<DoctorCreateOrConnectWithoutClinicInput>
+    createMany?: DoctorCreateManyClinicInputEnvelope
+    connect?: Enumerable<DoctorWhereUniqueInput>
+  }
+
+  export type ClinicUpdatedoctorIdsInput = {
+    set?: Enumerable<string>
+    push?: string | Enumerable<string>
+  }
+
+  export type DoctorUpdateManyWithoutClinicNestedInput = {
+    create?: XOR<Enumerable<DoctorCreateWithoutClinicInput>, Enumerable<DoctorUncheckedCreateWithoutClinicInput>>
+    connectOrCreate?: Enumerable<DoctorCreateOrConnectWithoutClinicInput>
+    upsert?: Enumerable<DoctorUpsertWithWhereUniqueWithoutClinicInput>
+    createMany?: DoctorCreateManyClinicInputEnvelope
+    set?: Enumerable<DoctorWhereUniqueInput>
+    disconnect?: Enumerable<DoctorWhereUniqueInput>
+    delete?: Enumerable<DoctorWhereUniqueInput>
+    connect?: Enumerable<DoctorWhereUniqueInput>
+    update?: Enumerable<DoctorUpdateWithWhereUniqueWithoutClinicInput>
+    updateMany?: Enumerable<DoctorUpdateManyWithWhereWithoutClinicInput>
+    deleteMany?: Enumerable<DoctorScalarWhereInput>
+  }
+
+  export type DoctorUncheckedUpdateManyWithoutClinicNestedInput = {
+    create?: XOR<Enumerable<DoctorCreateWithoutClinicInput>, Enumerable<DoctorUncheckedCreateWithoutClinicInput>>
+    connectOrCreate?: Enumerable<DoctorCreateOrConnectWithoutClinicInput>
+    upsert?: Enumerable<DoctorUpsertWithWhereUniqueWithoutClinicInput>
+    createMany?: DoctorCreateManyClinicInputEnvelope
+    set?: Enumerable<DoctorWhereUniqueInput>
+    disconnect?: Enumerable<DoctorWhereUniqueInput>
+    delete?: Enumerable<DoctorWhereUniqueInput>
+    connect?: Enumerable<DoctorWhereUniqueInput>
+    update?: Enumerable<DoctorUpdateWithWhereUniqueWithoutClinicInput>
+    updateMany?: Enumerable<DoctorUpdateManyWithWhereWithoutClinicInput>
+    deleteMany?: Enumerable<DoctorScalarWhereInput>
+  }
+
   export type PulseUserCreateNestedOneWithoutDoctorInput = {
     create?: XOR<PulseUserCreateWithoutDoctorInput, PulseUserUncheckedCreateWithoutDoctorInput>
     connectOrCreate?: PulseUserCreateOrConnectWithoutDoctorInput
@@ -10093,6 +11510,12 @@ export namespace Prisma {
     create?: XOR<Enumerable<SpecializationCreateWithoutDoctorInput>, Enumerable<SpecializationUncheckedCreateWithoutDoctorInput>>
     connectOrCreate?: Enumerable<SpecializationCreateOrConnectWithoutDoctorInput>
     connect?: Enumerable<SpecializationWhereUniqueInput>
+  }
+
+  export type ClinicCreateNestedOneWithoutDoctorsInput = {
+    create?: XOR<ClinicCreateWithoutDoctorsInput, ClinicUncheckedCreateWithoutDoctorsInput>
+    connectOrCreate?: ClinicCreateOrConnectWithoutDoctorsInput
+    connect?: ClinicWhereUniqueInput
   }
 
   export type SpecializationUncheckedCreateNestedManyWithoutDoctorInput = {
@@ -10133,6 +11556,16 @@ export namespace Prisma {
     update?: Enumerable<SpecializationUpdateWithWhereUniqueWithoutDoctorInput>
     updateMany?: Enumerable<SpecializationUpdateManyWithWhereWithoutDoctorInput>
     deleteMany?: Enumerable<SpecializationScalarWhereInput>
+  }
+
+  export type ClinicUpdateOneWithoutDoctorsNestedInput = {
+    create?: XOR<ClinicCreateWithoutDoctorsInput, ClinicUncheckedCreateWithoutDoctorsInput>
+    connectOrCreate?: ClinicCreateOrConnectWithoutDoctorsInput
+    upsert?: ClinicUpsertWithoutDoctorsInput
+    disconnect?: boolean
+    delete?: boolean
+    connect?: ClinicWhereUniqueInput
+    update?: XOR<ClinicUpdateWithoutDoctorsInput, ClinicUncheckedUpdateWithoutDoctorsInput>
   }
 
   export type SpecializationUncheckedUpdateManyWithoutDoctorNestedInput = {
@@ -10516,6 +11949,7 @@ export namespace Prisma {
     calUserId?: number
     specializationsIds?: DoctorCreatespecializationsIdsInput | Enumerable<string>
     specializations?: SpecializationCreateNestedManyWithoutDoctorInput
+    clinic?: ClinicCreateNestedOneWithoutDoctorsInput
     description?: InputJsonValue | null
   }
 
@@ -10527,6 +11961,7 @@ export namespace Prisma {
     calUserId?: number
     specializationsIds?: DoctorCreatespecializationsIdsInput | Enumerable<string>
     specializations?: SpecializationUncheckedCreateNestedManyWithoutDoctorInput
+    clinicId?: string | null
     description?: InputJsonValue | null
   }
 
@@ -10664,6 +12099,7 @@ export namespace Prisma {
     calUserId?: IntFieldUpdateOperationsInput | number
     specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
     specializations?: SpecializationUpdateManyWithoutDoctorNestedInput
+    clinic?: ClinicUpdateOneWithoutDoctorsNestedInput
     description?: InputJsonValue | InputJsonValue | null
   }
 
@@ -10674,6 +12110,7 @@ export namespace Prisma {
     calUserId?: IntFieldUpdateOperationsInput | number
     specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
     specializations?: SpecializationUncheckedUpdateManyWithoutDoctorNestedInput
+    clinicId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: InputJsonValue | InputJsonValue | null
   }
 
@@ -11043,6 +12480,70 @@ export namespace Prisma {
     authoredFiles?: FileEntityUncheckedUpdateManyWithoutAuthorNestedInput
   }
 
+  export type DoctorCreateWithoutClinicInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    calLink?: string
+    calUserId?: number
+    user: PulseUserCreateNestedOneWithoutDoctorInput
+    specializationsIds?: DoctorCreatespecializationsIdsInput | Enumerable<string>
+    specializations?: SpecializationCreateNestedManyWithoutDoctorInput
+    description?: InputJsonValue | null
+  }
+
+  export type DoctorUncheckedCreateWithoutClinicInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    calLink?: string
+    calUserId?: number
+    userId: string
+    specializationsIds?: DoctorCreatespecializationsIdsInput | Enumerable<string>
+    specializations?: SpecializationUncheckedCreateNestedManyWithoutDoctorInput
+    description?: InputJsonValue | null
+  }
+
+  export type DoctorCreateOrConnectWithoutClinicInput = {
+    where: DoctorWhereUniqueInput
+    create: XOR<DoctorCreateWithoutClinicInput, DoctorUncheckedCreateWithoutClinicInput>
+  }
+
+  export type DoctorCreateManyClinicInputEnvelope = {
+    data: Enumerable<DoctorCreateManyClinicInput>
+  }
+
+  export type DoctorUpsertWithWhereUniqueWithoutClinicInput = {
+    where: DoctorWhereUniqueInput
+    update: XOR<DoctorUpdateWithoutClinicInput, DoctorUncheckedUpdateWithoutClinicInput>
+    create: XOR<DoctorCreateWithoutClinicInput, DoctorUncheckedCreateWithoutClinicInput>
+  }
+
+  export type DoctorUpdateWithWhereUniqueWithoutClinicInput = {
+    where: DoctorWhereUniqueInput
+    data: XOR<DoctorUpdateWithoutClinicInput, DoctorUncheckedUpdateWithoutClinicInput>
+  }
+
+  export type DoctorUpdateManyWithWhereWithoutClinicInput = {
+    where: DoctorScalarWhereInput
+    data: XOR<DoctorUpdateManyMutationInput, DoctorUncheckedUpdateManyWithoutDoctorsInput>
+  }
+
+  export type DoctorScalarWhereInput = {
+    AND?: Enumerable<DoctorScalarWhereInput>
+    OR?: Enumerable<DoctorScalarWhereInput>
+    NOT?: Enumerable<DoctorScalarWhereInput>
+    id?: StringFilter | string
+    createdAt?: DateTimeFilter | Date | string
+    updatedAt?: DateTimeFilter | Date | string
+    calLink?: StringFilter | string
+    calUserId?: IntFilter | number
+    userId?: StringFilter | string
+    specializationsIds?: StringNullableListFilter
+    clinicId?: StringNullableFilter | string | null
+    description?: JsonNullableFilter
+  }
+
   export type PulseUserCreateWithoutDoctorInput = {
     id?: string
     createdAt?: Date | string
@@ -11103,6 +12604,37 @@ export namespace Prisma {
   export type SpecializationCreateOrConnectWithoutDoctorInput = {
     where: SpecializationWhereUniqueInput
     create: XOR<SpecializationCreateWithoutDoctorInput, SpecializationUncheckedCreateWithoutDoctorInput>
+  }
+
+  export type ClinicCreateWithoutDoctorsInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    email: string
+    address: string
+    coverPhoto: string
+    phoneNumber: string
+    description: string
+    doctorIds?: ClinicCreatedoctorIdsInput | Enumerable<string>
+  }
+
+  export type ClinicUncheckedCreateWithoutDoctorsInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    email: string
+    address: string
+    coverPhoto: string
+    phoneNumber: string
+    description: string
+    doctorIds?: ClinicCreatedoctorIdsInput | Enumerable<string>
+  }
+
+  export type ClinicCreateOrConnectWithoutDoctorsInput = {
+    where: ClinicWhereUniqueInput
+    create: XOR<ClinicCreateWithoutDoctorsInput, ClinicUncheckedCreateWithoutDoctorsInput>
   }
 
   export type PulseUserUpsertWithoutDoctorInput = {
@@ -11172,6 +12704,35 @@ export namespace Prisma {
     doctorIds?: StringNullableListFilter
   }
 
+  export type ClinicUpsertWithoutDoctorsInput = {
+    update: XOR<ClinicUpdateWithoutDoctorsInput, ClinicUncheckedUpdateWithoutDoctorsInput>
+    create: XOR<ClinicCreateWithoutDoctorsInput, ClinicUncheckedCreateWithoutDoctorsInput>
+  }
+
+  export type ClinicUpdateWithoutDoctorsInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    coverPhoto?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    doctorIds?: ClinicUpdatedoctorIdsInput | Enumerable<string>
+  }
+
+  export type ClinicUncheckedUpdateWithoutDoctorsInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    coverPhoto?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    doctorIds?: ClinicUpdatedoctorIdsInput | Enumerable<string>
+  }
+
   export type DoctorCreateWithoutSpecializationsInput = {
     id?: string
     createdAt?: Date | string
@@ -11180,6 +12741,7 @@ export namespace Prisma {
     calUserId?: number
     user: PulseUserCreateNestedOneWithoutDoctorInput
     specializationsIds?: DoctorCreatespecializationsIdsInput | Enumerable<string>
+    clinic?: ClinicCreateNestedOneWithoutDoctorsInput
     description?: InputJsonValue | null
   }
 
@@ -11191,6 +12753,7 @@ export namespace Prisma {
     calUserId?: number
     userId: string
     specializationsIds?: DoctorCreatespecializationsIdsInput | Enumerable<string>
+    clinicId?: string | null
     description?: InputJsonValue | null
   }
 
@@ -11213,20 +12776,6 @@ export namespace Prisma {
   export type DoctorUpdateManyWithWhereWithoutSpecializationsInput = {
     where: DoctorScalarWhereInput
     data: XOR<DoctorUpdateManyMutationInput, DoctorUncheckedUpdateManyWithoutDoctorInput>
-  }
-
-  export type DoctorScalarWhereInput = {
-    AND?: Enumerable<DoctorScalarWhereInput>
-    OR?: Enumerable<DoctorScalarWhereInput>
-    NOT?: Enumerable<DoctorScalarWhereInput>
-    id?: StringFilter | string
-    createdAt?: DateTimeFilter | Date | string
-    updatedAt?: DateTimeFilter | Date | string
-    calLink?: StringFilter | string
-    calUserId?: IntFilter | number
-    userId?: StringFilter | string
-    specializationsIds?: StringNullableListFilter
-    description?: JsonNullableFilter
   }
 
   export type PulseUserCreateWithoutAuthoredFilesInput = {
@@ -11466,6 +13015,49 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type DoctorCreateManyClinicInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    calLink?: string
+    calUserId?: number
+    userId: string
+    specializationsIds?: DoctorCreatespecializationsIdsInput | Enumerable<string>
+    description?: InputJsonValue | null
+  }
+
+  export type DoctorUpdateWithoutClinicInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calLink?: StringFieldUpdateOperationsInput | string
+    calUserId?: IntFieldUpdateOperationsInput | number
+    user?: PulseUserUpdateOneRequiredWithoutDoctorNestedInput
+    specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
+    specializations?: SpecializationUpdateManyWithoutDoctorNestedInput
+    description?: InputJsonValue | InputJsonValue | null
+  }
+
+  export type DoctorUncheckedUpdateWithoutClinicInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calLink?: StringFieldUpdateOperationsInput | string
+    calUserId?: IntFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
+    specializations?: SpecializationUncheckedUpdateManyWithoutDoctorNestedInput
+    description?: InputJsonValue | InputJsonValue | null
+  }
+
+  export type DoctorUncheckedUpdateManyWithoutDoctorsInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calLink?: StringFieldUpdateOperationsInput | string
+    calUserId?: IntFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
+    description?: InputJsonValue | InputJsonValue | null
+  }
+
   export type SpecializationUpdateWithoutDoctorInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
@@ -11491,6 +13083,7 @@ export namespace Prisma {
     calUserId?: IntFieldUpdateOperationsInput | number
     user?: PulseUserUpdateOneRequiredWithoutDoctorNestedInput
     specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
+    clinic?: ClinicUpdateOneWithoutDoctorsNestedInput
     description?: InputJsonValue | InputJsonValue | null
   }
 
@@ -11501,6 +13094,7 @@ export namespace Prisma {
     calUserId?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
     specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
+    clinicId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: InputJsonValue | InputJsonValue | null
   }
 
@@ -11511,6 +13105,7 @@ export namespace Prisma {
     calUserId?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
     specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
+    clinicId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: InputJsonValue | InputJsonValue | null
   }
 

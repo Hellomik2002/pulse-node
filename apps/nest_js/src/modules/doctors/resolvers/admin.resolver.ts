@@ -1,4 +1,5 @@
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { Clinic } from "src/@generated/clinic/clinic.model";
 import { DoctorCreateInput } from "src/@generated/doctor/doctor-create.input";
 import { DoctorUpdateInput } from "src/@generated/doctor/doctor-update.input";
 import { Doctor } from "src/@generated/doctor/doctor.model";
@@ -108,8 +109,43 @@ export class AdminDoctor {
         specializations: {
           include: { Doctor: false },
         },
+
+        clinic: true
       },
     });
     return doctor;
+  }
+
+  @Query(() => [Clinic])
+  async getClinics(): Promise<Clinic[]> {
+    const clinics = await mainPrismaClient.clinic.findMany({
+      include: {
+        doctors: {
+          include: {
+            user: true,
+            clinic: true,
+            specializations: true,
+          }
+        }
+      }
+    });
+    return clinics;
+  }
+
+  @Query(() => Clinic)
+  async getClinicById(@Args("clinicId") clinicId: string): Promise<Clinic> {
+    const clinic = await mainPrismaClient.clinic.findUnique({
+      where: { id: clinicId },
+      include: {
+        doctors: {
+          include: {
+            user: true,
+            clinic: true,
+            specializations: true,
+          }
+        }
+      }
+    });
+    return clinic;
   }
 }

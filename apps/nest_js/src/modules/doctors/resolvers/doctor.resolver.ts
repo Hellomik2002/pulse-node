@@ -10,6 +10,7 @@ export class DoctorResolver {
 			include: {
 				user: true,
 				specializations: true,
+        clinic: true,
 			},
 		});
 		return doctors;
