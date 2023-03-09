@@ -14,7 +14,7 @@ export class FilemanagerController {
       console.log(headers)
       const authorId = headers.authorid;
       const isEditor = headers.iseditor;
-      const uploadedFile = await this.fileUploadService.uploadFile(file.buffer, file.originalname, authorId);
+      const uploadedFile = await this.fileUploadService.uploadFile(file.buffer, file.originalname, authorId, headers);
       console.log('File has been uploaded,', uploadedFile.fileName);
       return {
         success: 1,
@@ -30,5 +30,6 @@ export class FilemanagerController {
       return error;
     }
   }
+
 
 }

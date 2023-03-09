@@ -1,10 +1,9 @@
-import { PrismaClient } from './pulse_client';
+import { PrismaClient } from "./pulse_client";
 
 const prisma = new PrismaClient();
 
 async function main() {
-
-  console.log('Seeding...');
+  console.log("Seeding...");
 
   // const user1 = await prisma.user.create({
   // 	data: {
@@ -20,13 +19,12 @@ async function main() {
   const user = await prisma.pulseUser.create({
     data: {
       address: "1234 Main St",
-      email: 'bart@simpson.com',
-      fullName: 'Bart Simpson',
-      phoneNumber: '+380999999999',
-      uniqueName: 'bart',
-      role: 'PATIENT',
-      password:
-        '$2b$10$EpRnTzVlqHNP0.fUbXUwSOyuiXe/QLSUG6xNekdHgTGmrpHEfIoxm', // secret42
+      email: "bart@simpson.com",
+      fullName: "Bart Simpson",
+      phoneNumber: "+380999999999",
+      uniqueName: "bart",
+      role: "ADMIN",
+      password: "$2b$10$EpRnTzVlqHNP0.fUbXUwSOyuiXe/QLSUG6xNekdHgTGmrpHEfIoxm", // secret42
     },
   });
 
@@ -40,18 +38,17 @@ async function main() {
           phoneNumber: "+380999999998",
           uniqueName: "doctor",
           role: "DOCTOR",
-          password: "$2b$10$EpRnTzVlqHNP0.fUbXUwSOyuiXe/QLSUG6xNekdHgTGmrpHEfIoxm"
-        }
-      }
-    }
+          password: "$2b$10$EpRnTzVlqHNP0.fUbXUwSOyuiXe/QLSUG6xNekdHgTGmrpHEfIoxm",
+        },
+      },
+    },
   });
 
   console.log({ user, doctor });
-
 }
 
 main()
-  .catch(e => console.error(e))
+  .catch((e) => console.error(e))
   .finally(async () => {
     await prisma.$disconnect();
   });

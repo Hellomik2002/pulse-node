@@ -12,14 +12,26 @@ export class AdminDoctor {
   constructor(
     private readonly passwordService: PasswordService,
     private readonly calcomAccountManagerService: CalComAccountManagerService
-  ) {}
+  ) { }
 
   @Mutation(() => Doctor)
   async createDoctor(@Args("doctor") doctor: DoctorCreateInput): Promise<Doctor> {
+    const hashedPassword = await this.passwordService.hashPassword(
+      doctor.user.create.password,
+    );
+
+
     const newDoctor = await mainPrismaClient.doctor.create({
       data: {
         ...doctor,
-      },
+        user: {
+          create: {
+            ...doctor.user.create,
+            password: hashedPassword,
+            role: 'DOCTOR',
+          }
+        },
+      }
     });
     // find user by user id from doctor;
     const user = await mainPrismaClient.pulseUser.findUnique({

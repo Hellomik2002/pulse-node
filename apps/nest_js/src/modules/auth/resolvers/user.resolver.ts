@@ -1,23 +1,29 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Query, Resolver } from '@nestjs/graphql';
 import { PulseUser } from 'src/@generated/pulse-user/pulse-user.model';
+import { ResearchDocument } from 'src/@generated/research-document/research-document.model';
 import { mainPrismaClient } from 'src/prisma/main_client';
 import { GqlAuthGuard } from '../tools/gql-auth.guard';
 import { UserEntity } from '../tools/user.decorator';
 
 @Resolver()
-export class UserResolver { 
+export class UserResolver {
   // get user by id query
   @Query(() => PulseUser)
-  getUserById(@Args('id',  { type: () => String }) id: string) {
+  getUserById(@Args('id', { type: () => String }) id: string) {
     return mainPrismaClient.pulseUser.findUnique({
       where: {
         id
       },
-      include:{
+      include: {
         appointmentsAsPatient: {
           include: {
             author: true,
+          }
+        },
+        researchDocumentsAsPatient: {
+          include: {
+            author: true
           }
         }
       }
@@ -26,14 +32,14 @@ export class UserResolver {
 
 
   @Query(() => PulseUser)
-	@UseGuards(GqlAuthGuard)
-	getUser(@UserEntity() { id: userId }: PulseUser) {
-		return mainPrismaClient.pulseUser.findUnique({
-			where: {
-				id: userId,
-			},
-		});
-	}
+  @UseGuards(GqlAuthGuard)
+  getUser(@UserEntity() { id: userId }: PulseUser) {
+    return mainPrismaClient.pulseUser.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+  }
 
   // get all users query
 

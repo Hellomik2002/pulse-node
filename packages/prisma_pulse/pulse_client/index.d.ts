@@ -66,6 +66,7 @@ export type Doctor = {
   calUserId: number
   userId: string
   specializationsIds: string[]
+  description: Prisma.JsonValue | null
 }
 
 /**
@@ -4249,6 +4250,7 @@ export namespace Prisma {
     calUserId: number
     userId: number
     specializationsIds: number
+    description: number
     _all: number
   }
 
@@ -4287,6 +4289,7 @@ export namespace Prisma {
     calUserId?: true
     userId?: true
     specializationsIds?: true
+    description?: true
     _all?: true
   }
 
@@ -4385,6 +4388,7 @@ export namespace Prisma {
     calUserId: number
     userId: string
     specializationsIds: string[]
+    description: JsonValue | null
     _count: DoctorCountAggregateOutputType | null
     _avg: DoctorAvgAggregateOutputType | null
     _sum: DoctorSumAggregateOutputType | null
@@ -4416,6 +4420,7 @@ export namespace Prisma {
     userId?: boolean
     specializationsIds?: boolean
     specializations?: boolean | Doctor$specializationsArgs
+    description?: boolean
     _count?: boolean | DoctorCountOutputTypeArgs
   }
 
@@ -7299,7 +7304,8 @@ export namespace Prisma {
     calLink: 'calLink',
     calUserId: 'calUserId',
     userId: 'userId',
-    specializationsIds: 'specializationsIds'
+    specializationsIds: 'specializationsIds',
+    description: 'description'
   };
 
   export type DoctorScalarFieldEnum = (typeof DoctorScalarFieldEnum)[keyof typeof DoctorScalarFieldEnum]
@@ -7582,6 +7588,7 @@ export namespace Prisma {
     userId?: StringFilter | string
     specializationsIds?: StringNullableListFilter
     specializations?: SpecializationListRelationFilter
+    description?: JsonNullableFilter
   }
 
   export type DoctorOrderByWithRelationInput = {
@@ -7594,6 +7601,7 @@ export namespace Prisma {
     userId?: SortOrder
     specializationsIds?: SortOrder
     specializations?: SpecializationOrderByRelationAggregateInput
+    description?: SortOrder
   }
 
   export type DoctorWhereUniqueInput = {
@@ -7609,6 +7617,7 @@ export namespace Prisma {
     calUserId?: SortOrder
     userId?: SortOrder
     specializationsIds?: SortOrder
+    description?: SortOrder
     _count?: DoctorCountOrderByAggregateInput
     _avg?: DoctorAvgOrderByAggregateInput
     _max?: DoctorMaxOrderByAggregateInput
@@ -7627,6 +7636,7 @@ export namespace Prisma {
     calUserId?: IntWithAggregatesFilter | number
     userId?: StringWithAggregatesFilter | string
     specializationsIds?: StringNullableListFilter
+    description?: JsonNullableWithAggregatesFilter
   }
 
   export type SpecializationWhereInput = {
@@ -7973,6 +7983,7 @@ export namespace Prisma {
     user: PulseUserCreateNestedOneWithoutDoctorInput
     specializationsIds?: DoctorCreatespecializationsIdsInput | Enumerable<string>
     specializations?: SpecializationCreateNestedManyWithoutDoctorInput
+    description?: InputJsonValue | null
   }
 
   export type DoctorUncheckedCreateInput = {
@@ -7984,6 +7995,7 @@ export namespace Prisma {
     userId: string
     specializationsIds?: DoctorCreatespecializationsIdsInput | Enumerable<string>
     specializations?: SpecializationUncheckedCreateNestedManyWithoutDoctorInput
+    description?: InputJsonValue | null
   }
 
   export type DoctorUpdateInput = {
@@ -7994,6 +8006,7 @@ export namespace Prisma {
     user?: PulseUserUpdateOneRequiredWithoutDoctorNestedInput
     specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
     specializations?: SpecializationUpdateManyWithoutDoctorNestedInput
+    description?: InputJsonValue | InputJsonValue | null
   }
 
   export type DoctorUncheckedUpdateInput = {
@@ -8004,6 +8017,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
     specializations?: SpecializationUncheckedUpdateManyWithoutDoctorNestedInput
+    description?: InputJsonValue | InputJsonValue | null
   }
 
   export type DoctorCreateManyInput = {
@@ -8014,6 +8028,7 @@ export namespace Prisma {
     calUserId?: number
     userId: string
     specializationsIds?: DoctorCreatespecializationsIdsInput | Enumerable<string>
+    description?: InputJsonValue | null
   }
 
   export type DoctorUpdateManyMutationInput = {
@@ -8022,6 +8037,7 @@ export namespace Prisma {
     calLink?: StringFieldUpdateOperationsInput | string
     calUserId?: IntFieldUpdateOperationsInput | number
     specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
+    description?: InputJsonValue | InputJsonValue | null
   }
 
   export type DoctorUncheckedUpdateManyInput = {
@@ -8031,6 +8047,7 @@ export namespace Prisma {
     calUserId?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
     specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
+    description?: InputJsonValue | InputJsonValue | null
   }
 
   export type SpecializationCreateInput = {
@@ -8460,6 +8477,7 @@ export namespace Prisma {
     calUserId?: SortOrder
     userId?: SortOrder
     specializationsIds?: SortOrder
+    description?: SortOrder
   }
 
   export type DoctorAvgOrderByAggregateInput = {
@@ -9323,6 +9341,7 @@ export namespace Prisma {
     calUserId?: number
     specializationsIds?: DoctorCreatespecializationsIdsInput | Enumerable<string>
     specializations?: SpecializationCreateNestedManyWithoutDoctorInput
+    description?: InputJsonValue | null
   }
 
   export type DoctorUncheckedCreateWithoutUserInput = {
@@ -9333,6 +9352,7 @@ export namespace Prisma {
     calUserId?: number
     specializationsIds?: DoctorCreatespecializationsIdsInput | Enumerable<string>
     specializations?: SpecializationUncheckedCreateNestedManyWithoutDoctorInput
+    description?: InputJsonValue | null
   }
 
   export type DoctorCreateOrConnectWithoutUserInput = {
@@ -9469,6 +9489,7 @@ export namespace Prisma {
     calUserId?: IntFieldUpdateOperationsInput | number
     specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
     specializations?: SpecializationUpdateManyWithoutDoctorNestedInput
+    description?: InputJsonValue | InputJsonValue | null
   }
 
   export type DoctorUncheckedUpdateWithoutUserInput = {
@@ -9478,6 +9499,7 @@ export namespace Prisma {
     calUserId?: IntFieldUpdateOperationsInput | number
     specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
     specializations?: SpecializationUncheckedUpdateManyWithoutDoctorNestedInput
+    description?: InputJsonValue | InputJsonValue | null
   }
 
   export type FileEntityUpsertWithWhereUniqueWithoutAuthorInput = {
@@ -9983,6 +10005,7 @@ export namespace Prisma {
     calUserId?: number
     user: PulseUserCreateNestedOneWithoutDoctorInput
     specializationsIds?: DoctorCreatespecializationsIdsInput | Enumerable<string>
+    description?: InputJsonValue | null
   }
 
   export type DoctorUncheckedCreateWithoutSpecializationsInput = {
@@ -9993,6 +10016,7 @@ export namespace Prisma {
     calUserId?: number
     userId: string
     specializationsIds?: DoctorCreatespecializationsIdsInput | Enumerable<string>
+    description?: InputJsonValue | null
   }
 
   export type DoctorCreateOrConnectWithoutSpecializationsInput = {
@@ -10027,6 +10051,7 @@ export namespace Prisma {
     calUserId?: IntFilter | number
     userId?: StringFilter | string
     specializationsIds?: StringNullableListFilter
+    description?: JsonNullableFilter
   }
 
   export type PulseUserCreateWithoutAuthoredFilesInput = {
@@ -10291,6 +10316,7 @@ export namespace Prisma {
     calUserId?: IntFieldUpdateOperationsInput | number
     user?: PulseUserUpdateOneRequiredWithoutDoctorNestedInput
     specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
+    description?: InputJsonValue | InputJsonValue | null
   }
 
   export type DoctorUncheckedUpdateWithoutSpecializationsInput = {
@@ -10300,6 +10326,7 @@ export namespace Prisma {
     calUserId?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
     specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
+    description?: InputJsonValue | InputJsonValue | null
   }
 
   export type DoctorUncheckedUpdateManyWithoutDoctorInput = {
@@ -10309,6 +10336,7 @@ export namespace Prisma {
     calUserId?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
     specializationsIds?: DoctorUpdatespecializationsIdsInput | Enumerable<string>
+    description?: InputJsonValue | InputJsonValue | null
   }
 
 

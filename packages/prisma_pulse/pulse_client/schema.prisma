@@ -85,6 +85,7 @@ model Doctor {
   userId             String           @unique @db.ObjectId
   specializationsIds String[]         @db.ObjectId
   specializations    Specialization[] @relation(fields: [specializationsIds], references: [id])
+  description        Json?             @default("{}")
 }
 
 model Specialization {

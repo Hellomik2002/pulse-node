@@ -105,7 +105,8 @@ exports.Prisma.DoctorScalarFieldEnum = makeEnum({
   calLink: 'calLink',
   calUserId: 'calUserId',
   userId: 'userId',
-  specializationsIds: 'specializationsIds'
+  specializationsIds: 'specializationsIds',
+  description: 'description'
 });
 
 exports.Prisma.FileEntityScalarFieldEnum = makeEnum({

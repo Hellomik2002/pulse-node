@@ -28,8 +28,7 @@
 		"prisma:studio": "npx prisma studio",
 		"prisma:generate": "npx prisma generate",
 		"prisma:generate:watch": "npx prisma generate --watch",
-		"seed": "prisma db seed",
-		"dx": "yarn dev"
+		"seed": "prisma db seed"
 	},
 	"dependencies": {
 		"@calcom/prisma": "*",

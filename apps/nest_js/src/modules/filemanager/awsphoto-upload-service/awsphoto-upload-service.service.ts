@@ -25,7 +25,7 @@ export class AWSUploadService {
   }
 
 
-  async uploadFile(dataBuffer: Buffer, fileName: string, authorId: string) {
+  async uploadFile(dataBuffer: Buffer, fileName: string, authorId: string, metadata: any) {
     const uploadResult = await this.s3.upload({
       Bucket: this.bucketName,
       Body: dataBuffer,
@@ -40,7 +40,7 @@ export class AWSUploadService {
 
     const filestored = await mainPrismaClient.fileEntity.create({
       data: {
-        ...fileStorageInDB, authorId
+        ...fileStorageInDB, authorId, metadata
       },
     });
 

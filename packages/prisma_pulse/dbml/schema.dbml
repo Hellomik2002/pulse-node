@@ -54,6 +54,7 @@ Table Doctor {
   userId String [unique, not null]
   specializationsIds String[] [not null]
   specializations Specialization [not null]
+  description Json [default: '{}']
 }
 
 Table Specialization {
