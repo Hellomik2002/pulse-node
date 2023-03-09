@@ -120,6 +120,15 @@ exports.Prisma.FileEntityScalarFieldEnum = makeEnum({
   updatedAt: 'updatedAt'
 });
 
+exports.Prisma.PharmacyScalarFieldEnum = makeEnum({
+  id: 'id',
+  name: 'name',
+  label: 'label',
+  company: 'company',
+  price: 'price',
+  photoUrls: 'photoUrls'
+});
+
 exports.Prisma.PulseUserScalarFieldEnum = makeEnum({
   id: 'id',
   createdAt: 'createdAt',
@@ -173,7 +182,8 @@ exports.Prisma.ModelName = makeEnum({
   ResearchDocument: 'ResearchDocument',
   Doctor: 'Doctor',
   Specialization: 'Specialization',
-  FileEntity: 'FileEntity'
+  FileEntity: 'FileEntity',
+  Pharmacy: 'Pharmacy'
 });
 
 /**

@@ -89,3 +89,6 @@ packages/prisma_pulse/pulse_client/index.js
 packages/prisma_pulse/pulse_client/libquery_engine-darwin.dylib.node
 packages/prisma_pulse/pulse_client/index.js
 
+packages/prisma_pulse/dbml/schema.dbml
+packages/prisma_pulse/pulse_client/index.d.ts
+packages/prisma_pulse/pulse_client/index.js

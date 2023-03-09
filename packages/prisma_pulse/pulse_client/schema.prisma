@@ -127,3 +127,11 @@ model FileEntity {
 
 // @Field(() => [ServiceGraph])
 // services: ServiceGraph[];
+model Pharmacy {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  label     String?
+  company   String?
+  price     Float[]
+  photoUrls String[]
+}

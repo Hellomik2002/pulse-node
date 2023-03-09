@@ -95,6 +95,19 @@ export type FileEntity = {
   updatedAt: Date
 }
 
+/**
+ * Model Pharmacy
+ * 
+ */
+export type Pharmacy = {
+  id: string
+  name: string
+  label: string | null
+  company: string | null
+  price: number[]
+  photoUrls: string[]
+}
+
 
 /**
  * Enums
@@ -259,6 +272,16 @@ export class PrismaClient<
     * ```
     */
   get fileEntity(): Prisma.FileEntityDelegate<GlobalReject>;
+
+  /**
+   * `prisma.pharmacy`: Exposes CRUD operations for the **Pharmacy** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Pharmacies
+    * const pharmacies = await prisma.pharmacy.findMany()
+    * ```
+    */
+  get pharmacy(): Prisma.PharmacyDelegate<GlobalReject>;
 }
 
 export namespace Prisma {
@@ -733,7 +756,8 @@ export namespace Prisma {
     ResearchDocument: 'ResearchDocument',
     Doctor: 'Doctor',
     Specialization: 'Specialization',
-    FileEntity: 'FileEntity'
+    FileEntity: 'FileEntity',
+    Pharmacy: 'Pharmacy'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -7279,6 +7303,991 @@ export namespace Prisma {
 
 
   /**
+   * Model Pharmacy
+   */
+
+
+  export type AggregatePharmacy = {
+    _count: PharmacyCountAggregateOutputType | null
+    _avg: PharmacyAvgAggregateOutputType | null
+    _sum: PharmacySumAggregateOutputType | null
+    _min: PharmacyMinAggregateOutputType | null
+    _max: PharmacyMaxAggregateOutputType | null
+  }
+
+  export type PharmacyAvgAggregateOutputType = {
+    price: number | null
+  }
+
+  export type PharmacySumAggregateOutputType = {
+    price: number[] | null
+  }
+
+<<<<<<< HEAD
+  export const DoctorScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    calLink: 'calLink',
+    calUserId: 'calUserId',
+    userId: 'userId',
+    specializationsIds: 'specializationsIds',
+    description: 'description'
+  };
+=======
+  export type PharmacyMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    label: string | null
+    company: string | null
+  }
+>>>>>>> d7fb74bfac2f51c9e6e2f699e551f61590a80202
+
+  export type PharmacyMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    label: string | null
+    company: string | null
+  }
+
+  export type PharmacyCountAggregateOutputType = {
+    id: number
+    name: number
+    label: number
+    company: number
+    price: number
+    photoUrls: number
+    _all: number
+  }
+
+
+  export type PharmacyAvgAggregateInputType = {
+    price?: true
+  }
+
+  export type PharmacySumAggregateInputType = {
+    price?: true
+  }
+
+  export type PharmacyMinAggregateInputType = {
+    id?: true
+    name?: true
+    label?: true
+    company?: true
+  }
+
+  export type PharmacyMaxAggregateInputType = {
+    id?: true
+    name?: true
+    label?: true
+    company?: true
+  }
+
+  export type PharmacyCountAggregateInputType = {
+    id?: true
+    name?: true
+    label?: true
+    company?: true
+    price?: true
+    photoUrls?: true
+    _all?: true
+  }
+
+  export type PharmacyAggregateArgs = {
+    /**
+     * Filter which Pharmacy to aggregate.
+     */
+    where?: PharmacyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Pharmacies to fetch.
+     */
+    orderBy?: Enumerable<PharmacyOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PharmacyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Pharmacies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Pharmacies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Pharmacies
+    **/
+    _count?: true | PharmacyCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PharmacyAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PharmacySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PharmacyMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PharmacyMaxAggregateInputType
+  }
+
+  export type GetPharmacyAggregateType<T extends PharmacyAggregateArgs> = {
+        [P in keyof T & keyof AggregatePharmacy]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePharmacy[P]>
+      : GetScalarType<T[P], AggregatePharmacy[P]>
+  }
+
+
+
+
+  export type PharmacyGroupByArgs = {
+    where?: PharmacyWhereInput
+    orderBy?: Enumerable<PharmacyOrderByWithAggregationInput>
+    by: PharmacyScalarFieldEnum[]
+    having?: PharmacyScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PharmacyCountAggregateInputType | true
+    _avg?: PharmacyAvgAggregateInputType
+    _sum?: PharmacySumAggregateInputType
+    _min?: PharmacyMinAggregateInputType
+    _max?: PharmacyMaxAggregateInputType
+  }
+
+
+  export type PharmacyGroupByOutputType = {
+    id: string
+    name: string
+    label: string | null
+    company: string | null
+    price: number[]
+    photoUrls: string[]
+    _count: PharmacyCountAggregateOutputType | null
+    _avg: PharmacyAvgAggregateOutputType | null
+    _sum: PharmacySumAggregateOutputType | null
+    _min: PharmacyMinAggregateOutputType | null
+    _max: PharmacyMaxAggregateOutputType | null
+  }
+
+  type GetPharmacyGroupByPayload<T extends PharmacyGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickArray<PharmacyGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PharmacyGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PharmacyGroupByOutputType[P]>
+            : GetScalarType<T[P], PharmacyGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PharmacySelect = {
+    id?: boolean
+    name?: boolean
+    label?: boolean
+    company?: boolean
+    price?: boolean
+    photoUrls?: boolean
+  }
+
+
+  export type PharmacyGetPayload<S extends boolean | null | undefined | PharmacyArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? Pharmacy :
+    S extends undefined ? never :
+    S extends { include: any } & (PharmacyArgs | PharmacyFindManyArgs)
+    ? Pharmacy 
+    : S extends { select: any } & (PharmacyArgs | PharmacyFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+    P extends keyof Pharmacy ? Pharmacy[P] : never
+  } 
+      : Pharmacy
+
+
+  type PharmacyCountArgs = 
+    Omit<PharmacyFindManyArgs, 'select' | 'include'> & {
+      select?: PharmacyCountAggregateInputType | true
+    }
+
+  export interface PharmacyDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+
+    /**
+     * Find zero or one Pharmacy that matches the filter.
+     * @param {PharmacyFindUniqueArgs} args - Arguments to find a Pharmacy
+     * @example
+     * // Get one Pharmacy
+     * const pharmacy = await prisma.pharmacy.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends PharmacyFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, PharmacyFindUniqueArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Pharmacy'> extends True ? Prisma__PharmacyClient<PharmacyGetPayload<T>> : Prisma__PharmacyClient<PharmacyGetPayload<T> | null, null>
+
+    /**
+     * Find one Pharmacy that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {PharmacyFindUniqueOrThrowArgs} args - Arguments to find a Pharmacy
+     * @example
+     * // Get one Pharmacy
+     * const pharmacy = await prisma.pharmacy.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends PharmacyFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, PharmacyFindUniqueOrThrowArgs>
+    ): Prisma__PharmacyClient<PharmacyGetPayload<T>>
+
+    /**
+     * Find the first Pharmacy that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PharmacyFindFirstArgs} args - Arguments to find a Pharmacy
+     * @example
+     * // Get one Pharmacy
+     * const pharmacy = await prisma.pharmacy.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends PharmacyFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, PharmacyFindFirstArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Pharmacy'> extends True ? Prisma__PharmacyClient<PharmacyGetPayload<T>> : Prisma__PharmacyClient<PharmacyGetPayload<T> | null, null>
+
+    /**
+     * Find the first Pharmacy that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PharmacyFindFirstOrThrowArgs} args - Arguments to find a Pharmacy
+     * @example
+     * // Get one Pharmacy
+     * const pharmacy = await prisma.pharmacy.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends PharmacyFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, PharmacyFindFirstOrThrowArgs>
+    ): Prisma__PharmacyClient<PharmacyGetPayload<T>>
+
+    /**
+     * Find zero or more Pharmacies that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PharmacyFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Pharmacies
+     * const pharmacies = await prisma.pharmacy.findMany()
+     * 
+     * // Get first 10 Pharmacies
+     * const pharmacies = await prisma.pharmacy.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const pharmacyWithIdOnly = await prisma.pharmacy.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends PharmacyFindManyArgs>(
+      args?: SelectSubset<T, PharmacyFindManyArgs>
+    ): Prisma.PrismaPromise<Array<PharmacyGetPayload<T>>>
+
+    /**
+     * Create a Pharmacy.
+     * @param {PharmacyCreateArgs} args - Arguments to create a Pharmacy.
+     * @example
+     * // Create one Pharmacy
+     * const Pharmacy = await prisma.pharmacy.create({
+     *   data: {
+     *     // ... data to create a Pharmacy
+     *   }
+     * })
+     * 
+    **/
+    create<T extends PharmacyCreateArgs>(
+      args: SelectSubset<T, PharmacyCreateArgs>
+    ): Prisma__PharmacyClient<PharmacyGetPayload<T>>
+
+    /**
+     * Create many Pharmacies.
+     *     @param {PharmacyCreateManyArgs} args - Arguments to create many Pharmacies.
+     *     @example
+     *     // Create many Pharmacies
+     *     const pharmacy = await prisma.pharmacy.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends PharmacyCreateManyArgs>(
+      args?: SelectSubset<T, PharmacyCreateManyArgs>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Pharmacy.
+     * @param {PharmacyDeleteArgs} args - Arguments to delete one Pharmacy.
+     * @example
+     * // Delete one Pharmacy
+     * const Pharmacy = await prisma.pharmacy.delete({
+     *   where: {
+     *     // ... filter to delete one Pharmacy
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends PharmacyDeleteArgs>(
+      args: SelectSubset<T, PharmacyDeleteArgs>
+    ): Prisma__PharmacyClient<PharmacyGetPayload<T>>
+
+    /**
+     * Update one Pharmacy.
+     * @param {PharmacyUpdateArgs} args - Arguments to update one Pharmacy.
+     * @example
+     * // Update one Pharmacy
+     * const pharmacy = await prisma.pharmacy.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends PharmacyUpdateArgs>(
+      args: SelectSubset<T, PharmacyUpdateArgs>
+    ): Prisma__PharmacyClient<PharmacyGetPayload<T>>
+
+    /**
+     * Delete zero or more Pharmacies.
+     * @param {PharmacyDeleteManyArgs} args - Arguments to filter Pharmacies to delete.
+     * @example
+     * // Delete a few Pharmacies
+     * const { count } = await prisma.pharmacy.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends PharmacyDeleteManyArgs>(
+      args?: SelectSubset<T, PharmacyDeleteManyArgs>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Pharmacies.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PharmacyUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Pharmacies
+     * const pharmacy = await prisma.pharmacy.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends PharmacyUpdateManyArgs>(
+      args: SelectSubset<T, PharmacyUpdateManyArgs>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Pharmacy.
+     * @param {PharmacyUpsertArgs} args - Arguments to update or create a Pharmacy.
+     * @example
+     * // Update or create a Pharmacy
+     * const pharmacy = await prisma.pharmacy.upsert({
+     *   create: {
+     *     // ... data to create a Pharmacy
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Pharmacy we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends PharmacyUpsertArgs>(
+      args: SelectSubset<T, PharmacyUpsertArgs>
+    ): Prisma__PharmacyClient<PharmacyGetPayload<T>>
+
+    /**
+     * Find zero or more Pharmacies that matches the filter.
+     * @param {PharmacyFindRawArgs} args - Select which filters you would like to apply.
+     * @example
+     * const pharmacy = await prisma.pharmacy.findRaw({
+     *   filter: { age: { $gt: 25 } } 
+     * })
+    **/
+    findRaw(
+      args?: PharmacyFindRawArgs
+    ): Prisma.PrismaPromise<JsonObject>
+
+    /**
+     * Perform aggregation operations on a Pharmacy.
+     * @param {PharmacyAggregateRawArgs} args - Select which aggregations you would like to apply.
+     * @example
+     * const pharmacy = await prisma.pharmacy.aggregateRaw({
+     *   pipeline: [
+     *     { $match: { status: "registered" } },
+     *     { $group: { _id: "$country", total: { $sum: 1 } } }
+     *   ]
+     * })
+    **/
+    aggregateRaw(
+      args?: PharmacyAggregateRawArgs
+    ): Prisma.PrismaPromise<JsonObject>
+
+    /**
+     * Count the number of Pharmacies.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PharmacyCountArgs} args - Arguments to filter Pharmacies to count.
+     * @example
+     * // Count the number of Pharmacies
+     * const count = await prisma.pharmacy.count({
+     *   where: {
+     *     // ... the filter for the Pharmacies we want to count
+     *   }
+     * })
+    **/
+    count<T extends PharmacyCountArgs>(
+      args?: Subset<T, PharmacyCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends _Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PharmacyCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Pharmacy.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PharmacyAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PharmacyAggregateArgs>(args: Subset<T, PharmacyAggregateArgs>): Prisma.PrismaPromise<GetPharmacyAggregateType<T>>
+
+    /**
+     * Group by Pharmacy.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PharmacyGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PharmacyGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PharmacyGroupByArgs['orderBy'] }
+        : { orderBy?: PharmacyGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PharmacyGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPharmacyGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Pharmacy.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__PharmacyClient<T, Null = never> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * Pharmacy base type for findUnique actions
+   */
+  export type PharmacyFindUniqueArgsBase = {
+    /**
+     * Select specific fields to fetch from the Pharmacy
+     */
+    select?: PharmacySelect | null
+    /**
+     * Filter, which Pharmacy to fetch.
+     */
+    where: PharmacyWhereUniqueInput
+  }
+
+  /**
+   * Pharmacy findUnique
+   */
+  export interface PharmacyFindUniqueArgs extends PharmacyFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Pharmacy findUniqueOrThrow
+   */
+  export type PharmacyFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the Pharmacy
+     */
+    select?: PharmacySelect | null
+    /**
+     * Filter, which Pharmacy to fetch.
+     */
+    where: PharmacyWhereUniqueInput
+  }
+
+
+  /**
+   * Pharmacy base type for findFirst actions
+   */
+  export type PharmacyFindFirstArgsBase = {
+    /**
+     * Select specific fields to fetch from the Pharmacy
+     */
+    select?: PharmacySelect | null
+    /**
+     * Filter, which Pharmacy to fetch.
+     */
+    where?: PharmacyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Pharmacies to fetch.
+     */
+    orderBy?: Enumerable<PharmacyOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Pharmacies.
+     */
+    cursor?: PharmacyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Pharmacies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Pharmacies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Pharmacies.
+     */
+    distinct?: Enumerable<PharmacyScalarFieldEnum>
+  }
+
+  /**
+   * Pharmacy findFirst
+   */
+  export interface PharmacyFindFirstArgs extends PharmacyFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Pharmacy findFirstOrThrow
+   */
+  export type PharmacyFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the Pharmacy
+     */
+    select?: PharmacySelect | null
+    /**
+     * Filter, which Pharmacy to fetch.
+     */
+    where?: PharmacyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Pharmacies to fetch.
+     */
+    orderBy?: Enumerable<PharmacyOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Pharmacies.
+     */
+    cursor?: PharmacyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Pharmacies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Pharmacies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Pharmacies.
+     */
+    distinct?: Enumerable<PharmacyScalarFieldEnum>
+  }
+
+
+  /**
+   * Pharmacy findMany
+   */
+  export type PharmacyFindManyArgs = {
+    /**
+     * Select specific fields to fetch from the Pharmacy
+     */
+    select?: PharmacySelect | null
+    /**
+     * Filter, which Pharmacies to fetch.
+     */
+    where?: PharmacyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Pharmacies to fetch.
+     */
+    orderBy?: Enumerable<PharmacyOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Pharmacies.
+     */
+    cursor?: PharmacyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Pharmacies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Pharmacies.
+     */
+    skip?: number
+    distinct?: Enumerable<PharmacyScalarFieldEnum>
+  }
+
+
+  /**
+   * Pharmacy create
+   */
+  export type PharmacyCreateArgs = {
+    /**
+     * Select specific fields to fetch from the Pharmacy
+     */
+    select?: PharmacySelect | null
+    /**
+     * The data needed to create a Pharmacy.
+     */
+    data: XOR<PharmacyCreateInput, PharmacyUncheckedCreateInput>
+  }
+
+
+  /**
+   * Pharmacy createMany
+   */
+  export type PharmacyCreateManyArgs = {
+    /**
+     * The data used to create many Pharmacies.
+     */
+    data: Enumerable<PharmacyCreateManyInput>
+  }
+
+
+  /**
+   * Pharmacy update
+   */
+  export type PharmacyUpdateArgs = {
+    /**
+     * Select specific fields to fetch from the Pharmacy
+     */
+    select?: PharmacySelect | null
+    /**
+     * The data needed to update a Pharmacy.
+     */
+    data: XOR<PharmacyUpdateInput, PharmacyUncheckedUpdateInput>
+    /**
+     * Choose, which Pharmacy to update.
+     */
+    where: PharmacyWhereUniqueInput
+  }
+
+
+  /**
+   * Pharmacy updateMany
+   */
+  export type PharmacyUpdateManyArgs = {
+    /**
+     * The data used to update Pharmacies.
+     */
+    data: XOR<PharmacyUpdateManyMutationInput, PharmacyUncheckedUpdateManyInput>
+    /**
+     * Filter which Pharmacies to update
+     */
+    where?: PharmacyWhereInput
+  }
+
+
+  /**
+   * Pharmacy upsert
+   */
+  export type PharmacyUpsertArgs = {
+    /**
+     * Select specific fields to fetch from the Pharmacy
+     */
+    select?: PharmacySelect | null
+    /**
+     * The filter to search for the Pharmacy to update in case it exists.
+     */
+    where: PharmacyWhereUniqueInput
+    /**
+     * In case the Pharmacy found by the `where` argument doesn't exist, create a new Pharmacy with this data.
+     */
+    create: XOR<PharmacyCreateInput, PharmacyUncheckedCreateInput>
+    /**
+     * In case the Pharmacy was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PharmacyUpdateInput, PharmacyUncheckedUpdateInput>
+  }
+
+
+  /**
+   * Pharmacy delete
+   */
+  export type PharmacyDeleteArgs = {
+    /**
+     * Select specific fields to fetch from the Pharmacy
+     */
+    select?: PharmacySelect | null
+    /**
+     * Filter which Pharmacy to delete.
+     */
+    where: PharmacyWhereUniqueInput
+  }
+
+
+  /**
+   * Pharmacy deleteMany
+   */
+  export type PharmacyDeleteManyArgs = {
+    /**
+     * Filter which Pharmacies to delete
+     */
+    where?: PharmacyWhereInput
+  }
+
+
+  /**
+   * Pharmacy findRaw
+   */
+  export type PharmacyFindRawArgs = {
+    /**
+     * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
+     */
+    filter?: InputJsonValue
+    /**
+     * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
+     */
+    options?: InputJsonValue
+  }
+
+
+  /**
+   * Pharmacy aggregateRaw
+   */
+  export type PharmacyAggregateRawArgs = {
+    /**
+     * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
+     */
+    pipeline?: InputJsonValue[]
+    /**
+     * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
+     */
+    options?: InputJsonValue
+  }
+
+
+  /**
+   * Pharmacy without action
+   */
+  export type PharmacyArgs = {
+    /**
+     * Select specific fields to fetch from the Pharmacy
+     */
+    select?: PharmacySelect | null
+  }
+
+
+
+  /**
    * Enums
    */
 
@@ -7304,8 +8313,7 @@ export namespace Prisma {
     calLink: 'calLink',
     calUserId: 'calUserId',
     userId: 'userId',
-    specializationsIds: 'specializationsIds',
-    description: 'description'
+    specializationsIds: 'specializationsIds'
   };
 
   export type DoctorScalarFieldEnum = (typeof DoctorScalarFieldEnum)[keyof typeof DoctorScalarFieldEnum]
@@ -7323,6 +8331,18 @@ export namespace Prisma {
   };
 
   export type FileEntityScalarFieldEnum = (typeof FileEntityScalarFieldEnum)[keyof typeof FileEntityScalarFieldEnum]
+
+
+  export const PharmacyScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    label: 'label',
+    company: 'company',
+    price: 'price',
+    photoUrls: 'photoUrls'
+  };
+
+  export type PharmacyScalarFieldEnum = (typeof PharmacyScalarFieldEnum)[keyof typeof PharmacyScalarFieldEnum]
 
 
   export const PulseUserScalarFieldEnum: {
@@ -7740,6 +8760,57 @@ export namespace Prisma {
     metadata?: JsonWithAggregatesFilter
     createdAt?: DateTimeWithAggregatesFilter | Date | string
     updatedAt?: DateTimeWithAggregatesFilter | Date | string
+  }
+
+  export type PharmacyWhereInput = {
+    AND?: Enumerable<PharmacyWhereInput>
+    OR?: Enumerable<PharmacyWhereInput>
+    NOT?: Enumerable<PharmacyWhereInput>
+    id?: StringFilter | string
+    name?: StringFilter | string
+    label?: StringNullableFilter | string | null
+    company?: StringNullableFilter | string | null
+    price?: FloatNullableListFilter
+    photoUrls?: StringNullableListFilter
+  }
+
+  export type PharmacyOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    label?: SortOrder
+    company?: SortOrder
+    price?: SortOrder
+    photoUrls?: SortOrder
+  }
+
+  export type PharmacyWhereUniqueInput = {
+    id?: string
+  }
+
+  export type PharmacyOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    label?: SortOrder
+    company?: SortOrder
+    price?: SortOrder
+    photoUrls?: SortOrder
+    _count?: PharmacyCountOrderByAggregateInput
+    _avg?: PharmacyAvgOrderByAggregateInput
+    _max?: PharmacyMaxOrderByAggregateInput
+    _min?: PharmacyMinOrderByAggregateInput
+    _sum?: PharmacySumOrderByAggregateInput
+  }
+
+  export type PharmacyScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<PharmacyScalarWhereWithAggregatesInput>
+    OR?: Enumerable<PharmacyScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<PharmacyScalarWhereWithAggregatesInput>
+    id?: StringWithAggregatesFilter | string
+    name?: StringWithAggregatesFilter | string
+    label?: StringNullableWithAggregatesFilter | string | null
+    company?: StringNullableWithAggregatesFilter | string | null
+    price?: FloatNullableListFilter
+    photoUrls?: StringNullableListFilter
   }
 
   export type PulseUserCreateInput = {
@@ -8169,6 +9240,65 @@ export namespace Prisma {
     metadata?: InputJsonValue | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PharmacyCreateInput = {
+    id?: string
+    name: string
+    label?: string | null
+    company?: string | null
+    price?: PharmacyCreatepriceInput | Enumerable<number>
+    photoUrls?: PharmacyCreatephotoUrlsInput | Enumerable<string>
+  }
+
+  export type PharmacyUncheckedCreateInput = {
+    id?: string
+    name: string
+    label?: string | null
+    company?: string | null
+    price?: PharmacyCreatepriceInput | Enumerable<number>
+    photoUrls?: PharmacyCreatephotoUrlsInput | Enumerable<string>
+  }
+
+  export type PharmacyUpdateInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: PharmacyUpdatepriceInput | Enumerable<number>
+    photoUrls?: PharmacyUpdatephotoUrlsInput | Enumerable<string>
+  }
+
+  export type PharmacyUncheckedUpdateInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: PharmacyUpdatepriceInput | Enumerable<number>
+    photoUrls?: PharmacyUpdatephotoUrlsInput | Enumerable<string>
+  }
+
+  export type PharmacyCreateManyInput = {
+    id?: string
+    name: string
+    label?: string | null
+    company?: string | null
+    price?: PharmacyCreatepriceInput | Enumerable<number>
+    photoUrls?: PharmacyCreatephotoUrlsInput | Enumerable<string>
+  }
+
+  export type PharmacyUpdateManyMutationInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: PharmacyUpdatepriceInput | Enumerable<number>
+    photoUrls?: PharmacyUpdatephotoUrlsInput | Enumerable<string>
+  }
+
+  export type PharmacyUncheckedUpdateManyInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: PharmacyUpdatepriceInput | Enumerable<number>
+    photoUrls?: PharmacyUpdatephotoUrlsInput | Enumerable<string>
   }
 
   export type StringFilter = {
@@ -8605,6 +9735,45 @@ export namespace Prisma {
     _count?: NestedIntFilter
     _min?: NestedJsonFilter
     _max?: NestedJsonFilter
+  }
+
+  export type FloatNullableListFilter = {
+    equals?: Enumerable<number> | null
+    has?: number | null
+    hasEvery?: Enumerable<number>
+    hasSome?: Enumerable<number>
+    isEmpty?: boolean
+  }
+
+  export type PharmacyCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    label?: SortOrder
+    company?: SortOrder
+    price?: SortOrder
+    photoUrls?: SortOrder
+  }
+
+  export type PharmacyAvgOrderByAggregateInput = {
+    price?: SortOrder
+  }
+
+  export type PharmacyMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    label?: SortOrder
+    company?: SortOrder
+  }
+
+  export type PharmacyMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    label?: SortOrder
+    company?: SortOrder
+  }
+
+  export type PharmacySumOrderByAggregateInput = {
+    price?: SortOrder
   }
 
   export type ConsulationListCreateNestedManyWithoutAuthorInput = {
@@ -9052,6 +10221,24 @@ export namespace Prisma {
     delete?: boolean
     connect?: PulseUserWhereUniqueInput
     update?: XOR<PulseUserUpdateWithoutAuthoredFilesInput, PulseUserUncheckedUpdateWithoutAuthoredFilesInput>
+  }
+
+  export type PharmacyCreatepriceInput = {
+    set: Enumerable<number>
+  }
+
+  export type PharmacyCreatephotoUrlsInput = {
+    set: Enumerable<string>
+  }
+
+  export type PharmacyUpdatepriceInput = {
+    set?: Enumerable<number>
+    push?: number | Enumerable<number>
+  }
+
+  export type PharmacyUpdatephotoUrlsInput = {
+    set?: Enumerable<string>
+    push?: string | Enumerable<string>
   }
 
   export type NestedStringFilter = {
