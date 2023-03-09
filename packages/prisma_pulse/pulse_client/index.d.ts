@@ -7323,25 +7323,12 @@ export namespace Prisma {
     price: number[] | null
   }
 
-<<<<<<< HEAD
-  export const DoctorScalarFieldEnum: {
-    id: 'id',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    calLink: 'calLink',
-    calUserId: 'calUserId',
-    userId: 'userId',
-    specializationsIds: 'specializationsIds',
-    description: 'description'
-  };
-=======
   export type PharmacyMinAggregateOutputType = {
     id: string | null
     name: string | null
     label: string | null
     company: string | null
   }
->>>>>>> d7fb74bfac2f51c9e6e2f699e551f61590a80202
 
   export type PharmacyMaxAggregateOutputType = {
     id: string | null
@@ -8313,7 +8300,8 @@ export namespace Prisma {
     calLink: 'calLink',
     calUserId: 'calUserId',
     userId: 'userId',
-    specializationsIds: 'specializationsIds'
+    specializationsIds: 'specializationsIds',
+    description: 'description'
   };
 
   export type DoctorScalarFieldEnum = (typeof DoctorScalarFieldEnum)[keyof typeof DoctorScalarFieldEnum]
